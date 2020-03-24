@@ -1,86 +1,81 @@
 #include<iostream>
+#include <stdexcept>
+#include <string>
 
 using namespace std;
 
-int my_strlen(char *ptr);
-void my_strncpy(char *ptr_dest, char *ptr_src, int n);
-
-class CMyString {
-	char* m_pData;
-  	int length;  
-	public:
-		CMyString(){ 
-			cout << "Default constructor.\n";
-			m_pData = (char*)"Hello";
-			length = my_strlen(m_pData);
+int duplicate(int numbers[] , int length) {
+	int sum1 = 0;
+	
+	for(int i = 0; i < length; ++i) {
+		if(numbers[i] < 0 || numbers[i] > length - 2){
+			 cout << "Invalid numbers." << endl;
+			 throw; // Just re-throw the exception
 		}
-
-		CMyString(char* pData){ 
-			cout << "myString( char * ) constr.\n";
-			length = my_strlen(pData);
-			my_strncpy(m_pData, pData, length );  // copy init value into storage
-		}
-
-		CMyString(const CMyString& str){
-			cout << "myString copy const.\n";
-			length = str.length;
-			my_strncpy(m_pData, str.m_pData, length );
-		}
-			
-		~CMyString(void){ 
-			cout << "myString destr.\n";
-			delete [] m_pData; 
-		}
-		
-		CMyString& operator =(const CMyString &str){
-			if(this != &str) {
-				CMyString strTemp(str);
-		
-				char* pTemp = strTemp.m_pData;
-				strTemp.m_pData = m_pData;
-				m_pData = pTemp;
-			}
-			return *this;
-		}
-
-		int getLen() const{ return length; }
-		friend ostream& operator<< (ostream& os, const CMyString& s);
-};
-
-
-ostream& operator<< (ostream& os, const CMyString &s) {
-	int length = s.getLen();
-	for(int i=0; i < length; i++){
-		os.put(s.m_pData[i]);
+        sum1 += numbers[i];
 	}
-	return os;
-}
 
+	int sum2 = ((length - 1) * (length - 2)) >> 1;
+        
+    return sum1 - sum2;
+}
+    
+void test(const std::string &testName, int numbers[], int n, int expected, bool invalidArgument){
+	cout << testName << " begins: ";
+	
+	try {
+		int duplication = duplicate(numbers, n);
+            if(!invalidArgument && duplication == expected)
+                cout << "Passed.\n";
+            else
+                cout << "FAILED.\n";
+    } catch(const invalid_argument& ia){
+    	if(invalidArgument)
+    		cout << "Passed.\n";
+    	else
+    		cout << "FAILED.\n";
+    }
+}
+    
+void test1(){
+	int numbers[] = {2, 1, 3, 1, 0};
+    test("Test1", numbers, 5, 1, false);
+}
+    
+void test2(){
+	int numbers[] = {2, 0, 3, 1, 0};
+	test("Test2", numbers, 5, 0, false);
+}
+    
+void test3(){
+	int numbers[] = {2, 0, 4, 3, 1, 4};
+	test("Test3", numbers, 5, 4, false);
+}
+    
+void test4(){
+	int numbers[] = {2, 1, 3, 0, 4};
+	test("Test4", numbers, 5, 0, true);
+}
+    
+void test5(){
+	int numbers[] = {2, 1, 3, 0, -1};
+	test("Test5", numbers, 5, 0, true);
+}
+    
+void test6(){
+	int numbers[] = {0};
+	test("Test6", numbers, 1, 0, true);
+}
 
 int main(){
-	CMyString a = (char*)"Hello ";
-	CMyString b = a;
-	CMyString c;
-
-	cout << a << b << c << endl;
-
+	test1();
+	test2();
+	test3();
+    test4();
+    test5();
+    test6();
+    
 	return 0;
-}
-
-int my_strlen(char *ptr ){    
-	int len = 0;
-	char *p = ptr;
-	while(*p != '\0' ) {
-		len++;
-		p++;
-	}
-	return len;
-}
-
-void my_strncpy( char * ptr_dest, char * ptr_src, int n ){
-	for( int i=0; i < n; i++ ){
-		ptr_dest[i] = ptr_src[i];
-	}
 }
 
 
