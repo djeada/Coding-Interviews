@@ -1,10 +1,11 @@
 #include<iostream>
+#include <type_traits>
 
 using namespace std;
 
 bool find(int matrix[][3], int value){
-	int rows = sizeof( matrix )/sizeof( matrix[0]);
-	int cols = sizeof( matrix[0])/sizeof( matrix[0][0]);
+	int rows = 3;
+	int cols = 3;
 	int start = 0;
 	int end = rows * cols - 1;
 	
@@ -29,7 +30,7 @@ bool find(int matrix[][3], int value){
 }
     
 void test(const string &testName, int matrix[][3], int value, bool expected){
-	cout << testName + " begins: ";
+	cout << testName << " begins: ";
 	
 	if(find(matrix, value) == expected){
 		cout << "passed.\n";
