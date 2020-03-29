@@ -1,219 +1,88 @@
 #include <stdio.h>
 #include <string.h>
-#include <stack>
 #include <iostream>
+#include <vector>
+#include<bits/stdc++.h> 
 
 using namespace std;
 
-bool hasPathCore(char* matrix, int rows, int cols, int row, int col, char* str, int& pathLength, bool* visited);
-
-bool hasPath(char* matrix, int rows, int cols, char* str)
-{
-    if(matrix == NULL || rows < 1 || cols < 1 || str == NULL)
-        return false;
-
-    bool *visited = new bool[rows * cols];
-    memset(visited, 0, rows * cols);
-
-    int pathLength = 0;
-    for(int row = 0; row < rows; ++row)
-    {
-        for(int col = 0; col < cols; ++col)
-        {
-            if(hasPathCore(matrix, rows, cols, row, col, str, pathLength, visited))
-                return true;
-        }
-    }
-    
-    delete[] visited;
-
-    return false;
+void fillArray(vector<int> &m, int x){
+	for (int i = 0; i < x; i++)
+		m.push_back(0);
 }
 
-bool hasPathCore(char* matrix, int rows, int cols, int row, int col, char* str, int& pathLength, bool* visited)
-{
-    if(str[pathLength] == '\0')
-        return true;
-        
-    bool hasPath = false;
-    if(row >= 0 && row < rows && col >= 0 && col < cols 
-            && matrix[row * cols + col] == str[pathLength]
-            && !visited[row * cols + col])
-    {
-        ++pathLength;
-        visited[row * cols + col] = true;
-        
-        hasPath = hasPathCore(matrix, rows, cols, row, col - 1, str, pathLength, visited)
-                || hasPathCore(matrix, rows, cols, row - 1, col, str, pathLength, visited)
-                || hasPathCore(matrix, rows, cols, row, col + 1, str, pathLength, visited) 
-                || hasPathCore(matrix, rows, cols, row + 1, col, str, pathLength, visited);
-        
-        if(!hasPath)
-        {
-            --pathLength;
-            visited[row * cols + col] = false;
-        }
-    }
-    
-    return hasPath;
+int GetMinCount(int total, vector<int> coins){
+	vector<int> counts;
+	fillArray(counts, total + 1);
+	counts[0] = 0;
+	
+	const int MAX = INT_MAX;
+	
+	for (int i = 1; i <= total; ++i){
+		int count = MAX;
+		for (int j = 0; j < coins.size(); ++j){
+			if (i - coins[j] >= 0 && count > counts[i - coins[j]])
+				count = counts[i - coins[j]];
+			}
+		if (count < MAX)
+			counts[i] = count + 1;
+		else
+		counts[i] = MAX;
+	}
+	
+	return counts[total];
 }
 
-void Test(char* testName, char* matrix, int rows, int cols, char* str, bool expected)
-{
-    if(testName != NULL)
-        cout << testName << " begins: ";
-
-    if(hasPath(matrix, rows, cols, str) == expected)
-        cout << "Passed.\n";
-    else
-        cout << "FAILED.\n";
+// ============================ test code ============================
+void Test(const string &testName, int total, vector<int> coins, int expected){
+	cout << testName << " begins: ";
+	
+	if (GetMinCount(total, coins) == expected)
+		cout << "Passed.\n";
+	else
+		cout << "FAILED.\n";
 }
 
-//ABCE
-//SFCS
-//ADEE
-
-//ABCCED
-void Test1()
-{
-    char matrix[] = "ABCESFCSADEE";
-    char* str = "ABCCED";
-
-    Test("Test1", (char*)matrix, 3, 4, str, true);
+void Test1(){
+	vector<int>  coins { 1, 5, 10, 20, 25 };
+	int total = 40;
+	int expected = 2;
+	
+	Test("test1", total, coins, expected);
 }
 
-//ABCE
-//SFCS
-//ADEE
-
-//SEE
-void Test2()
-{
-    char matrix[] = "ABCESFCSADEE";
-    char* str = "SEE";
-
-    Test("Test2", (char*)matrix, 3, 4, str, true);
+void Test2(){
+	vector<int> coins { 1, 3, 9, 10 };
+	int total = 15;
+	int expected = 3;
+	
+	Test("test2", total, coins, expected);
 }
 
-//ABCE
-//SFCS
-//ADEE
-
-//ABCB
-void Test3()
-{
-    char matrix[] = "ABCESFCSADEE";
-    char* str = "ABCB";
-
-    Test("Test3", (char*)matrix, 3, 4, str, false);
+void Test3(){
+	vector<int> coins { 1, 2, 5, 21, 25 };
+	int total = 63;
+	int expected = 3;
+	
+	Test("test3", total, coins, expected);
 }
 
-//ABCEHJIG
-//SFCSLOPQ
-//ADEEMNOE
-//ADIDEJFM
-//VCEIFGGS
-
-//SLHECCEIDEJFGGFIE
-void Test4()
-{
-    char matrix[] = "ABCEHJIGSFCSLOPQADEEMNOEADIDEJFMVCEIFGGS";
-    char* str = "SLHECCEIDEJFGGFIE";
-
-    Test("Test4", (char*)matrix, 5, 8, str, true);
+// Impossible to make changes
+void Test4(){
+	vector<int> coins { 2, 4, 8, 16 };
+	int total = 63;
+	int expected = INT_MAX;
+	
+	Test("test4", total, coins, expected);
 }
 
-//ABCEHJIG
-//SFCSLOPQ
-//ADEEMNOE
-//ADIDEJFM
-//VCEIFGGS
-
-//SGGFIECVAASABCEHJIGQEM
-void Test5()
-{
-    char matrix[] = "ABCEHJIGSFCSLOPQADEEMNOEADIDEJFMVCEIFGGS";
-    char* str = "SGGFIECVAASABCEHJIGQEM";
-
-    Test("Test5", (char*)matrix, 5, 8, str, true);
-}
-
-//ABCEHJIG
-//SFCSLOPQ
-//ADEEMNOE
-//ADIDEJFM
-//VCEIFGGS
-
-//SGGFIECVAASABCEEJIGOEM
-void Test6()
-{
-    char matrix[] = "ABCEHJIGSFCSLOPQADEEMNOEADIDEJFMVCEIFGGS";
-    char* str = "SGGFIECVAASABCEEJIGOEM";
-
-    Test("Test6", (char*)matrix, 5, 8, str, false);
-}
-
-//ABCEHJIG
-//SFCSLOPQ
-//ADEEMNOE
-//ADIDEJFM
-//VCEIFGGS
-
-//SGGFIECVAASABCEHJIGQEMS
-void Test7()
-{
-    char matrix[] = "ABCEHJIGSFCSLOPQADEEMNOEADIDEJFMVCEIFGGS";
-    char* str = "SGGFIECVAASABCEHJIGQEMS";
-
-    Test("Test7", (char*)matrix, 5, 8, str, false);
-}
-
-//AAAA
-//AAAA
-//AAAA
-
-//AAAAAAAAAAAA
-void Test8()
-{
-    char matrix[] = "AAAAAAAAAAAA";
-    char* str = "AAAAAAAAAAAA";
-
-    Test("Test8", (char*)matrix, 3, 4, str, true);
-}
-
-//AAAA
-//AAAA
-//AAAA
-
-//AAAAAAAAAAAAA
-void Test9()
-{
-    char matrix[] = "AAAAAAAAAAAA";
-    char* str = "AAAAAAAAAAAAA";
-
-    Test("Test9", (char*)matrix, 3, 4, str, false);
-}
-
-//A
-
-//A
-void Test10()
-{
-    char matrix[] = "A";
-    char* str = "A";
-
-    Test("Test10", (char*)matrix, 1, 1, str, true);
-}
-
-//A
-
-//B
-void Test11()
-{
-    char matrix[] = "A";
-    char* str = "B";
-
-    Test("Test11", (char*)matrix, 1, 1, str, false);
+// Total value is in the array for coins
+void Test5() {
+	vector<int> coins { 1, 3, 9, 10 };
+	int total = 9;
+	int expected = 1;
+	
+	Test("test5", total, coins, expected);
 }
 
 int main(int argc, char* argv[])
@@ -223,12 +92,6 @@ int main(int argc, char* argv[])
     Test3();
     Test4();
     Test5();
-    Test6();
-    Test7();
-    Test8();
-    Test9();
-    Test10();
-    Test11();
 
 	return 0;
 }
