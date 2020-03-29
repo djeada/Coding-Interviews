@@ -1,223 +1,99 @@
 #include <stdio.h>
-#include <string.h>
-#include <stack>
 #include <iostream>
+#include <string>
+#include <vector>
 
 using namespace std;
+int Min(int num1, int num2, int num3);
+int GetEditDistanceHelp(const string &str1, const string &str2, vector< vector<int> > &distances, int len1, int len2);
+void fillMatrix(vector<vector<int>> &m, int x, int y);
 
-bool hasPathCore(char* matrix, int rows, int cols, int row, int col, char* str, int& pathLength, bool* visited);
+int GetEditDistance(const string &str1, const string &str2){
+	int len1 = str1.length();
+	int len2 = str2.length();
+	
+	vector<vector<int> > distances;  
+	fillMatrix(distances, len1 + 1, len2 + 1);
 
-bool hasPath(char* matrix, int rows, int cols, char* str)
-{
-    if(matrix == NULL || rows < 1 || cols < 1 || str == NULL)
-        return false;
-
-    bool *visited = new bool[rows * cols];
-    memset(visited, 0, rows * cols);
-
-    int pathLength = 0;
-    for(int row = 0; row < rows; ++row)
-    {
-        for(int col = 0; col < cols; ++col)
-        {
-            if(hasPathCore(matrix, rows, cols, row, col, str, pathLength, visited))
-                return true;
-        }
-    }
-    
-    delete[] visited;
-
-    return false;
+	int editDistance = GetEditDistanceHelp(str1, str2, distances, len1, len2);
+	
+	return editDistance;
 }
 
-bool hasPathCore(char* matrix, int rows, int cols, int row, int col, char* str, int& pathLength, bool* visited)
-{
-    if(str[pathLength] == '\0')
-        return true;
-        
-    bool hasPath = false;
-    if(row >= 0 && row < rows && col >= 0 && col < cols 
-            && matrix[row * cols + col] == str[pathLength]
-            && !visited[row * cols + col])
-    {
-        ++pathLength;
-        visited[row * cols + col] = true;
-        
-        hasPath = hasPathCore(matrix, rows, cols, row, col - 1, str, pathLength, visited)
-                || hasPathCore(matrix, rows, cols, row - 1, col, str, pathLength, visited)
-                || hasPathCore(matrix, rows, cols, row, col + 1, str, pathLength, visited) 
-                || hasPathCore(matrix, rows, cols, row + 1, col, str, pathLength, visited);
-        
-        if(!hasPath)
-        {
-            --pathLength;
-            visited[row * cols + col] = false;
-        }
-    }
-    
-    return hasPath;
+int GetEditDistanceHelp(const string &str1, const string &str2, vector< vector<int> > &distances, int len1, int len2){
+	for (int i = 0; i < len2 + 1; ++i)
+		distances[i][0] = i;
+	
+	for (int j = 0; j < len1 + 1; ++j)
+		distances[0][j] = j;
+		
+	for (int i = 1; i < len2 + 1; ++i){
+		for (int j = 1; j < len1 + 1; ++j){
+			if (str1[j - 1] == str2[i - 1])
+				distances[i][j] = distances[i - 1][j - 1];
+			else{
+				int deletion = distances[i][j - 1] + 1;
+				int insertion = distances[i - 1][j] + 1;
+				int substitution = distances[i - 1][j - 1] + 1;
+				distances[i][j] = Min(deletion, insertion, substitution);
+			}
+		}
+	}
+	return distances[len2][len1];
 }
 
-void Test(char* testName, char* matrix, int rows, int cols, char* str, bool expected)
-{
-    if(testName != NULL)
-        cout << testName << " begins: ";
-
-    if(hasPath(matrix, rows, cols, str) == expected)
-        cout << "Passed.\n";
-    else
-        cout << "FAILED.\n";
+int Min(int num1, int num2, int num3){
+	int less = (num1 < num2) ? num1 : num2;
+	return (less < num3) ? less : num3;
 }
 
-//ABCE
-//SFCS
-//ADEE
-
-//ABCCED
-void Test1()
-{
-    char matrix[] = "ABCESFCSADEE";
-    char* str = "ABCCED";
-
-    Test("Test1", (char*)matrix, 3, 4, str, true);
+void fillMatrix(vector<vector<int>> &m, int x, int y){
+	for (int i = 0; i < y; i++){
+		m.push_back({});// We insert a blank row until there are X rows
+		for (int j = 0; j < x; j++){
+			m[i].push_back(0); //Within the j'th row, we insert the element corresponding to the i'th column
+	 	}
+	}
 }
 
-//ABCE
-//SFCS
-//ADEE
-
-//SEE
-void Test2()
-{
-    char matrix[] = "ABCESFCSADEE";
-    char* str = "SEE";
-
-    Test("Test2", (char*)matrix, 3, 4, str, true);
+void Test(const string &testName, const string &str1, const string &str2, int expected) {
+	cout << testName << " begins: ";
+	
+	if (GetEditDistance(str1, str2) == expected)
+		cout << "Passed.\n";
+	else
+		cout << "FAILED.\n";
 }
 
-//ABCE
-//SFCS
-//ADEE
-
-//ABCB
-void Test3()
-{
-    char matrix[] = "ABCESFCSADEE";
-    char* str = "ABCB";
-
-    Test("Test3", (char*)matrix, 3, 4, str, false);
+void Test1(){
+	Test("Test1", "kitten", "kitten", 0);
 }
 
-//ABCEHJIG
-//SFCSLOPQ
-//ADEEMNOE
-//ADIDEJFM
-//VCEIFGGS
-
-//SLHECCEIDEJFGGFIE
-void Test4()
-{
-    char matrix[] = "ABCEHJIGSFCSLOPQADEEMNOEADIDEJFMVCEIFGGS";
-    char* str = "SLHECCEIDEJFGGFIE";
-
-    Test("Test4", (char*)matrix, 5, 8, str, true);
+void Test2(){
+	Test("Test2", "kitten", "sitting", 3);
 }
 
-//ABCEHJIG
-//SFCSLOPQ
-//ADEEMNOE
-//ADIDEJFM
-//VCEIFGGS
-
-//SGGFIECVAASABCEHJIGQEM
-void Test5()
-{
-    char matrix[] = "ABCEHJIGSFCSLOPQADEEMNOEADIDEJFMVCEIFGGS";
-    char* str = "SGGFIECVAASABCEHJIGQEM";
-
-    Test("Test5", (char*)matrix, 5, 8, str, true);
+void Test3(){
+	Test("Test3", "Saturday", "Sunday", 3);
 }
 
-//ABCEHJIG
-//SFCSLOPQ
-//ADEEMNOE
-//ADIDEJFM
-//VCEIFGGS
-
-//SGGFIECVAASABCEEJIGOEM
-void Test6()
-{
-    char matrix[] = "ABCEHJIGSFCSLOPQADEEMNOEADIDEJFMVCEIFGGS";
-    char* str = "SGGFIECVAASABCEEJIGOEM";
-
-    Test("Test6", (char*)matrix, 5, 8, str, false);
+void Test4(){
+	Test("Test4", "ant", "parent", 3);
 }
 
-//ABCEHJIG
-//SFCSLOPQ
-//ADEEMNOE
-//ADIDEJFM
-//VCEIFGGS
-
-//SGGFIECVAASABCEHJIGQEMS
-void Test7()
-{
-    char matrix[] = "ABCEHJIGSFCSLOPQADEEMNOEADIDEJFMVCEIFGGS";
-    char* str = "SGGFIECVAASABCEHJIGQEMS";
-
-    Test("Test7", (char*)matrix, 5, 8, str, false);
+void Test5(){
+	Test("Test5", "parent", "ant", 3);
 }
 
-//AAAA
-//AAAA
-//AAAA
-
-//AAAAAAAAAAAA
-void Test8()
-{
-    char matrix[] = "AAAAAAAAAAAA";
-    char* str = "AAAAAAAAAAAA";
-
-    Test("Test8", (char*)matrix, 3, 4, str, true);
+void Test6(){
+	Test("Test6", "parent", "", 6);
 }
 
-//AAAA
-//AAAA
-//AAAA
-
-//AAAAAAAAAAAAA
-void Test9()
-{
-    char matrix[] = "AAAAAAAAAAAA";
-    char* str = "AAAAAAAAAAAAA";
-
-    Test("Test9", (char*)matrix, 3, 4, str, false);
+void Test7(){
+	Test("Test7", "", "parent", 6);
 }
 
-//A
-
-//A
-void Test10()
-{
-    char matrix[] = "A";
-    char* str = "A";
-
-    Test("Test10", (char*)matrix, 1, 1, str, true);
-}
-
-//A
-
-//B
-void Test11()
-{
-    char matrix[] = "A";
-    char* str = "B";
-
-    Test("Test11", (char*)matrix, 1, 1, str, false);
-}
-
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]){
     Test1();
     Test2();
     Test3();
@@ -225,10 +101,6 @@ int main(int argc, char* argv[])
     Test5();
     Test6();
     Test7();
-    Test8();
-    Test9();
-    Test10();
-    Test11();
 
 	return 0;
 }
