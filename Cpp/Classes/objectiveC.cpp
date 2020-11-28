@@ -1,4 +1,5 @@
 #include <stdio.h>
+
 struct X {
 	int x;
 	void (*fp)(struct X *);
