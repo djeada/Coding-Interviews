@@ -3,7 +3,6 @@
 #include <bits/stdc++.h> 
 using namespace std;
 
-
 template < typename T > void print( const std::stack<T>& stk )
 {
     struct cheat : std::stack<T> { using std::stack<T>::c ; } ;
@@ -94,7 +93,7 @@ void test5(){
 	vector<int>  array2 = {7};
 	vector<int>  array3 = {8};
 	vector<int>  array4 = {9};
-        
+
 	arrays.push_back(array1);
 	arrays.push_back(array2);
 	arrays.push_back(array3);
@@ -109,5 +108,5 @@ int main(int argc, char* argv[]){
 	test3();
 	test4();
 	test5();
-	return 1;
+	return 0;
 }
