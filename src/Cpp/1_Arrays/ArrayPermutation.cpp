@@ -1,112 +1,84 @@
+#include <bits/stdc++.h>
 #include <iostream>
 #include <vector>
-#include <bits/stdc++.h> 
-using namespace std;
 
-template < typename T > void print( const std::stack<T>& stk )
-{
-    struct cheat : std::stack<T> { using std::stack<T>::c ; } ;
-    const auto& seq = static_cast< const cheat& >(stk).c ;
+void print(const std::stack<int> &stk) {
 
-    for( const auto& v : seq ) std::cout << v << ' ' ;
-    std::cout << '\n' ;
+  for (std::stack<int> dump = stk; !dump.empty(); dump.pop())
+    std::cout << dump.top() << ' ';
+
+  std::cout << std::endl;
 }
 
-void permuteCore(vector<vector<int>> arrays, stack <int> permutation){
-	if(permutation.size() == arrays.size()){
-		print(permutation);
-		return;
-	}
-	
-	vector<int> array = arrays[permutation.size()];
-	for(int i = 0; i < array.size(); ++i){
-		permutation.push(array[i]);
-		permuteCore(arrays, permutation);
-		permutation.pop();
-	}
+void permute(std::vector<std::vector<int>> &arrays) {
+
+  std::function<void(std::vector<std::vector<int>> &, std::stack<int> &)>
+      permuteCore;
+  permuteCore = [&](std::vector<std::vector<int>> &arrays,
+                    std::stack<int> &permutation) {
+    if (permutation.size() == arrays.size()) {
+      print(permutation);
+      return;
+    }
+
+    std::vector<int> array = arrays[permutation.size()];
+
+    for (unsigned int i = 0; i < array.size(); ++i) {
+      permutation.push(array[i]);
+      permuteCore(arrays, permutation);
+      permutation.pop();
+    }
+  };
+
+  std::stack<int> permutation;
+  permuteCore(arrays, permutation);
+  std::cout << std::endl;
 }
 
-void permute(vector<vector<int>> arrays){
-	stack <int> permutation;
-	permuteCore(arrays, permutation);
-}
- 
-//================= Test Code =================
-void test(const string &testName, vector<vector<int>> arrays){
-	cout << testName << " begins: \n";
-	permute(arrays);
+void test1() {
+  std::vector<std::vector<int>> arrays;
+
+  std::vector<int> array1{1, 2};
+  std::vector<int> array2{3, 4};
+  std::vector<int> array3{5, 6};
+
+  arrays.push_back(array1);
+  arrays.push_back(array2);
+  arrays.push_back(array3);
+
+  permute(arrays);
 }
 
-void test1(){
-	vector<vector<int>> arrays;
-	
-	vector<int> array1 {1, 2};
-	vector<int> array2 {3, 4};
-	vector<int> array3 {5, 6};
-	
-	arrays.push_back(array1);
-	arrays.push_back(array2);
-	arrays.push_back(array3);
-	
-	test("Test1", arrays);
-}
-    
-void test2(){
-	vector<vector<int>> arrays;
-	
-	vector<int> array1 {1, 2};
-	vector<int> array2 {3, 4, 5};
-	vector<int> array3 {6};
-	
-	arrays.push_back(array1);
-	arrays.push_back(array2);
-	arrays.push_back(array3);
-	
-	test("Test2", arrays);
-}
-    
-void test3(){
-	vector<vector<int>> arrays;
-        
-	vector<int> array1 {1, 2, 3};
-	vector<int> array2 {4, 5, 6};
-	vector<int> array3 {7, 8};
-        
-	arrays.push_back(array1);
-	arrays.push_back(array2);
-	arrays.push_back(array3);
+void test2() {
+  std::vector<std::vector<int>> arrays;
+  std::vector<int> array1{1, 2, 3, 4, 5};
+  arrays.push_back(array1);
 
-	test("Test3", arrays);
+  permute(arrays);
+  std::cout << std::endl;
 }
-    
-void test4(){
-	vector<vector<int>> arrays;
-	vector<int> array1 {1, 2, 3, 4, 5};
-	arrays.push_back(array1);
 
-	test("Test4", arrays);
+void test3() {
+  std::vector<std::vector<int>> arrays;
+  std::vector<int> array1{6};
+  std::vector<int> array2 = {7};
+  std::vector<int> array3 = {8};
+  std::vector<int> array4 = {9};
+
+  arrays.push_back(array1);
+  arrays.push_back(array2);
+  arrays.push_back(array3);
+  arrays.push_back(array4);
+
+  permute(arrays);
+  std::cout << std::endl;
 }
-    
-void test5(){ 
-	vector<vector<int>> arrays;
-	vector<int>  array1 {6};
-	vector<int>  array2 = {7};
-	vector<int>  array3 = {8};
-	vector<int>  array4 = {9};
 
-	arrays.push_back(array1);
-	arrays.push_back(array2);
-	arrays.push_back(array3);
-	arrays.push_back(array4);
+int main() {
 
-	test("Test4", arrays);
-}
-    
-int main(int argc, char* argv[]){
-	test1();
-	test2();
-	test3();
-	test4();
-	test5();
-	return 0;
+  test1();
+  test2();
+  test3();
+
+  return 0;
 }

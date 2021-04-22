@@ -1,235 +1,222 @@
+#include <iostream>
+#include <stack>
 #include <stdio.h>
 #include <string.h>
-#include <stack>
-#include <iostream>
 
 using namespace std;
 
-bool hasPathCore(char* matrix, int rows, int cols, int row, int col, char* str, int& pathLength, bool* visited);
+bool hasPathCore(char *matrix, int rows, int cols, int row, int col, char *str,
+                 int &pathLength, bool *visited);
 
-bool hasPath(char* matrix, int rows, int cols, char* str)
-{
-    if(matrix == NULL || rows < 1 || cols < 1 || str == NULL)
-        return false;
-
-    bool *visited = new bool[rows * cols];
-    memset(visited, 0, rows * cols);
-
-    int pathLength = 0;
-    for(int row = 0; row < rows; ++row)
-    {
-        for(int col = 0; col < cols; ++col)
-        {
-            if(hasPathCore(matrix, rows, cols, row, col, str, pathLength, visited))
-                return true;
-        }
-    }
-    
-    delete[] visited;
-
+bool hasPath(char *matrix, int rows, int cols, char *str) {
+  if (matrix == NULL || rows < 1 || cols < 1 || str == NULL)
     return false;
-}
 
-bool hasPathCore(char* matrix, int rows, int cols, int row, int col, char* str, int& pathLength, bool* visited)
-{
-    if(str[pathLength] == '\0')
+  bool *visited = new bool[rows * cols];
+  memset(visited, 0, rows * cols);
+
+  int pathLength = 0;
+  for (int row = 0; row < rows; ++row) {
+    for (int col = 0; col < cols; ++col) {
+      if (hasPathCore(matrix, rows, cols, row, col, str, pathLength, visited))
         return true;
-        
-    bool hasPath = false;
-    if(row >= 0 && row < rows && col >= 0 && col < cols 
-            && matrix[row * cols + col] == str[pathLength]
-            && !visited[row * cols + col])
-    {
-        ++pathLength;
-        visited[row * cols + col] = true;
-        
-        hasPath = hasPathCore(matrix, rows, cols, row, col - 1, str, pathLength, visited)
-                || hasPathCore(matrix, rows, cols, row - 1, col, str, pathLength, visited)
-                || hasPathCore(matrix, rows, cols, row, col + 1, str, pathLength, visited) 
-                || hasPathCore(matrix, rows, cols, row + 1, col, str, pathLength, visited);
-        
-        if(!hasPath)
-        {
-            --pathLength;
-            visited[row * cols + col] = false;
-        }
     }
-    
-    return hasPath;
+  }
+
+  delete[] visited;
+
+  return false;
 }
 
-void Test(char* testName, char* matrix, int rows, int cols, char* str, bool expected)
-{
-    if(testName != NULL)
-        cout << testName << " begins: ";
+bool hasPathCore(char *matrix, int rows, int cols, int row, int col, char *str,
+                 int &pathLength, bool *visited) {
+  if (str[pathLength] == '\0')
+    return true;
 
-    if(hasPath(matrix, rows, cols, str) == expected)
-        cout << "Passed.\n";
-    else
-        cout << "FAILED.\n";
+  bool hasPath = false;
+  if (row >= 0 && row < rows && col >= 0 && col < cols &&
+      matrix[row * cols + col] == str[pathLength] &&
+      !visited[row * cols + col]) {
+    ++pathLength;
+    visited[row * cols + col] = true;
+
+    hasPath =
+        hasPathCore(matrix, rows, cols, row, col - 1, str, pathLength,
+                    visited) ||
+        hasPathCore(matrix, rows, cols, row - 1, col, str, pathLength,
+                    visited) ||
+        hasPathCore(matrix, rows, cols, row, col + 1, str, pathLength,
+                    visited) ||
+        hasPathCore(matrix, rows, cols, row + 1, col, str, pathLength, visited);
+
+    if (!hasPath) {
+      --pathLength;
+      visited[row * cols + col] = false;
+    }
+  }
+
+  return hasPath;
 }
 
-//ABCE
-//SFCS
-//ADEE
+void Test(char *testName, char *matrix, int rows, int cols, char *str,
+          bool expected) {
+  if (testName != NULL)
+    cout << testName << " begins: ";
 
-//ABCCED
-void Test1()
-{
-    char matrix[] = "ABCESFCSADEE";
-    char* str = "ABCCED";
-
-    Test("Test1", (char*)matrix, 3, 4, str, true);
+  if (hasPath(matrix, rows, cols, str) == expected)
+    cout << "Passed.\n";
+  else
+    cout << "FAILED.\n";
 }
 
-//ABCE
-//SFCS
-//ADEE
+// ABCE
+// SFCS
+// ADEE
 
-//SEE
-void Test2()
-{
-    char matrix[] = "ABCESFCSADEE";
-    char* str = "SEE";
+// ABCCED
+void Test1() {
+  char matrix[] = "ABCESFCSADEE";
+  char *str = "ABCCED";
 
-    Test("Test2", (char*)matrix, 3, 4, str, true);
+  Test("Test1", (char *)matrix, 3, 4, str, true);
 }
 
-//ABCE
-//SFCS
-//ADEE
+// ABCE
+// SFCS
+// ADEE
 
-//ABCB
-void Test3()
-{
-    char matrix[] = "ABCESFCSADEE";
-    char* str = "ABCB";
+// SEE
+void Test2() {
+  char matrix[] = "ABCESFCSADEE";
+  char *str = "SEE";
 
-    Test("Test3", (char*)matrix, 3, 4, str, false);
+  Test("Test2", (char *)matrix, 3, 4, str, true);
 }
 
-//ABCEHJIG
-//SFCSLOPQ
-//ADEEMNOE
-//ADIDEJFM
-//VCEIFGGS
+// ABCE
+// SFCS
+// ADEE
 
-//SLHECCEIDEJFGGFIE
-void Test4()
-{
-    char matrix[] = "ABCEHJIGSFCSLOPQADEEMNOEADIDEJFMVCEIFGGS";
-    char* str = "SLHECCEIDEJFGGFIE";
+// ABCB
+void Test3() {
+  char matrix[] = "ABCESFCSADEE";
+  char *str = "ABCB";
 
-    Test("Test4", (char*)matrix, 5, 8, str, true);
+  Test("Test3", (char *)matrix, 3, 4, str, false);
 }
 
-//ABCEHJIG
-//SFCSLOPQ
-//ADEEMNOE
-//ADIDEJFM
-//VCEIFGGS
+// ABCEHJIG
+// SFCSLOPQ
+// ADEEMNOE
+// ADIDEJFM
+// VCEIFGGS
 
-//SGGFIECVAASABCEHJIGQEM
-void Test5()
-{
-    char matrix[] = "ABCEHJIGSFCSLOPQADEEMNOEADIDEJFMVCEIFGGS";
-    char* str = "SGGFIECVAASABCEHJIGQEM";
+// SLHECCEIDEJFGGFIE
+void Test4() {
+  char matrix[] = "ABCEHJIGSFCSLOPQADEEMNOEADIDEJFMVCEIFGGS";
+  char *str = "SLHECCEIDEJFGGFIE";
 
-    Test("Test5", (char*)matrix, 5, 8, str, true);
+  Test("Test4", (char *)matrix, 5, 8, str, true);
 }
 
-//ABCEHJIG
-//SFCSLOPQ
-//ADEEMNOE
-//ADIDEJFM
-//VCEIFGGS
+// ABCEHJIG
+// SFCSLOPQ
+// ADEEMNOE
+// ADIDEJFM
+// VCEIFGGS
 
-//SGGFIECVAASABCEEJIGOEM
-void Test6()
-{
-    char matrix[] = "ABCEHJIGSFCSLOPQADEEMNOEADIDEJFMVCEIFGGS";
-    char* str = "SGGFIECVAASABCEEJIGOEM";
+// SGGFIECVAASABCEHJIGQEM
+void Test5() {
+  char matrix[] = "ABCEHJIGSFCSLOPQADEEMNOEADIDEJFMVCEIFGGS";
+  char *str = "SGGFIECVAASABCEHJIGQEM";
 
-    Test("Test6", (char*)matrix, 5, 8, str, false);
+  Test("Test5", (char *)matrix, 5, 8, str, true);
 }
 
-//ABCEHJIG
-//SFCSLOPQ
-//ADEEMNOE
-//ADIDEJFM
-//VCEIFGGS
+// ABCEHJIG
+// SFCSLOPQ
+// ADEEMNOE
+// ADIDEJFM
+// VCEIFGGS
 
-//SGGFIECVAASABCEHJIGQEMS
-void Test7()
-{
-    char matrix[] = "ABCEHJIGSFCSLOPQADEEMNOEADIDEJFMVCEIFGGS";
-    char* str = "SGGFIECVAASABCEHJIGQEMS";
+// SGGFIECVAASABCEEJIGOEM
+void Test6() {
+  char matrix[] = "ABCEHJIGSFCSLOPQADEEMNOEADIDEJFMVCEIFGGS";
+  char *str = "SGGFIECVAASABCEEJIGOEM";
 
-    Test("Test7", (char*)matrix, 5, 8, str, false);
+  Test("Test6", (char *)matrix, 5, 8, str, false);
 }
 
-//AAAA
-//AAAA
-//AAAA
+// ABCEHJIG
+// SFCSLOPQ
+// ADEEMNOE
+// ADIDEJFM
+// VCEIFGGS
 
-//AAAAAAAAAAAA
-void Test8()
-{
-    char matrix[] = "AAAAAAAAAAAA";
-    char* str = "AAAAAAAAAAAA";
+// SGGFIECVAASABCEHJIGQEMS
+void Test7() {
+  char matrix[] = "ABCEHJIGSFCSLOPQADEEMNOEADIDEJFMVCEIFGGS";
+  char *str = "SGGFIECVAASABCEHJIGQEMS";
 
-    Test("Test8", (char*)matrix, 3, 4, str, true);
+  Test("Test7", (char *)matrix, 5, 8, str, false);
 }
 
-//AAAA
-//AAAA
-//AAAA
+// AAAA
+// AAAA
+// AAAA
 
-//AAAAAAAAAAAAA
-void Test9()
-{
-    char matrix[] = "AAAAAAAAAAAA";
-    char* str = "AAAAAAAAAAAAA";
+// AAAAAAAAAAAA
+void Test8() {
+  char matrix[] = "AAAAAAAAAAAA";
+  char *str = "AAAAAAAAAAAA";
 
-    Test("Test9", (char*)matrix, 3, 4, str, false);
+  Test("Test8", (char *)matrix, 3, 4, str, true);
 }
 
-//A
+// AAAA
+// AAAA
+// AAAA
 
-//A
-void Test10()
-{
-    char matrix[] = "A";
-    char* str = "A";
+// AAAAAAAAAAAAA
+void Test9() {
+  char matrix[] = "AAAAAAAAAAAA";
+  char *str = "AAAAAAAAAAAAA";
 
-    Test("Test10", (char*)matrix, 1, 1, str, true);
+  Test("Test9", (char *)matrix, 3, 4, str, false);
 }
 
-//A
+// A
 
-//B
-void Test11()
-{
-    char matrix[] = "A";
-    char* str = "B";
+// A
+void Test10() {
+  char matrix[] = "A";
+  char *str = "A";
 
-    Test("Test11", (char*)matrix, 1, 1, str, false);
+  Test("Test10", (char *)matrix, 1, 1, str, true);
 }
 
-int main(int argc, char* argv[])
-{
-    Test1();
-    Test2();
-    Test3();
-    Test4();
-    Test5();
-    Test6();
-    Test7();
-    Test8();
-    Test9();
-    Test10();
-    Test11();
+// A
 
-	return 0;
+// B
+void Test11() {
+  char matrix[] = "A";
+  char *str = "B";
+
+  Test("Test11", (char *)matrix, 1, 1, str, false);
 }
 
+int main(int argc, char *argv[]) {
+  Test1();
+  Test2();
+  Test3();
+  Test4();
+  Test5();
+  Test6();
+  Test7();
+  Test8();
+  Test9();
+  Test10();
+  Test11();
+
+  return 0;
+}
