@@ -1,23 +1,17 @@
 #include <bits/stdc++.h>
-#include <iostream>
+#include <cassert>
 #include <vector>
 
-void print(const std::stack<int> &stk) {
+std::vector<std::stack<int>> permute(std::vector<std::vector<int>> &arrays) {
 
-  for (std::stack<int> dump = stk; !dump.empty(); dump.pop())
-    std::cout << dump.top() << ' ';
-
-  std::cout << std::endl;
-}
-
-void permute(std::vector<std::vector<int>> &arrays) {
+  std::vector<std::stack<int>> result;
 
   std::function<void(std::vector<std::vector<int>> &, std::stack<int> &)>
       permuteCore;
   permuteCore = [&](std::vector<std::vector<int>> &arrays,
                     std::stack<int> &permutation) {
     if (permutation.size() == arrays.size()) {
-      print(permutation);
+      result.push_back(permutation);
       return;
     }
 
@@ -32,46 +26,38 @@ void permute(std::vector<std::vector<int>> &arrays) {
 
   std::stack<int> permutation;
   permuteCore(arrays, permutation);
-  std::cout << std::endl;
+
+  return result;
 }
 
 void test1() {
-  std::vector<std::vector<int>> arrays;
+  std::vector<std::vector<int>> arrays{{1, 2}, {3, 4}, {5, 6}};
 
-  std::vector<int> array1{1, 2};
-  std::vector<int> array2{3, 4};
-  std::vector<int> array3{5, 6};
+  std::vector<std::stack<int>> result{
+      std::stack<int>({5, 3, 1}), std::stack<int>({6, 3, 1}),
+      std::stack<int>({5, 4, 1}), std::stack<int>({6, 4, 1}),
+      std::stack<int>({5, 3, 2}), std::stack<int>({6, 3, 2}),
+      std::stack<int>({5, 4, 2}), std::stack<int>({6, 4, 2})};
 
-  arrays.push_back(array1);
-  arrays.push_back(array2);
-  arrays.push_back(array3);
-
-  permute(arrays);
+  assert(permute(arrays) == result);
 }
 
 void test2() {
-  std::vector<std::vector<int>> arrays;
-  std::vector<int> array1{1, 2, 3, 4, 5};
-  arrays.push_back(array1);
+  std::vector<std::vector<int>> arrays{{1, 2, 3, 4, 5}};
 
-  permute(arrays);
-  std::cout << std::endl;
+  std::vector<std::stack<int>> result{
+      std::stack<int>({1}), std::stack<int>({2}), std::stack<int>({3}),
+      std::stack<int>({4}), std::stack<int>({5})};
+
+  assert(permute(arrays) == result);
 }
 
 void test3() {
-  std::vector<std::vector<int>> arrays;
-  std::vector<int> array1{6};
-  std::vector<int> array2 = {7};
-  std::vector<int> array3 = {8};
-  std::vector<int> array4 = {9};
+  std::vector<std::vector<int>> arrays{{6}, {7}, {8}, {9}};
 
-  arrays.push_back(array1);
-  arrays.push_back(array2);
-  arrays.push_back(array3);
-  arrays.push_back(array4);
+  std::vector<std::stack<int>> result{std::stack<int>({6, 7, 8, 9})};
 
-  permute(arrays);
-  std::cout << std::endl;
+  assert(permute(arrays) == result);
 }
 
 int main() {

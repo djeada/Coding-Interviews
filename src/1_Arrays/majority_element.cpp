@@ -1,145 +1,119 @@
-#include <iostream>
+#include <cassert>
 #include <random>
 #include <stdexcept>
 #include <vector>
 
-using namespace std;
-bool checkMajorityExistence(vector<int> numbers, int number);
-int randomInRange(int start, int end);
-int partition(vector<int> numbers, int start, int end);
-
-int getMajority_1(vector<int> numbers) {
-  int length = numbers.size();
-  int middle = length >> 1;
-  int start = 0;
-  int end = length - 1;
-
-  int index = partition(numbers, start, end);
-  while (index != middle) {
-    if (index > middle) {
-      end = index - 1;
-      index = partition(numbers, start, end);
-    } else {
-      start = index + 1;
-      index = partition(numbers, start, end);
-    }
+bool checkMajorityExistence(std::vector<int> arr, int number) {
+  unsigned int times = 0;
+  for (unsigned int i = 0; i < arr.size(); ++i) {
+    if (arr[i] == number)
+      times++;
   }
-  int result = numbers[middle];
-  if (!checkMajorityExistence(numbers, result))
-    throw invalid_argument("No majority exisits.");
-
-  return result;
+  return (times * 2 > arr.size());
 }
 
-int partition(vector<int> numbers, int start, int end) {
+int randomInRange(int start, int end) {
+  std::random_device rd;
+  std::mt19937 eng(rd());
+  std::uniform_int_distribution<> distr(start, end);
+  return distr(eng);
+}
+
+int partition(std::vector<int> arr, int start, int end) {
   int index = randomInRange(start, end);
-  swap(numbers[index], numbers[end]);
+  std::swap(arr[index], arr[end]);
 
   int small = start - 1;
   for (index = start; index < end; ++index) {
-    if (numbers[index] < numbers[end]) {
+    if (arr[index] < arr[end]) {
       ++small;
       if (small != index)
-        swap(numbers[index], numbers[small]);
+        std::swap(arr[index], arr[small]);
     }
   }
   ++small;
-  swap(numbers[index], numbers[end]);
+  std::swap(arr[index], arr[end]);
 
   return small;
 }
 
-int randomInRange(int start, int end) {
-  random_device rd;  // obtain a random number from hardware
-  mt19937 eng(rd()); // seed the generator
-  uniform_int_distribution<> distr(start, end);
-  return distr(eng);
-}
+int getMajority_1(std::vector<int> arr) {
+  int length = arr.size();
+  int middle = length >> 1;
+  int start = 0;
+  int end = length - 1;
 
-int getMajority_2(vector<int> numbers) {
-  int result = numbers[0];
-  int times = 1;
-  for (int i = 1; i < numbers.size(); ++i) {
-    if (times == 0) {
-      result = numbers[i];
-      times = 1;
-    } else if (numbers[i] == result)
-      times++;
-    else
-      times--;
+  int index = partition(arr, start, end);
+  while (index != middle) {
+    if (index > middle) {
+      end = index - 1;
+      index = partition(arr, start, end);
+    } else {
+      start = index + 1;
+      index = partition(arr, start, end);
+    }
   }
-  if (!checkMajorityExistence(numbers, result))
-    throw invalid_argument("No majority exisits.");
+  int result = arr[middle];
+  if (!checkMajorityExistence(arr, result))
+    throw std::invalid_argument("No majority exisits.");
 
   return result;
 }
 
-//================= Common methods =================
-bool checkMajorityExistence(vector<int> numbers, int number) {
-  int times = 0;
-  for (int i = 0; i < numbers.size(); ++i) {
-    if (numbers[i] == number)
+int getMajority_2(std::vector<int> arr) {
+  int result = arr[0];
+  int times = 1;
+  for (unsigned int i = 1; i < arr.size(); ++i) {
+    if (times == 0) {
+      result = arr[i];
+      times = 1;
+    } else if (arr[i] == result)
       times++;
+    else
+      times--;
   }
-  return (times * 2 > numbers.size());
-}
+  if (!checkMajorityExistence(arr, result))
+    throw std::invalid_argument("No majority exisits.");
 
-//================= Test Code =================
-void test(const string &testName, vector<int> numbers, int expected,
-          bool invalidArgument) {
-  cout << testName << " begins: ";
-
-  try {
-    int majority = getMajority_1(numbers);
-
-    if (!invalidArgument && majority == expected)
-      cout << "Solution1 Passed; ";
-    else
-      cout << "Solution1 FAILED; ";
-  } catch (const invalid_argument &ia) {
-    if (invalidArgument)
-      cout << "Solution1 Passed; ";
-    else
-      cout << "Solution1 FAILED; ";
-  }
-  try {
-    int majority = getMajority_2(numbers);
-
-    if (!invalidArgument && majority == expected)
-      cout << "Solution2 Passed.\n";
-    else
-      cout << "Solution2 FAILED.\n";
-  } catch (const invalid_argument &ia) {
-    if (invalidArgument)
-      cout << "Solution2 Passed.\n";
-    else
-      cout << "Solution2 FAILED.\n";
-  }
+  return result;
 }
 
 void test1() {
-  vector<int> numbers{1, 2, 3, 2, 2, 2, 5, 4, 2};
-  test("Test1", numbers, 2, false);
+  bool exceptionThrown = false;
+
+  try {
+    std::vector<int> arr{1, 2, 3, 4, 5};
+    getMajority_1(arr);
+  } catch (...) {
+    exceptionThrown = true;
+  }
+
+  assert(exceptionThrown);
 }
 
 void test2() {
-  vector<int> numbers{1, 2, 3, 2, 4, 2, 5, 2, 3};
-  test("test2", numbers, 0, true);
+  bool exceptionThrown = false;
+
+  try {
+    std::vector<int> arr{1, 2, 3, 4, 5};
+    getMajority_2(arr);
+  } catch (...) {
+    exceptionThrown = true;
+  }
+
+  assert(exceptionThrown);
 }
 
 void test3() {
-  vector<int> numbers{2, 2, 2, 2, 2, 1, 3, 4, 5};
-  test("test3", numbers, 2, false);
+  std::vector<int> arr{2, 2, 2, 2, 2, 1, 3, 4, 5};
+  int result = 2;
+  assert(getMajority_1(arr) == result);
 }
 
 void test4() {
-  vector<int> numbers{1, 3, 4, 5, 2, 2, 2, 2, 2};
-  test("test4", numbers, 2, false);
-}
-
-void test5() {
-  vector<int> numbers{1};
-  test("test4", numbers, 1, false);
+  std::vector<int> arr{2, 2, 2, 2, 2, 1, 3, 4, 5};
+  int result = 2;
+  assert(getMajority_2(arr) == result);
 }
 
 int main() {
@@ -147,7 +121,6 @@ int main() {
   test2();
   test3();
   test4();
-  test5();
 
   return 0;
 }

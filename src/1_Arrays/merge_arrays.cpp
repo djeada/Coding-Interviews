@@ -1,116 +1,78 @@
-#include <iostream>
-#include <stdio.h>
-using namespace std;
+#include <cassert>
+#include <vector>
 
-// Supposing there is enough memory at the end of array1,
-// in order to accommodate numbers in array2
-void merge(int *array1, int length1, int *array2, int length2) {
-  int index1, index2, indexMerged;
+void merge(std::vector<int> &arr1, std::vector<int> &arr2) {
+  int idx1, idx2, idxMerged;
 
-  if (array1 == NULL || array2 == NULL) {
+  if (arr1.empty() || arr2.empty()) {
     return;
   }
 
-  index1 = length1 - 1;
-  index2 = length2 - 1;
-  indexMerged = length1 + length2 - 1;
+  idx1 = arr1.size() - 1;
+  idx2 = arr2.size() - 1;
+  idxMerged = arr1.size() + arr2.size() - 1;
 
-  while (index1 >= 0 && index2 >= 0) {
-    if (array1[index1] >= array2[index2]) {
-      array1[indexMerged--] = array1[index1--];
+  arr1.resize(idxMerged + 1);
+
+  while (idx1 >= 0 && idx2 >= 0) {
+    if (arr1[idx1] >= arr2[idx2]) {
+      arr1[idxMerged--] = arr1[idx1--];
     } else {
-      array1[indexMerged--] = array2[index2--];
+      arr1[idxMerged--] = arr2[idx2--];
     }
   }
 
-  while (index2 >= 0) {
-    array1[indexMerged--] = array2[index2--];
+  while (idx2 >= 0) {
+    arr1[idxMerged--] = arr2[idx2--];
   }
 }
 
-void Test(char *testName, int *array1, int length1, int *array2, int length2,
-          int *expected) {
-  int i;
+void test1() {
+  std::vector<int> arr1{1, 3, 5, 7, 9};
+  std::vector<int> arr2{2, 4, 6, 8, 10};
 
-  if (testName != NULL)
-    cout << testName << begins;
+  std::vector<int> expected{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
-  merge(array1, length1, array2, length2);
-
-  if (expected != NULL && array1 != NULL && array2 != NULL) {
-    for (i = 0; i < length1 + length2; ++i) {
-      if (array1[i] != expected[i])
-        break;
-    }
-  }
-
-  if ((expected == NULL && (array1 == NULL || array2 == NULL)) ||
-      (i == length1 + length2)) {
-    cout << "passed.\n";
-  } else {
-    cout << "FAILED.\n";
-  }
+  merge(arr1, arr2);
+  assert(arr1 == expected);
 }
 
-// no duplicated numbers
-void Test1() {
-  int array1[20] = {1, 3, 5, 7, 9};
-  int array2[] = {2, 4, 6, 8, 10};
+void test2() {
+  std::vector<int> arr1{2, 4, 6, 8, 10};
+  std::vector<int> arr2{1, 3, 5, 7, 9};
 
-  int expected[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+  std::vector<int> expected{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
-  Test("Test1", array1, 5, array2, 5, expected);
+  merge(arr1, arr2);
+  assert(arr1 == expected);
 }
 
-// no duplicated numbers
-void Test2() {
-  int array1[20] = {2, 4, 6, 8, 10};
-  int array2[] = {1, 3, 5, 7, 9};
+void test3() {
+  std::vector<int> arr1{2, 4, 6, 8, 10};
+  std::vector<int> arr2{2, 4, 6, 8, 10};
 
-  int expected[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+  std::vector<int> expected{2, 2, 4, 4, 6, 6, 8, 8, 10, 10};
 
-  Test("Test2", array1, 5, array2, 5, expected);
+  merge(arr1, arr2);
+  assert(arr1 == expected);
 }
 
-// duplicated arrays
-void Test3() {
-  int array1[20] = {2, 4, 6, 8, 10};
-  int array2[] = {2, 4, 6, 8, 10};
+void test4() {
+  std::vector<int> arr1{1, 2, 3, 4, 5};
+  std::vector<int> arr2{6, 7, 8, 9, 10};
 
-  int expected[] = {2, 2, 4, 4, 6, 6, 8, 8, 10, 10};
+  std::vector<int> expected{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
-  Test("Test3", array1, 5, array2, 5, expected);
+  merge(arr1, arr2);
+  assert(arr1 == expected);
 }
-
-// numbers in array1 are less than numbers in array2
-void Test4() {
-  int array1[20] = {1, 2, 3, 4, 5};
-  int array2[] = {6, 7, 8, 9, 10};
-
-  int expected[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-
-  Test("Test4", array1, 5, array2, 5, expected);
-}
-
-// numbers in array1 are greater than numbers in array2
-void Test5() {
-  int array1[20] = {6, 7, 8, 9, 10};
-  int array2[] = {1, 2, 3, 4, 5};
-
-  int expected[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-
-  Test("Test5", array1, 5, array2, 5, expected);
-}
-
-// numbers in array1 are greater than numbers in array2
-void Test6() { Test("Test6", NULL, 0, NULL, 0, NULL); }
 
 int main() {
-  Test1();
-  Test2();
-  Test3();
-  Test4();
-  Test5();
-  Test6();
+
+  test1();
+  test2();
+  test3();
+  test4();
+
   return 1;
 }

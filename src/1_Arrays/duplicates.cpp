@@ -1,17 +1,10 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cassert>
+#include <vector>
 
-void printArr(int *arr, int len) {
-  for (int i = 0; i < len; i++) {
-    printf("%d ", arr[i]);
-  }
-}
-
-int howManyDuplicates(int *arr, int len) {
+int howManyDuplicates(std::vector<int> &arr) {
   int count = 0;
-  for (int i = 0; i < len; i++) {
-    for (int j = i + 1; j < len; j++) {
+  for (unsigned int i = 0; i < arr.size(); i++) {
+    for (unsigned int j = i + 1; j < arr.size(); j++) {
       if (arr[i] == arr[j])
         count++;
     }
@@ -20,34 +13,53 @@ int howManyDuplicates(int *arr, int len) {
   return count;
 }
 
-int *getDuplicates(int *arr, int len) {
+std::vector<int> getDuplicates(std::vector<int> &arr) {
 
-  int n = howManyDuplicates(arr, len);
-  int *duplicates = malloc(sizeof(int) * n);
-  memset(duplicates, 0, n * sizeof(int));
+  std::vector<int> duplicates;
 
   int count = 0;
-  for (int i = 0; i < len; i++) {
-    for (int j = i + 1; j < len; j++) {
+  for (unsigned int i = 0; i < arr.size(); i++) {
+    for (unsigned int j = i + 1; j < arr.size(); j++) {
       if (arr[i] == arr[j]) {
-        duplicates[count] = arr[i];
+        duplicates.push_back(arr[i]);
         count++;
       }
     }
   }
+
   return duplicates;
 }
 
+void test1() {
+  std::vector<int> arr{1, 2, 3, 4, 5};
+  int result = 0;
+  assert(howManyDuplicates(arr) == result);
+}
+
+void test2() {
+  std::vector<int> arr{5, 10, 15, 5, 3, 3};
+  int result = 2;
+  assert(howManyDuplicates(arr) == result);
+}
+
+void test3() {
+  std::vector<int> arr{1, 2, 3, 4, 5};
+  std::vector<int> result;
+  assert(getDuplicates(arr) == result);
+}
+
+void test4() {
+  std::vector<int> arr{3, 9, 9, 7, 3};
+  std::vector<int> result{3, 9};
+  assert(getDuplicates(arr) == result);
+}
+
 int main() {
-  int arr[] = {5, 6, 7, 6, 2, 2, 5, 4, 11};
-  int len = sizeof(arr) / sizeof(arr[0]);
 
-  printf("Array: \n");
-  printArr(arr, len);
-
-  printf("\nDuplicates: \n");
-  printArr(getDuplicates(arr, len), howManyDuplicates(arr, len));
-  printf("\n");
+  test1();
+  test2();
+  test3();
+  test4();
 
   return 0;
 }
