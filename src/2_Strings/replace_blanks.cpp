@@ -1,32 +1,23 @@
-#include <iostream>
-#include <stdio.h>
-#include <string.h>
-#define LENGTH 100
+#include <cassert>
+#include <cstring>
 
-using namespace std;
-
-/*capacity is total capacity of a string, which is longer than its actual
- * length*/
-void ReplaceBlank(char string[], int capacity) {
+void replaceBlank(char string[], int capacity) {
   int originalLength, numberOfBlank, newLength;
   int i, indexOfOriginal, indexOfNew;
 
-  if (string == NULL || capacity <= 0) {
+  if (string == NULL || capacity <= 0)
     return;
-  }
 
-  /*originalLength is the actual length of string*/
   originalLength = numberOfBlank = i = 0;
   while (string[i] != '\0') {
     originalLength++;
 
-    if (string[i] == ' ') {
+    if (string[i] == ' ')
       numberOfBlank++;
-    }
+
     i++;
   }
 
-  /*newLength is the length of the replaced string*/
   newLength = originalLength + numberOfBlank * 2;
   if (newLength > capacity)
     return;
@@ -46,92 +37,43 @@ void ReplaceBlank(char string[], int capacity) {
   }
 }
 
-void Test(char *testName, char string[], int length, char expected[]) {
-  if (testName != NULL) {
-    cout << testName << "begins: ";
-  }
-
-  ReplaceBlank(string, length);
-
-  if (expected == NULL && string == NULL) {
-    cout << "passed.\n";
-  } else if (expected == NULL && string != NULL) {
-    cout << "failed.\n";
-  } else if (strcmp(string, expected) == 0) {
-    cout << "passed.\n";
-  } else {
-    cout << "failed.\n";
-  }
+bool identical(char const *strA, char const *strB) {
+  return 0 == strcmp(strA, strB);
 }
 
-// A blank is inside a sentence
-void Test1() {
-  char string[LENGTH] = "hello world";
-  Test("Test1", string, LENGTH, "hello%20world");
+void test1() {
+  char string[100] = "hello world";
+  char const *result = "hello%20world";
+  replaceBlank(string, 100);
+  assert(identical(string, result));
 }
 
-// A blank is at the beginning of a sentence
-void Test2() {
-  char string[LENGTH] = " helloworld";
-  Test("Test2", string, LENGTH, "%20helloworld");
+void test2() {
+  char string[100] = " helloworld";
+  char const *result = "%20helloworld";
+  replaceBlank(string, 100);
+  assert(identical(string, result));
 }
 
-// A blank is at the end of a sentence
-void Test3() {
-  char string[LENGTH] = "helloworld ";
-  Test("Test3", string, LENGTH, "helloworld%20");
+void test3() {
+  char string[100] = "helloworld ";
+  char const *result = "helloworld%20";
+  replaceBlank(string, 100);
+  assert(identical(string, result));
 }
 
-// Two adjcent blanks
-void Test4() {
-  char string[LENGTH] = "hello  world";
-  Test("Test4", string, LENGTH, "hello%20%20world");
-}
-
-// NULL
-void Test5() { Test("Test5", NULL, 0, NULL); }
-
-// Empty string
-void Test6() {
-  char string[LENGTH] = "";
-  Test("Test6", string, LENGTH, "");
-}
-
-// Input string only has a blank
-void Test7() {
-  char string[LENGTH] = " ";
-  Test("Test7", string, LENGTH, "%20");
-}
-
-// No blanks in the input
-void Test8() {
-  char string[LENGTH] = "helloworld";
-  Test("Test8", string, LENGTH, "helloworld");
-}
-
-// Input string only has blanks
-void Test9() {
-  char string[LENGTH] = "   ";
-  Test("Test9", string, LENGTH, "%20%20%20");
-}
-
-// Multiple blanks among words
-void Test10() {
-  char string[LENGTH] = "Multiple blanks among words";
-  Test("Test10", string, LENGTH, "Multiple%20blanks%20among%20words");
+void test4() {
+  char string[100] = "hello  world";
+  char const *result = "hello%20%20world";
+  replaceBlank(string, 100);
+  assert(identical(string, result));
 }
 
 int main(int argc, char *argv[]) {
-  Test1();
-  Test2();
-  Test3();
-  Test4();
-  Test5();
-  Test6();
-  Test7();
-  Test8();
-  Test9();
-  Test10();
+  test1();
+  test2();
+  test3();
+  test4();
 
   return 0;
 }

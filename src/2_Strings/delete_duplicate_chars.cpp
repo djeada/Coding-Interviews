@@ -1,7 +1,7 @@
-#include <stdio.h>
-#include <string.h>
+#include <cassert>
+#include <cstring>
 
-void DeletedDuplication(char *pString) {
+void deleteDuplication(char *pString) {
   int hashTable[256];
   char *pSlow = pString;
   char *pFast = pString;
@@ -25,60 +25,43 @@ void DeletedDuplication(char *pString) {
   *pSlow = '\0';
 }
 
-// ==================== Test Code ====================
-void Test(char *testName, char *pString, char *pExpected) {
-  if (NULL != testName)
-    printf("%s begins: ", testName);
-
-  DeletedDuplication(pString);
-  if ((pString == NULL && pExpected == NULL) ||
-      (0 == strcmp(pString, pExpected)))
-    printf("Passed.\n");
-  else
-    printf("FAILED.\n");
+bool identical(char const *strA, char const *strB) {
+  return 0 == strcmp(strA, strB);
 }
 
-void Test1() {
-  char pString[] = "google";
-  char *pExpected = "gole";
-  Test("Test1", pString, pExpected);
+void test1() {
+  char string[] = "google";
+  char const *result = "gole";
+  deleteDuplication(string);
+  assert(identical(string, result));
 }
 
-void Test2() {
-  char pString[] = "aaaaaaaaaaaaaaaaaaaaa";
-  char *pExpected = "a";
-  Test("Test2", pString, pExpected);
+void test2() {
+  char string[] = "aaaaaaaaaaaaaaaaaaaaa";
+  char const *result = "a";
+  deleteDuplication(string);
+  assert(identical(string, result));
 }
 
-void Test3() {
-  char pString[] = "";
-  char *pExpected = "";
-  Test("Test3", pString, pExpected);
+void test3() {
+  char string[] = "";
+  char const *result = "";
+  deleteDuplication(string);
+  assert(identical(string, result));
 }
 
-void Test4() {
-  char pString[] = "abcacbbacbcacabcba";
-  char *pExpected = "abc";
-  Test("Test4", pString, pExpected);
+void test4() {
+  char string[] = "abcacbbacbcacabcba";
+  char const *result = "abc";
+  deleteDuplication(string);
+  assert(identical(string, result));
 }
 
-void Test5() {
-  char pString[] = "abcdefg";
-  char *pExpected = "abcdefg";
-  Test("Test5", pString, pExpected);
-}
+int main() {
+  test1();
+  test2();
+  test3();
+  test4();
 
-void Test6() {
-  char *pString = NULL;
-  char *pExpected = NULL;
-  Test("Test6", pString, pExpected);
-}
-
-int main(int argc, char *argv[]) {
-  Test1();
-  Test2();
-  Test3();
-  Test4();
-  Test5();
-  Test6();
+  return 0;
 }

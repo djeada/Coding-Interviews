@@ -1,101 +1,51 @@
-#include <iostream>
-#include <stdio.h>
+#include <cassert>
 #include <string>
-using namespace std;
 
-void Reverse(char *pBegin, char *pEnd) {
-  if (pBegin == NULL || pEnd == NULL)
-    return;
-
-  while (pBegin < pEnd) {
-    char temp = *pBegin;
-    *pBegin = *pEnd;
-    *pEnd = temp;
-
-    pBegin++, pEnd--;
+void reversed(std::string &s, int l, int r) {
+  while (l < r) {
+    std::swap(s[l], s[r]);
+    l++;
+    r--;
   }
 }
 
-char *ReverseSentence(char *pData) {
-  if (pData == NULL)
-    return NULL;
+std::string reverse(std::string str) {
+  str.insert(str.end(), ' ');
 
-  char *pBegin = pData;
+  int n = str.length();
 
-  char *pEnd = pData;
-  while (*pEnd != '\0')
-    pEnd++;
-  pEnd--;
+  int j = 0;
 
-  // Reverse the whole sentence
-  Reverse(pBegin, pEnd);
-
-  // Reverse every word in the sentence
-  pBegin = pEnd = pData;
-  while (*pBegin != '\0') {
-    if (*pBegin == ' ') {
-      pBegin++;
-      pEnd++;
-    } else if (*pEnd == ' ' || *pEnd == '\0') {
-      Reverse(pBegin, --pEnd);
-      pBegin = ++pEnd;
-    } else {
-      pEnd++;
+  for (int i = 0; i < n; i++) {
+    if (str[i] == ' ') {
+      reversed(str, j, i - 1);
+      j = i + 1;
     }
   }
 
-  return pData;
+  str.pop_back();
+
+  reversed(str, 0, str.length() - 1);
+
+  return str;
 }
 
-// ==================== Test Code ====================
-void Test(char *testName, char *input, char *expectedResult) {
-  if (testName != NULL)
-    printf("%s begins: ", testName);
+void test1() {
+  std::string str = "hello world";
+  std::string wynik = "world hello";
 
-  ReverseSentence(input);
-
-  if ((input == NULL && expectedResult == NULL) ||
-      (input != NULL && strcmp(input, expectedResult) == 0))
-    printf("Passed.\n\n");
-  else
-    printf("Failed.\n\n");
+  assert(reverse(str) == wynik);
 }
 
-// Multiple words
-void Test1() {
-  char input[] = "I am a student.";
-  char expected[] = "student. a am I";
+void test2() {
+  std::string str = "adam";
+  std::string wynik = "adam";
 
-  Test("Test1", input, expected);
+  assert(reverse(str) == wynik);
 }
 
-// Only one word
-void Test2() {
-  char input[] = "Wonderful";
-  char expected[] = "Wonderful";
-
-  Test("Test2", input, expected);
-}
-
-// Null pointer
-void Test3() { Test("Test3", NULL, NULL); }
-
-// empty string
-void Test4() { Test("Test4", "", ""); }
-
-// Only blanks
-void Test5() {
-  char input[] = "   ";
-  char expected[] = "   ";
-  Test("Test5", input, expected);
-}
-
-int main(int argc, char *argv[]) {
-  Test1();
-  Test2();
-  Test3();
-  Test4();
-  Test5();
-
+int main() {
+  test1();
+  test2();
   return 0;
 }

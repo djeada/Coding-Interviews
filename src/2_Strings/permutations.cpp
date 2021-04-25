@@ -1,67 +1,50 @@
-#include <stdio.h>
-#include <string.h>
+#include <algorithm>
+#include <cassert>
+#include <string>
+#include <vector>
 
-void PermutationCore(char *pStr, char *pBegin);
-
-void Permutation(char *pStr) {
-  if (pStr == NULL)
+void permutation(std::string &strIn, std::string &strOut,
+                 std::vector<std::string> &result) {
+  if (strIn.empty()) {
+    result.push_back(strOut);
     return;
+  }
 
-  PermutationCore(pStr, pStr);
-}
-
-void PermutationCore(char *pStr, char *pBegin) {
-  char *pCh = NULL;
-  char temp;
-
-  if (*pBegin == '\0') {
-    printf("%s\n", pStr);
-  } else {
-    for (pCh = pBegin; *pCh != '\0'; ++pCh) {
-      temp = *pCh;
-      *pCh = *pBegin;
-      *pBegin = temp;
-
-      PermutationCore(pStr, pBegin + 1);
-
-      temp = *pCh;
-      *pCh = *pBegin;
-      *pBegin = temp;
-    }
+  for (unsigned int i = 0; i < strIn.length(); ++i) {
+    std::string newStrIn = strIn;
+    std::string newStrOut = strOut;
+    newStrIn.erase(i, 1);
+    newStrOut += strIn.at(i);
+    permutation(newStrIn, newStrOut, result);
   }
 }
 
-// ==================== Test Code ====================
-void Test(char *pStr) {
-  if (pStr == NULL)
-    printf("Test for NULL begins:\n");
-  else
-    printf("Test for %s begins:\n", pStr);
+std::vector<std::string> permutations(std::string &strIn) {
 
-  Permutation(pStr);
+  std::vector<std::string> result;
 
-  printf("\n");
+  std::string strOut;
+  permutation(strIn, strOut, result);
+
+  return result;
 }
 
-int main(int argc, char *argv[]) {
-  char string1[64];
-  char string2[64];
-  char string3[64];
-  char string4[64];
+void test1() {
+  std::string slowo = "Dora";
 
-  Test(NULL);
+  std::vector<std::string> listOfPermutations = permutations(slowo);
 
-  string1[0] = '\0';
-  Test(string1);
+  std::vector<std::string> result{
+      "Droa", "Daor", "aDor", "aroD", "aDro", "aorD", "raDo", "roDa",
+      "rDoa", "raoD", "aoDr", "arDo", "oraD", "oaDr", "orDa", "rDao",
+      "oDar", "roaD", "oarD", "oDra", "Dora", "Daro", "Doar", "Drao"};
 
-  sprintf(string2, "%s", "a");
-  Test(string2);
+  sort(listOfPermutations.begin(), listOfPermutations.end());
+  sort(result.begin(), result.end());
+  assert(listOfPermutations == result);
+}
 
-  sprintf(string3, "%s", "ab");
-  Test(string3);
-
-  sprintf(string4, "%s", "abc");
-  Test(string4);
-
+int main() {
+  test1();
   return 0;
 }

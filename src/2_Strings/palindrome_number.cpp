@@ -1,60 +1,56 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#define max_len 20
+#include <cassert>
+#include <string>
 
-void isPalindrome_1(int x);
-void isPalindrome_2(int x);
-int isStrPalindrome(const char *const str);
-
-int main() {
-  int number_1 = 121;
-  int number_2 = 3356;
-  int number_3 = 55855;
-  int number_4 = 12811;
-
-  isPalindrome_1(number_1);
-  isPalindrome_1(number_2);
-  isPalindrome_2(number_3);
-  isPalindrome_2(number_4);
-
-  return 0;
-}
-
-void isPalindrome_1(int x) {
-  char str[max_len];
-  sprintf(str, "%d", x);
-  if (isStrPalindrome(str) == 1) {
-    printf("Number %d is palindrome \n", x);
-  } else {
-    printf("Number %d is not palindrome \n", x);
+bool isPalindrome1(int x) {
+  auto str = std::to_string(x);
+  for (unsigned int i = 0; i < str.size() / 2; i++) {
+    if (str[i] != str[str.size() - i - 1])
+      return false;
   }
+  return true;
 }
 
-void isPalindrome_2(int x) {
+bool isPalindrome2(int x) {
   int reversed = 0;
   int copy = x;
   while (x != 0) {
     reversed = reversed * 10 + x % 10;
     x /= 10;
   }
-  if (reversed == copy) {
-    printf("Number %d is palindrome \n", copy);
-  } else {
-    printf("Number %d is not palindrome \n", copy);
-  }
+
+  return reversed == copy;
 }
 
-int isStrPalindrome(const char *const str) {
-  if (str != NULL) {
-    int len = strlen(str);
-    int half = len >> 1;
+void test1() {
+  int number = 121;
+  assert(isPalindrome1(number));
+  assert(isPalindrome2(number));
+}
 
-    for (int i = 0; i < half; i++) {
-      if (str[i] != str[len - 1 - i]) {
-        return 0;
-      }
-    }
-  }
-  return 1;
+void test2() {
+  int number = 3356;
+  assert(!isPalindrome1(number));
+  assert(!isPalindrome2(number));
+}
+
+void test3() {
+  int number = 55855;
+  assert(isPalindrome1(number));
+  assert(isPalindrome2(number));
+}
+
+void test4() {
+  int number = 12811;
+  assert(!isPalindrome1(number));
+  assert(!isPalindrome2(number));
+}
+
+int main() {
+
+  test1();
+  test2();
+  test3();
+  test4();
+
+  return 0;
 }

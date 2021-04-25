@@ -4,7 +4,7 @@
 
 void _combination(const std::string &str, int index, int number,
                   std::stack<char> &result, std::set<std::string> &results) {
-  
+
   if (number == 0) {
     std::string reverse;
     auto copy = result;
@@ -80,7 +80,7 @@ void test2() {
 
   std::string str = "ab";
   std::set<std::string> result = {"b", "a", "ab"};
-  //assert(identical(combination1(str), result));
+  // assert(identical(combination1(str), result));
   assert(combination2(str) == result);
 }
 
@@ -88,7 +88,7 @@ void test3() {
 
   std::string str = "abc";
   std::set<std::string> result = {"c", "b", "bc", "a", "ac", "ab", "abc"};
-  //assert(combination1(str) == result);
+  // assert(combination1(str) == result);
   assert(combination2(str) == result);
 }
 
@@ -98,7 +98,7 @@ void test4() {
   std::set<std::string> result = {"d",   "c",   "cd",  "b",   "bd",
                                   "bc",  "bcd", "a",   "ad",  "ac",
                                   "acd", "ab",  "abd", "abc", "abcd"};
-  //assert(combination1(str) == result);
+  // assert(combination1(str) == result);
   assert(combination2(str) == result);
 }
 

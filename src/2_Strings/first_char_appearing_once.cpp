@@ -1,80 +1,71 @@
-#include <iostream>
+#include <cassert>
 #include <limits>
-#include <stdio.h>
+#include <string>
 #include <vector>
 
-using namespace std;
+int insert(int occurrence[], char ch, int index) {
+  int i = (int)ch;
+  if (occurrence[i] == -1)
+    occurrence[i] = index;
+  else if (occurrence[i] >= 0)
+    occurrence[i] = -2;
 
-class CharStatistics {
-public:
-  CharStatistics() : index(0) {
-    for (int i = 0; i < 256; ++i)
-      occurrence[i] = -1;
-  }
-
-  void Insert(char ch) {
-    if (occurrence[ch] == -1)
-      occurrence[ch] = index;
-    else if (occurrence[ch] >= 0)
-      occurrence[ch] = -2;
-
-    index++;
-  }
-
-  char FirstAppearingOnce() {
-    char ch = '\0';
-    int minIndex = numeric_limits<int>::max();
-    for (int i = 0; i < 256; ++i) {
-      if (occurrence[i] >= 0 && occurrence[i] < minIndex) {
-        ch = (char)i;
-        minIndex = occurrence[i];
-      }
-    }
-
-    return ch;
-  }
-
-private:
-  // occurrence[i]: A character with ASCII value i;
-  // occurrence[i] = -1: The character has not found;
-  // occurrence[i] = -2: The character has been found for mutlple times
-  // occurrence[i] >= 0: The character has been found only once
-  int occurrence[256];
-  int index;
-};
-
-void Test(char *testName, CharStatistics chars, char expected) {
-  if (testName != NULL)
-    printf("%s begins: ", testName);
-
-  if (chars.FirstAppearingOnce() == expected)
-    printf("Passed.\n");
-  else
-    printf("FAILED.\n");
+  index++;
+  return index;
 }
 
-int main(int argc, char *argv[]) {
-  CharStatistics chars;
+char firstAppearingOnce(std::string &str) {
+  int index = 0;
 
-  Test("Test1", chars, '\0');
+  int occurrence[256];
 
-  chars.Insert('g');
-  Test("Test2", chars, 'g');
+  for (int i = 0; i < 256; ++i)
+    occurrence[i] = -1;
 
-  chars.Insert('o');
-  Test("Test3", chars, 'g');
+  for (auto c : str)
+    index = insert(occurrence, c, index);
 
-  chars.Insert('o');
-  Test("Test4", chars, 'g');
+  char ch = '\0';
+  int minIndex = std::numeric_limits<int>::max();
+  for (int i = 0; i < 256; ++i) {
+    if (occurrence[i] >= 0 && occurrence[i] < minIndex) {
+      ch = (char)i;
+      minIndex = occurrence[i];
+    }
+  }
 
-  chars.Insert('g');
-  Test("Test5", chars, '\0');
+  return ch;
+}
 
-  chars.Insert('l');
-  Test("Test6", chars, 'l');
+void test1() {
+  std::string str = "abc";
+  char result = 'a';
+  assert(firstAppearingOnce(str) == result);
+}
 
-  chars.Insert('e');
-  Test("Test7", chars, 'l');
+void test2() {
+  std::string str = "ababac";
+  char result = 'c';
+  assert(firstAppearingOnce(str) == result);
+}
 
+void test3() {
+  std::string str = "xyza";
+  char result = 'x';
+  assert(firstAppearingOnce(str) == result);
+}
+
+void test4() {
+  std::string str = "lol";
+  char result = 'o';
+
+  assert(firstAppearingOnce(str) == result);
+}
+
+int main() {
+  test1();
+  test2();
+  test3();
+  test4();
   return 0;
 }

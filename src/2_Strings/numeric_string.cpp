@@ -1,99 +1,151 @@
-#include <iostream>
-#include <stdio.h>
-using namespace std;
+#include <cassert>
+#include <string>
 
-void scanDigits(char **string);
-bool isExponential(char **string);
+bool onlyDigits(std::string &str) {
+  for (auto c : str) {
+    if (!(c >= '0' && c <= '9'))
+      return false;
+  }
 
-bool isNumeric(char *string) {
-  if (string == NULL) {
+  return true;
+}
+
+bool isExponential(std::string &str) {
+
+  if (str.size() < 2)
     return false;
-  }
-  if (*string == '+' || *string == '-') {
-    ++string;
-  }
-  if (*string == '\0') {
+
+  if (str.front() != 'e' && str.front() != 'E')
     return false;
+
+  unsigned int i = 2;
+
+  if (str[i] == '+' || str[i] == '-') {
+    if (str.size() == 2)
+      return false;
+    i++;
+  }
+
+  std::string numeric = str.substr(i, str.size() - 2);
+
+  return onlyDigits(numeric);
+}
+
+bool isNumeric(std::string &str) {
+
+  if (str.empty())
+    return false;
+
+  unsigned int i = 1;
+
+  if (str[i] == '+' || str[i] == '-') {
+    if (str.size() == 1)
+      return false;
+    i++;
   }
 
   bool numeric = true;
 
-  scanDigits(&string);
-  if (*string != '\0') {
-    // for floats
-    if (*string == '.') {
-      ++string;
-      scanDigits(&string);
+  while (i < str.size() && str[i] >= '0' && str[i] <= '9')
+    i++;
 
-      if (*string == 'e' || *string == 'E') {
-        numeric = isExponential(&string);
+  if (i != str.size()) {
+    if (str[i] == '.') {
+      i++;
+
+      while (i < str.size() && str[i] >= '0' && str[i] <= '9')
+        i++;
+
+      if (i < str.size() && (str[i] == 'e' || str[i] == 'E')) {
+        auto rest = str.substr(i, str.size() - i);
+        numeric = isExponential(rest);
+        i = str.size();
       }
-    }
-    // for integers
-    else if (*string == 'e' || *string == 'E') {
-      numeric = isExponential(&string);
-    } else {
+    } else if (str[i] == 'e' || str[i] == 'E') {
+      auto rest = str.substr(i, str.size() - i);
+      numeric = isExponential(rest);
+      i = str.size();
+    } else
       numeric = false;
-    }
   }
 
-  return numeric && *string == '\0';
+  return numeric && i == str.size();
 }
 
-void scanDigits(char **string) {
-  while (**string != '\0' && **string >= '0' && **string <= '9') {
-    ++(*string);
-  }
+void test1() {
+  std::string str = "100";
+  assert(isNumeric(str));
 }
 
-bool isExponential(char **string) {
-  if (**string != 'e' && **string != 'E') {
-    return false;
-  }
-  ++(*string);
-  if (**string == '+' || **string == '-') {
-    ++(*string);
-  }
-
-  if (**string == '\0') {
-    return false;
-  }
-
-  scanDigits(string);
-  return (**string == '\0') ? true : false;
+void test2() {
+  std::string str = "123.45e+6";
+  assert(isNumeric(str));
 }
 
-void Test(char *testName, char *string, bool expected) {
-  if (testName != NULL) {
-    cout << testName << "begins: ";
-  }
+void test3() {
+  std::string str = "+500";
+  assert(isNumeric(str));
+}
 
-  if (isNumeric(string) == expected) {
-    cout << "Passed.\n";
-  } else {
-    cout << "FAILED.\n";
-  }
+void test4() {
+  std::string str = "5e2";
+  assert(isNumeric(str));
+}
+
+void test5() {
+  std::string str = "3.145";
+  assert(isNumeric(str));
+}
+
+void test6() {
+  std::string str = "600.";
+  assert(isNumeric(str));
+}
+
+void test7() {
+  std::string str = "-.123";
+  assert(isNumeric(str));
+}
+
+void test8() {
+  std::string str = "1.484278348325E+308";
+  assert(isNumeric(str));
+}
+
+void test9() {
+  std::string str = "12e";
+  assert(!isNumeric(str));
+}
+
+void test10() {
+  std::string str = "1a3.14";
+  assert(!isNumeric(str));
+}
+
+void test11() {
+  std::string str = "+-5";
+  assert(isNumeric(str));
+}
+
+void test12() {
+  std::string str = "11.2.3";
+  assert(!isNumeric(str));
 }
 
 int main() {
-  Test("Test1", "100", true);
-  Test("Test2", "123.45e+6", true);
-  Test("Test3", "+500", true);
-  Test("Test4", "5e2", true);
-  Test("Test5", "3.1416", true);
-  Test("Test6", "600.", true);
-  Test("Test7", "-.123", true);
-  Test("Test8", "-1E-16", true);
-  Test("Test9", "1.79769313486232E+308", true);
 
-  cout << endl << endl;
-
-  Test("Test10", "12e", false);
-  Test("Test11", "1a3.14", false);
-  Test("Test12", "1+23", false);
-  Test("Test13", "1.2.3", false);
-  Test("Test14", "+-5", false);
-  Test("Test15", "12e+5.4", false);
+  test1();
+  test2();
+  test3();
+  test4();
+  test5();
+  test6();
+  test7();
+  test8();
+  test9();
+  test10();
+  test11();
+  test12();
 
   return 0;
 }

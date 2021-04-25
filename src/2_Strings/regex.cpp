@@ -1,88 +1,98 @@
-#include <iostream>
-#include <stdio.h>
-using namespace std;
+#include <cassert>
+#include <string>
 
-bool matchCore(char *string, char *pattern);
-
-bool match(char *string, char *pattern) {
-  if (string == NULL || pattern == NULL)
-    return false;
-
-  return matchCore(string, pattern);
-}
-
-bool matchCore(char *string, char *pattern) {
-  if (*string == '\0' && *pattern == '\0') {
+bool match(std::string str, std::string pattern) {
+  if (str.empty() && pattern.empty())
     return true;
-  }
 
-  if (*string != '\0' && *pattern == '\0') {
+  if (!str.empty() && pattern.empty())
     return false;
-  }
 
-  if (*(pattern + 1) == '*') {
-    if (*pattern == *string || (*pattern == '.' && *string != '\0'))
-      // move on the next state
-      return matchCore(string + 1, pattern + 2)
-             // stay on the current state
-             || matchCore(string + 1, pattern)
-             // ignore a '*'
-             || matchCore(string, pattern + 2);
+  if (pattern.size() > 1 && pattern[1] == '*') {
+    if (pattern == str || (pattern.front() == '.' && !str.empty()))
+      return match(str.substr(1), pattern.substr(2)) ||
+             match(str.substr(1), pattern) || match(str, pattern.substr(2));
     else
-      // ignore a '*'
-      return matchCore(string, pattern + 2);
+      return match(str, pattern.substr(2));
   }
 
-  if (*string == *pattern || (*pattern == '.' && *string != '\0')) {
-    return matchCore(string + 1, pattern + 1);
-  }
+  if (str == pattern || (pattern.front() == '.' && !str.empty()))
+    return match(str.substr(1), pattern.substr(1));
 
   return false;
 }
 
-void Test(char *testName, char *string, char *pattern, bool expected) {
-  if (testName != NULL) {
-    printf("%s begins: ", testName);
-  }
+void test1() {
+  std::string str = "";
+  std::string pattern = "";
+  assert(match(str, pattern));
+}
 
-  if (match(string, pattern) == expected) {
-    printf("Passed.\n");
-  } else {
-    printf("FAILED.\n");
-  }
+void test2() {
+  std::string str = "bbbba";
+  std::string pattern = ".*a*a";
+  assert(match(str, pattern));
+}
+void test3() {
+  std::string str = "aaa";
+  std::string pattern = ".*";
+  assert(match(str, pattern));
+}
+
+void test4() {
+  std::string str = "";
+  std::string pattern = ".*";
+  assert(match(str, pattern));
+}
+
+void test5() {
+  std::string str = "aaa";
+  std::string pattern = ".*a";
+  assert(match(str, pattern));
+}
+
+void test6() {
+  std::string str = "aaa";
+  std::string pattern = "";
+  assert(!match(str, pattern));
+}
+
+void test7() {
+  std::string str = "aaa";
+  std::string pattern = ".a";
+  assert(!match(str, pattern));
+}
+
+void test8() {
+  std::string str = "a";
+  std::string pattern = "ab*a";
+  assert(!match(str, pattern));
+}
+
+void test9() {
+  std::string str = "aaa";
+  std::string pattern = "ab*a";
+  assert(!match(str, pattern));
+}
+
+void test10() {
+  std::string str = "aaba";
+  std::string pattern = "ab*a*c*a";
+  assert(!match(str, pattern));
 }
 
 int main() {
-  Test("Test01", "", "", true);
-  Test("Test02", "", ".*", true);
-  Test("Test03", "", ".", false);
-  Test("Test04", "", "c*", true);
-  Test("Test05", "a", ".*", true);
-  Test("Test06", "a", "a.", false);
-  Test("Test07", "a", "", false);
-  Test("Test08", "a", ".", true);
-  Test("Test09", "a", "ab*", true);
-  Test("Test10", "a", "ab*a", false);
-  Test("Test11", "aa", "aa", true);
-  Test("Test12", "aa", "a*", true);
-  Test("Test13", "aa", ".*", true);
-  Test("Test14", "aa", ".", false);
-  Test("Test15", "ab", ".*", true);
-  Test("Test16", "ab", ".*", true);
-  Test("Test17", "aaa", "aa*", true);
-  Test("Test18", "aaa", "aa.a", false);
-  Test("Test19", "aaa", "a.a", true);
-  Test("Test20", "aaa", ".a", false);
-  Test("Test21", "aaa", "a*a", true);
-  Test("Test22", "aaa", "ab*a", false);
-  Test("Test23", "aaa", "ab*ac*a", true);
-  Test("Test24", "aaa", "ab*a*c*a", true);
-  Test("Test25", "aaa", ".*", true);
-  Test("Test26", "aab", "c*a*b", true);
-  Test("Test27", "aaca", "ab*a*c*a", true);
-  Test("Test28", "aaba", "ab*a*c*a", false);
-  Test("Test29", "bbbba", ".*a*a", true);
-  Test("Test30", "bcbbabab", ".*a*a", false);
+
+  test1();
+  test2();
+  test3();
+  test4();
+  test5();
+  test6();
+  test7();
+  test8();
+  test9();
+  test10();
 
   return 0;
 }
