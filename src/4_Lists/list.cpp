@@ -1,90 +1,95 @@
 #include "list.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include <exception>
+#include <iostream>
 
-ListNode *CreateListNode(int value) {
-  ListNode *pNode = new ListNode();
-  pNode->m_nValue = value;
-  pNode->m_pNext = NULL;
-
-  return pNode;
+List::List() {
+  head = nullptr;
+  curr = nullptr;
+  temp = nullptr;
 }
 
-void ConnectListNodes(ListNode *pCurrent, ListNode *pNext) {
-  if (pCurrent == NULL) {
-    printf("Error to connect two nodes.\n");
-    exit(1);
+List::~List() {
+  auto node = head;
+  while (node) {
+    head = head->next;
+    delete node;
+    node = head;
+  }
+}
+
+void List::setCurrent(Node *node) { curr = node; }
+
+void List::connectNode(Node *next) {
+  if (!curr)
+    throw std::out_of_range{"Current node wasn't set!"};
+
+  curr->next = next;
+}
+
+void List::print() {
+  std::cout << "PrintList starts." << std::endl;
+
+  auto node = head;
+  while (node) {
+    std::cout << node->data << " ";
+    node = node->next;
   }
 
-  pCurrent->m_pNext = pNext;
+  std::cout << std::endl;
 }
 
-void PrintListNode(ListNode *pNode) {
-  if (pNode == NULL) {
-    printf("The node is NULL\n");
+void List::append(int value) {
+  auto newNode = new Node;
+  newNode->next = nullptr;
+  newNode->data = value;
+
+  if (head) {
+    curr = head;
+    while (curr->next)
+      curr = curr->next;
+
+    curr->next = newNode;
+  }
+
+  else
+    head = newNode;
+}
+
+void List::remove(int value) {
+  Node *delPtr = nullptr;
+  temp = head;
+  curr = head;
+  while (curr && curr->data != value) {
+    temp = curr;
+    curr = curr->next;
+  }
+  if (curr) {
+    delete delPtr;
   } else {
-    printf("The key in node is %d.\n", pNode->m_nValue);
-  }
-}
-
-void PrintList(ListNode *pHead) {
-  printf("PrintList starts.\n");
-
-  ListNode *pNode = pHead;
-  while (pNode != NULL) {
-    printf("%d\t", pNode->m_nValue);
-    pNode = pNode->m_pNext;
-  }
-
-  printf("\nPrintList ends.\n");
-}
-
-void DestroyList(ListNode *pHead) {
-  ListNode *pNode = pHead;
-  while (pNode != NULL) {
-    pHead = pHead->m_pNext;
-    delete pNode;
-    pNode = pHead;
-  }
-}
-
-void AddToTail(ListNode **pHead, int value) {
-  ListNode *pNew = new ListNode();
-  pNew->m_nValue = value;
-  pNew->m_pNext = NULL;
-
-  if (*pHead == NULL) {
-    *pHead = pNew;
-  } else {
-    ListNode *pNode = *pHead;
-    while (pNode->m_pNext != NULL)
-      pNode = pNode->m_pNext;
-
-    pNode->m_pNext = pNew;
-  }
-}
-
-void RemoveNode(ListNode **pHead, int value) {
-  if (pHead == NULL || *pHead == NULL)
-    return;
-
-  ListNode *pToBeDeleted = NULL;
-  if ((*pHead)->m_nValue == value) {
-    pToBeDeleted = *pHead;
-    *pHead = (*pHead)->m_pNext;
-  } else {
-    ListNode *pNode = *pHead;
-    while (pNode->m_pNext != NULL && pNode->m_pNext->m_nValue != value)
-      pNode = pNode->m_pNext;
-
-    if (pNode->m_pNext != NULL && pNode->m_pNext->m_nValue == value) {
-      pToBeDeleted = pNode->m_pNext;
-      pNode->m_pNext = pNode->m_pNext->m_pNext;
+    delPtr = curr;
+    curr = curr->next;
+    temp->next = curr;
+    if (delPtr == head) {
+      head = head->next;
+      temp = nullptr;
     }
+    delete delPtr;
+  }
+}
+
+bool operator==(const List &l1, const List &l2) {
+
+  auto node1 = l1.head;
+  auto node2 = l2.head;
+
+  while (node1 && node2) {
+
+    if (node1->data != node2->data)
+      return false;
+
+    node1 = node1->next;
+    node2 = node2->next;
   }
 
-  if (pToBeDeleted != NULL) {
-    delete pToBeDeleted;
-    pToBeDeleted = NULL;
-  }
+  return node1 == node2;
 }
