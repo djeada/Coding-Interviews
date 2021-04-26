@@ -1,111 +1,68 @@
+#include <cassert>
 #include <stack>
-#include <stdio.h>
+#include <vector>
 
-bool IsPopOrder(const int *pPush, const int *pPop, int nLength) {
-  bool bPossible = false;
+bool isPopOrder(std::vector<int> &push, std::vector<int> &pop) {
+  bool possible = false;
 
-  if (pPush != NULL && pPop != NULL && nLength > 0) {
-    const int *pNextPush = pPush;
-    const int *pNextPop = pPop;
+  if (!push.empty() && !pop.empty()) {
+    unsigned int iPush = 0;
+    unsigned int iPop = 0;
     std::stack<int> stackData;
 
-    while (pNextPop - pPop < nLength) {
-      // Push some numbers when the number to be popped is not
-      // is not on the top of the stack
-      while (stackData.empty() || stackData.top() != *pNextPop) {
-        // Break when all numbers have been pushed
-        if (pNextPush - pPush == nLength)
+    while (iPop < pop.size()) {
+      while (stackData.empty() || stackData.top() != pop[iPop]) {
+
+        if (iPush == push.size())
           break;
 
-        stackData.push(*pNextPush);
-        pNextPush++;
+        stackData.push(push[iPush]);
+        iPush++;
       }
 
-      if (stackData.top() != *pNextPop)
+      if (stackData.top() != pop[iPop])
         break;
 
       stackData.pop();
-      pNextPop++;
+      iPop++;
     }
 
-    if (stackData.empty() && pNextPop - pPop == nLength)
-      bPossible = true;
+    if (stackData.empty() && iPop == pop.size())
+      possible = true;
   }
 
-  return bPossible;
+  return possible;
 }
 
-// ==================== Test Code ====================
-void Test(char *testName, const int *pPush, const int *pPop, int nLength,
-          bool expected) {
-  if (testName != NULL)
-    printf("%s begins: ", testName);
-
-  if (IsPopOrder(pPush, pPop, nLength) == expected)
-    printf("Passed.\n");
-  else
-    printf("failed.\n");
+void test1() {
+  std::vector<int> push{1, 2, 3, 4, 5};
+  std::vector<int> pop{4, 5, 3, 2, 1};
+  assert(isPopOrder(push, pop));
 }
 
-void Test1() {
-  const int nLength = 5;
-  int push[nLength] = {1, 2, 3, 4, 5};
-  int pop[nLength] = {4, 5, 3, 2, 1};
-
-  Test("Test1", push, pop, nLength, true);
+void test2() {
+  std::vector<int> push{1, 2, 3, 4, 5};
+  std::vector<int> pop{3, 5, 4, 2, 1};
+  assert(isPopOrder(push, pop));
 }
 
-void Test2() {
-  const int nLength = 5;
-  int push[nLength] = {1, 2, 3, 4, 5};
-  int pop[nLength] = {3, 5, 4, 2, 1};
-
-  Test("Test2", push, pop, nLength, true);
+void test3() {
+  std::vector<int> push{1, 2, 3, 4, 5};
+  std::vector<int> pop{4, 3, 5, 1, 2};
+  assert(!isPopOrder(push, pop));
 }
 
-void Test3() {
-  const int nLength = 5;
-  int push[nLength] = {1, 2, 3, 4, 5};
-  int pop[nLength] = {4, 3, 5, 1, 2};
-
-  Test("Test3", push, pop, nLength, false);
+void test4() {
+  std::vector<int> push{1, 2, 3, 4, 5};
+  std::vector<int> pop{3, 5, 4, 1, 2};
+  assert(!isPopOrder(push, pop));
 }
 
-void Test4() {
-  const int nLength = 5;
-  int push[nLength] = {1, 2, 3, 4, 5};
-  int pop[nLength] = {3, 5, 4, 1, 2};
-
-  Test("Test4", push, pop, nLength, false);
-}
-
-// There is only one element in the push and pop sequences
-void Test5() {
-  const int nLength = 1;
-  int push[nLength] = {1};
-  int pop[nLength] = {2};
-
-  Test("Test5", push, pop, nLength, false);
-}
-
-void Test6() {
-  const int nLength = 1;
-  int push[nLength] = {1};
-  int pop[nLength] = {1};
-
-  Test("Test6", push, pop, nLength, true);
-}
-
-void Test7() { Test("Test7", NULL, NULL, 0, false); }
-
-int main(int argc, char *argv[]) {
-  Test1();
-  Test2();
-  Test3();
-  Test4();
-  Test5();
-  Test6();
-  Test7();
+int main() {
+  test1();
+  test2();
+  test3();
+  test4();
 
   return 0;
 }

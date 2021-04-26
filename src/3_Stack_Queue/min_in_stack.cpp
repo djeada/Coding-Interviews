@@ -1,29 +1,11 @@
 #include <cassert>
 #include <stack>
-#include <stdio.h>
 
 template <typename T> class StackWithMin {
 public:
+  StackWithMin(void) {}
   virtual ~StackWithMin(void) {}
 
-  virtual T &top(void) = 0;
-  virtual const T &top(void) const = 0;
-
-  virtual void push(const T &value) = 0;
-  virtual void pop(void) = 0;
-
-  virtual const T &min(void) const = 0;
-
-  virtual bool empty() const = 0;
-  virtual size_t size() const = 0;
-};
-
-// ==================== Solution 1 ====================
-template <typename T> class StackWithMin_Solution1 : public StackWithMin<T> {
-public:
-  StackWithMin_Solution1(void) {}
-  virtual ~StackWithMin_Solution1(void) {}
-
   T &top(void);
   const T &top(void) const;
 
@@ -36,193 +18,84 @@ public:
   size_t size() const;
 
 private:
-  std::stack<T> m_data; // data stack, to store numbers
-  std::stack<T> m_min;  // auxiliary stack, to store minimal numbers
+  std::stack<T> data;
+  T min_value;
 };
 
-template <typename T> void StackWithMin_Solution1<T>::push(const T &value) {
-  m_data.push(value);
-
-  if (m_min.size() == 0 || value < m_min.top())
-    m_min.push(value);
-  else
-    m_min.push(m_min.top());
-}
-
-template <typename T> void StackWithMin_Solution1<T>::pop() {
-  assert(m_data.size() > 0 && m_min.size() > 0);
-
-  m_data.pop();
-  m_min.pop();
-}
-
-template <typename T> const T &StackWithMin_Solution1<T>::min() const {
-  assert(m_data.size() > 0 && m_min.size() > 0);
-
-  return m_min.top();
-}
-
-template <typename T> T &StackWithMin_Solution1<T>::top() {
-  return m_data.top();
-}
-
-template <typename T> const T &StackWithMin_Solution1<T>::top() const {
-  return m_data.top();
-}
-
-template <typename T> bool StackWithMin_Solution1<T>::empty() const {
-  return m_data.empty();
-}
-
-template <typename T> size_t StackWithMin_Solution1<T>::size() const {
-  return m_data.size();
-}
-
-// ==================== Solution 2 ====================
-template <typename T> class StackWithMin_Solution2 : public StackWithMin<T> {
-public:
-  StackWithMin_Solution2(void) {}
-  virtual ~StackWithMin_Solution2(void) {}
-
-  T &top(void);
-  const T &top(void) const;
-
-  void push(const T &value);
-  void pop(void);
-
-  const T &min(void) const;
-
-  bool empty() const;
-  size_t size() const;
-
-private:
-  std::stack<T> m_data; // data stack, to store numbers
-  T m_min;              // minimal number
-};
-
-template <typename T> void StackWithMin_Solution2<T>::push(const T &value) {
-  if (m_data.size() == 0) {
-    m_data.push(value);
-    m_min = value;
-  } else if (value >= m_min) {
-    m_data.push(value);
+template <typename T> void StackWithMin<T>::push(const T &value) {
+  if (data.size() == 0) {
+    data.push(value);
+    min_value = value;
+  } else if (value >= min_value) {
+    data.push(value);
   } else {
-    m_data.push(2 * value - m_min);
-    m_min = value;
+    data.push(2 * value - min_value);
+    min_value = value;
   }
 }
 
-template <typename T> void StackWithMin_Solution2<T>::pop() {
-  assert(m_data.size() > 0);
+template <typename T> void StackWithMin<T>::pop() {
+  assert(data.size() > 0);
 
-  if (m_data.top() < m_min)
-    m_min = 2 * m_min - m_data.top();
+  if (data.top() < min_value)
+    min_value = 2 * min_value - data.top();
 
-  m_data.pop();
+  data.pop();
 }
 
-template <typename T> const T &StackWithMin_Solution2<T>::min() const {
-  assert(m_data.size() > 0);
+template <typename T> const T &StackWithMin<T>::min() const {
+  assert(data.size() > 0);
 
-  return m_min;
+  return min_value;
 }
 
-template <typename T> T &StackWithMin_Solution2<T>::top() {
-  T top = m_data.top();
-  if (top < m_min)
-    top = m_min;
+template <typename T> T &StackWithMin<T>::top() {
+  T top = data.top();
+  if (top < min_value)
+    top = min_value;
 
   return top;
 }
 
-template <typename T> const T &StackWithMin_Solution2<T>::top() const {
-  T top = m_data.top();
-  if (top < m_min)
-    top = m_min;
+template <typename T> const T &StackWithMin<T>::top() const {
+  T top = data.top();
+  if (top < min_value)
+    top = min_value;
 
   return top;
 }
 
-template <typename T> bool StackWithMin_Solution2<T>::empty() const {
-  return m_data.empty();
+template <typename T> bool StackWithMin<T>::empty() const {
+  return data.empty();
 }
 
-template <typename T> size_t StackWithMin_Solution2<T>::size() const {
-  return m_data.size();
+template <typename T> size_t StackWithMin<T>::size() const {
+  return data.size();
 }
 
-// ==================== Test Code ====================
-void Test(char *testName, const StackWithMin<int> &stack, int expected) {
-  if (testName != NULL)
-    printf("%s begins: ", testName);
+void test1() {
 
-  if (stack.min() == expected)
-    printf("Passed.\n");
-  else
-    printf("Failed.\n");
-}
-
-void test_Solution1() {
-  printf("===== Test for Solution1 begins: =====\n");
-
-  StackWithMin_Solution1<int> stack;
-
-  stack.push(3);
-  Test("Test1", stack, 3);
-
-  stack.push(4);
-  Test("Test2", stack, 3);
-
+  StackWithMin<int> stack;
+  stack.push(10);
+  stack.push(5);
   stack.push(2);
-  Test("Test3", stack, 2);
 
-  stack.push(3);
-  Test("Test4", stack, 2);
-
-  stack.pop();
-  Test("Test5", stack, 2);
-
-  stack.pop();
-  Test("Test6", stack, 3);
-
-  stack.pop();
-  Test("Test7", stack, 3);
-
-  stack.push(0);
-  Test("Test8", stack, 0);
+  assert(stack.min() == 2);
 }
 
-void test_Solution2() {
-  printf("===== Test for Solution2 begins: =====\n");
+void test2() {
 
-  StackWithMin_Solution2<int> stack;
-
-  stack.push(3);
-  Test("Test1", stack, 3);
-
-  stack.push(4);
-  Test("Test2", stack, 3);
-
-  stack.push(2);
-  Test("Test3", stack, 2);
-
-  stack.push(3);
-  Test("Test4", stack, 2);
-
+  StackWithMin<int> stack;
+  stack.push(-1);
+  stack.push(7);
+  stack.push(-2);
   stack.pop();
-  Test("Test5", stack, 2);
 
-  stack.pop();
-  Test("Test6", stack, 3);
-
-  stack.pop();
-  Test("Test7", stack, 3);
-
-  stack.push(0);
-  Test("Test8", stack, 0);
+  assert(stack.min() == -1);
 }
 
-int main(int argc, char *argv[]) {
-  test_Solution1();
-  test_Solution2();
+int main() {
+  test1();
+  test2();
+  return 0;
 }
