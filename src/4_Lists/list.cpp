@@ -2,10 +2,14 @@
 #include <exception>
 #include <iostream>
 
-List::List() {
-  head = nullptr;
-  curr = nullptr;
-  temp = nullptr;
+List::List() : head(nullptr), curr(nullptr), count(0) {}
+
+List::List(const List &other) : head(nullptr), curr(nullptr), count(0) {
+  auto node = other.head;
+  while (node) {
+    append(node->data);
+    node = node->next;
+  }
 }
 
 List::~List() {
@@ -17,13 +21,39 @@ List::~List() {
   }
 }
 
-void List::setCurrent(Node *node) { curr = node; }
+bool List::empty() { return head == nullptr; }
 
-void List::connectNode(Node *next) {
-  if (!curr)
-    throw std::out_of_range{"Current node wasn't set!"};
+unsigned int List::size() { return count; }
 
-  curr->next = next;
+void List::connectNodes(unsigned int index1, unsigned int index2) {
+
+  Node *node1 = nullptr;
+  Node *node2 = nullptr;
+
+  unsigned int counter = 0;
+
+  auto node = head;
+
+  if (counter == index1)
+    node1 = node;
+
+  if (counter == index2)
+    node2 = node;
+
+  while (node && counter < std::max(index1, index2)) {
+    node = node->next;
+    counter++;
+    if (counter == index1)
+      node1 = node;
+
+    if (counter == index2)
+      node2 = node;
+  }
+
+  if (!node1 || !node2)
+    throw std::out_of_range{"Index out of range!"};
+
+  node1->next = node2;
 }
 
 void List::print() {
@@ -53,27 +83,50 @@ void List::append(int value) {
 
   else
     head = newNode;
+
+  count++;
+}
+
+int List::get(unsigned int index) {
+
+  unsigned int counter = 0;
+  auto node = head;
+
+  while (node && counter <= index) {
+
+    if (counter == index)
+      return node->data;
+
+    node = node->next;
+    counter++;
+  }
+
+  throw std::out_of_range{"Index out of range!"};
 }
 
 void List::remove(int value) {
-  Node *delPtr = nullptr;
-  temp = head;
+  Node *prev = nullptr;
   curr = head;
   while (curr && curr->data != value) {
-    temp = curr;
+    prev = curr;
     curr = curr->next;
   }
-  if (curr) {
-    delete delPtr;
-  } else {
-    delPtr = curr;
-    curr = curr->next;
-    temp->next = curr;
-    if (delPtr == head) {
-      head = head->next;
-      temp = nullptr;
+  if (curr && curr->data == value) {
+
+    if (curr == head) {
+      if (head->next)
+        head = head->next;
+      else
+        head = nullptr;
+    } else if (prev) {
+      if (curr->next)
+        prev->next = curr->next;
+      else
+        prev->next = nullptr;
     }
-    delete delPtr;
+    delete curr;
+    curr = nullptr;
+    count--;
   }
 }
 
@@ -83,7 +136,6 @@ bool operator==(const List &l1, const List &l2) {
   auto node2 = l2.head;
 
   while (node1 && node2) {
-
     if (node1->data != node2->data)
       return false;
 

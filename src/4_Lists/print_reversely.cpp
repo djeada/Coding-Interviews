@@ -73,10 +73,4 @@ void Test3() {
   Test(NULL);
 }
 
-int main(int argc, char *argv[]) {
-  Test1();
-  Test2();
-  Test3();
-
-  return 0;
-}
+int main() { return 0; }

@@ -1,195 +1,139 @@
 #include "list.h"
+#include <cassert>
 #include <iostream>
-using namespace std;
 
-ListNode *Merge(ListNode *pHead1, ListNode *pHead2) {
-  if (pHead1 == NULL)
-    return pHead2;
-  else if (pHead2 == NULL)
-    return pHead1;
+List merge(List &list1, List &list2) {
+  if (list1.empty())
+    return List(list2);
 
-  ListNode *pMergedHead = NULL;
+  if (list2.empty())
+    return List(list1);
 
-  if (pHead1->m_nValue < pHead2->m_nValue) {
-    pMergedHead = pHead1;
-    pMergedHead->m_pNext = Merge(pHead1->m_pNext, pHead2);
-  } else {
-    pMergedHead = pHead2;
-    pMergedHead->m_pNext = Merge(pHead1, pHead2->m_pNext);
+  List result;
+
+  unsigned int i = 0;
+  unsigned int j = 0;
+
+  while (i < list1.size() && j < list2.size()) {
+
+    auto data1 = list1.get(i);
+    auto data2 = list2.get(j);
+
+    if (data1 < data2) {
+      result.append(data1);
+      i++;
+    }
+
+    else {
+      result.append(data2);
+      j++;
+    }
   }
 
-  return pMergedHead;
+  while (i < list1.size()) {
+    result.append(list1.get(i));
+    i++;
+  }
+
+  while (j < list2.size()) {
+    result.append(list2.get(j));
+    j++;
+  }
+
+  return List(result);
 }
 
-// ==================== Test Code ====================
-ListNode *Test(char *testName, ListNode *pHead1, ListNode *pHead2) {
-  if (testName != NULL)
-    printf("%s begins:\n", testName);
+void test1() {
+  List list1;
+  list1.append(1);
+  list1.append(3);
+  list1.append(5);
 
-  cout << "The first list is:\n";
-  PrintList(pHead1);
+  List list2;
+  list2.append(2);
+  list2.append(4);
+  list2.append(6);
 
-  cout << "The second list is:\n";
-  PrintList(pHead2);
+  List expected;
+  expected.append(1);
+  expected.append(2);
+  expected.append(3);
+  expected.append(4);
+  expected.append(5);
+  expected.append(6);
 
-  cout << "The merged list is:\n";
-  ListNode *pMergedHead = Merge(pHead1, pHead2);
-  PrintList(pMergedHead);
-
-  cout << endl;
-
-  return pMergedHead;
+  auto result = merge(list1, list2);
+  assert(result == expected);
 }
 
-// list1: 1->3->5
-// list2: 2->4->6
-void Test1() {
-  ListNode *pNode1 = CreateListNode(1);
-  ListNode *pNode3 = CreateListNode(3);
-  ListNode *pNode5 = CreateListNode(5);
+void test2() {
+  List list1;
+  list1.append(1);
+  list1.append(2);
+  list1.append(3);
 
-  ConnectListNodes(pNode1, pNode3);
-  ConnectListNodes(pNode3, pNode5);
+  List list2;
+  list2.append(4);
+  list2.append(5);
+  list2.append(6);
 
-  ListNode *pNode2 = CreateListNode(2);
-  ListNode *pNode4 = CreateListNode(4);
-  ListNode *pNode6 = CreateListNode(6);
+  List expected;
+  expected.append(1);
+  expected.append(2);
+  expected.append(3);
+  expected.append(4);
+  expected.append(5);
+  expected.append(6);
 
-  ConnectListNodes(pNode2, pNode4);
-  ConnectListNodes(pNode4, pNode6);
-
-  ListNode *pMergedHead = Test("Test1", pNode1, pNode2);
-
-  DestroyList(pMergedHead);
+  auto result = merge(list1, list2);
+  assert(result == expected);
 }
 
-// There are duplicated nodes in two lists
-// list1: 1->3->5
-// list2: 1->3->5
-void Test2() {
-  ListNode *pNode1 = CreateListNode(1);
-  ListNode *pNode3 = CreateListNode(3);
-  ListNode *pNode5 = CreateListNode(5);
+void test3() {
+  List list1;
+  list1.append(1);
+  list1.append(2);
+  list1.append(3);
 
-  ConnectListNodes(pNode1, pNode3);
-  ConnectListNodes(pNode3, pNode5);
+  List list2;
 
-  ListNode *pNode2 = CreateListNode(1);
-  ListNode *pNode4 = CreateListNode(3);
-  ListNode *pNode6 = CreateListNode(5);
+  List expected;
+  expected.append(1);
+  expected.append(2);
+  expected.append(3);
 
-  ConnectListNodes(pNode2, pNode4);
-  ConnectListNodes(pNode4, pNode6);
-
-  ListNode *pMergedHead = Test("Test2", pNode1, pNode2);
-
-  DestroyList(pMergedHead);
+  auto result = merge(list1, list2);
+  assert(result == expected);
 }
 
-// Anyone of the two lists has only one node
-// list1: 1
-// list2: 2
-void Test3() {
-  ListNode *pNode1 = CreateListNode(1);
-  ListNode *pNode2 = CreateListNode(2);
+void test4() {
+  List list1;
+  list1.append(1);
+  list1.append(3);
+  list1.append(5);
 
-  ListNode *pMergedHead = Test("Test3", pNode1, pNode2);
+  List list2;
+  list2.append(2);
+  list2.append(4);
+  list2.append(6);
 
-  DestroyList(pMergedHead);
+  List expected;
+  expected.append(1);
+  expected.append(2);
+  expected.append(3);
+  expected.append(4);
+  expected.append(5);
+  expected.append(6);
+
+  auto result = merge(list1, list2);
+  assert(result == expected);
 }
 
-// One of the lists is empty
-// list1: 1->3->5
-// list2: empty
-void Test4() {
-  ListNode *pNode1 = CreateListNode(1);
-  ListNode *pNode3 = CreateListNode(3);
-  ListNode *pNode5 = CreateListNode(5);
-
-  ConnectListNodes(pNode1, pNode3);
-  ConnectListNodes(pNode3, pNode5);
-
-  ListNode *pMergedHead = Test("Test4", pNode1, NULL);
-
-  DestroyList(pMergedHead);
-}
-
-// One of the lists is empty
-// list1: empty
-// list2: 1->3->5
-void Test5() {
-  ListNode *pNode1 = CreateListNode(1);
-  ListNode *pNode3 = CreateListNode(3);
-  ListNode *pNode5 = CreateListNode(5);
-
-  ConnectListNodes(pNode1, pNode3);
-  ConnectListNodes(pNode3, pNode5);
-
-  ListNode *pMergedHead = Test("Test5", NULL, pNode1);
-
-  DestroyList(pMergedHead);
-}
-
-// Two lists are empty
-// list1: empty
-// list2: empty
-void Test6() { ListNode *pMergedHead = Test("Test6", NULL, NULL); }
-
-// nodes in list1 are less than nodes in list2
-// list1: 1->2->3
-// list2: 4->5->6
-void Test7() {
-  ListNode *pNode1 = CreateListNode(1);
-  ListNode *pNode2 = CreateListNode(2);
-  ListNode *pNode3 = CreateListNode(3);
-
-  ConnectListNodes(pNode1, pNode2);
-  ConnectListNodes(pNode2, pNode3);
-
-  ListNode *pNode4 = CreateListNode(4);
-  ListNode *pNode5 = CreateListNode(5);
-  ListNode *pNode6 = CreateListNode(6);
-
-  ConnectListNodes(pNode4, pNode5);
-  ConnectListNodes(pNode5, pNode6);
-
-  ListNode *pMergedHead = Test("Test7", pNode1, pNode4);
-
-  DestroyList(pMergedHead);
-}
-
-// nodes in list1 are greater than nodes in list2
-// list1: 4->5->6
-// list2: 1->2->3
-void Test8() {
-  ListNode *pNode4 = CreateListNode(4);
-  ListNode *pNode5 = CreateListNode(5);
-  ListNode *pNode6 = CreateListNode(6);
-
-  ConnectListNodes(pNode4, pNode5);
-  ConnectListNodes(pNode5, pNode6);
-
-  ListNode *pNode1 = CreateListNode(1);
-  ListNode *pNode2 = CreateListNode(2);
-  ListNode *pNode3 = CreateListNode(3);
-
-  ConnectListNodes(pNode1, pNode2);
-  ConnectListNodes(pNode2, pNode3);
-
-  ListNode *pMergedHead = Test("Test8", pNode4, pNode1);
-
-  DestroyList(pMergedHead);
-}
-
-int main(int argc, char *argv[]) {
-  Test1();
-  Test2();
-  Test3();
-  Test4();
-  Test5();
-  Test6();
-  Test7();
-  Test8();
+int main() {
+  test1();
+  test2();
+  test3();
+  test4();
 
   return 0;
 }

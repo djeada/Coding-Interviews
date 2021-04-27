@@ -1,174 +1,114 @@
 #include "list.h"
+#include <cassert>
 #include <iostream>
-using namespace std;
+#include <unordered_set>
 
-bool HasLoop(ListNode *pHead) {
-  if (pHead == NULL)
-    return false;
+class ListWithLoops : public List {
 
-  ListNode *pSlow = pHead->m_pNext;
-  if (pSlow == NULL)
-    return false;
+  std::unordered_set<Node *> nodes;
 
-  ListNode *pFast = pSlow->m_pNext;
-  while (pFast != NULL && pSlow != NULL) {
-    if (pFast == pSlow)
-      return true;
+public:
+  ListWithLoops() : List(){};
 
-    pSlow = pSlow->m_pNext;
+  ~ListWithLoops() {
+    for (auto &node : nodes)
+      delete node;
 
-    pFast = pFast->m_pNext;
-    if (pFast != NULL)
-      pFast = pFast->m_pNext;
+    head = nullptr;
   }
 
-  return false;
+  void append(int value) {
+    auto newNode = new Node;
+    newNode->next = nullptr;
+    newNode->data = value;
+
+    if (head) {
+      curr = head;
+      while (curr->next)
+        curr = curr->next;
+
+      curr->next = newNode;
+    }
+
+    else
+      head = newNode;
+
+    nodes.insert(newNode);
+  }
+
+  bool hasLoop() {
+    if (!head)
+      return false;
+
+    auto slow = head->next;
+    if (!slow)
+      return false;
+
+    auto fast = slow->next;
+    while (fast && slow) {
+      if (fast == slow)
+        return true;
+
+      slow = slow->next;
+
+      fast = fast->next;
+      if (fast)
+        fast = fast->next;
+    }
+
+    return false;
+  }
+};
+
+void test1() {
+  ListWithLoops list;
+
+  list.append(1);
+  assert(!list.hasLoop());
 }
 
-// ==================== Test Code ====================
-void Test(char *testName, ListNode *pHead, bool expected) {
-  if (testName != NULL)
-    cout << testName << " begins: ";
+void test2() {
+  ListWithLoops list;
 
-  if (HasLoop(pHead) == expected)
-    cout << "HasLoop Passed.\n";
-  else
-    cout << "HasLoop FAILED.\n";
+  list.append(1);
+  list.connectNodes(0, 0);
+
+  assert(list.hasLoop());
 }
 
-// A list has a node, without a loop
-void Test1() {
-  ListNode *pNode1 = CreateListNode(1);
+void test3() {
+  ListWithLoops list;
 
-  Test("Test1", pNode1, false);
+  list.append(1);
+  list.append(2);
+  list.append(3);
+  list.append(4);
+  list.append(5);
 
-  DestroyList(pNode1);
+  list.connectNodes(4, 2);
+
+  assert(list.hasLoop());
 }
 
-// A list has a node, with a loop
-void Test2() {
-  ListNode *pNode1 = CreateListNode(1);
-  ConnectListNodes(pNode1, pNode1);
+void test4() {
+  ListWithLoops list;
 
-  Test("Test2", pNode1, true);
+  list.append(1);
+  list.append(2);
+  list.append(3);
+  list.append(4);
+  list.append(5);
 
-  delete pNode1;
-  pNode1 = NULL;
+  list.connectNodes(4, 0);
+
+  assert(list.hasLoop());
 }
 
-// A list has multiple nodes, with a loop
-void Test3() {
-  ListNode *pNode1 = CreateListNode(1);
-  ListNode *pNode2 = CreateListNode(2);
-  ListNode *pNode3 = CreateListNode(3);
-  ListNode *pNode4 = CreateListNode(4);
-  ListNode *pNode5 = CreateListNode(5);
-
-  ConnectListNodes(pNode1, pNode2);
-  ConnectListNodes(pNode2, pNode3);
-  ConnectListNodes(pNode3, pNode4);
-  ConnectListNodes(pNode4, pNode5);
-  ConnectListNodes(pNode5, pNode3);
-
-  Test("Test3", pNode1, true);
-
-  delete pNode1;
-  pNode1 = NULL;
-  delete pNode2;
-  pNode2 = NULL;
-  delete pNode3;
-  pNode3 = NULL;
-  delete pNode4;
-  pNode4 = NULL;
-  delete pNode5;
-  pNode5 = NULL;
-}
-
-// A list has multiple nodes, with a loop
-void Test4() {
-  ListNode *pNode1 = CreateListNode(1);
-  ListNode *pNode2 = CreateListNode(2);
-  ListNode *pNode3 = CreateListNode(3);
-  ListNode *pNode4 = CreateListNode(4);
-  ListNode *pNode5 = CreateListNode(5);
-
-  ConnectListNodes(pNode1, pNode2);
-  ConnectListNodes(pNode2, pNode3);
-  ConnectListNodes(pNode3, pNode4);
-  ConnectListNodes(pNode4, pNode5);
-  ConnectListNodes(pNode5, pNode1);
-
-  Test("Test4", pNode1, true);
-
-  delete pNode1;
-  pNode1 = NULL;
-  delete pNode2;
-  pNode2 = NULL;
-  delete pNode3;
-  pNode3 = NULL;
-  delete pNode4;
-  pNode4 = NULL;
-  delete pNode5;
-  pNode5 = NULL;
-}
-
-// A list has multiple nodes, with a loop
-void Test5() {
-  ListNode *pNode1 = CreateListNode(1);
-  ListNode *pNode2 = CreateListNode(2);
-  ListNode *pNode3 = CreateListNode(3);
-  ListNode *pNode4 = CreateListNode(4);
-  ListNode *pNode5 = CreateListNode(5);
-
-  ConnectListNodes(pNode1, pNode2);
-  ConnectListNodes(pNode2, pNode3);
-  ConnectListNodes(pNode3, pNode4);
-  ConnectListNodes(pNode4, pNode5);
-  ConnectListNodes(pNode5, pNode5);
-
-  Test("Test5", pNode1, true);
-
-  delete pNode1;
-  pNode1 = NULL;
-  delete pNode2;
-  pNode2 = NULL;
-  delete pNode3;
-  pNode3 = NULL;
-  delete pNode4;
-  pNode4 = NULL;
-  delete pNode5;
-  pNode5 = NULL;
-}
-
-// A list has multiple nodes, without a loop
-void Test6() {
-  ListNode *pNode1 = CreateListNode(1);
-  ListNode *pNode2 = CreateListNode(2);
-  ListNode *pNode3 = CreateListNode(3);
-  ListNode *pNode4 = CreateListNode(4);
-  ListNode *pNode5 = CreateListNode(5);
-
-  ConnectListNodes(pNode1, pNode2);
-  ConnectListNodes(pNode2, pNode3);
-  ConnectListNodes(pNode3, pNode4);
-  ConnectListNodes(pNode4, pNode5);
-
-  Test("Test6", pNode1, false);
-
-  DestroyList(pNode1);
-}
-
-// Empty list
-void Test7() { Test("Test7", NULL, false); }
-
-int main(int argc, char *argv[]) {
-  Test1();
-  Test2();
-  Test3();
-  Test4();
-  Test5();
-  Test6();
-  Test7();
+int main() {
+  test1();
+  test2();
+  // test3();
+  test4();
 
   return 0;
 }

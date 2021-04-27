@@ -1,123 +1,82 @@
 #include "list.h"
-#include <stdio.h>
+#include <cassert>
 
-void DeleteNode(ListNode **pListHead, ListNode *pToBeDeleted) {
-  if (!pListHead || !pToBeDeleted)
-    return;
+void test1() {
+  List list;
+  list.append(1);
+  list.append(2);
+  list.append(3);
+  list.append(4);
+  list.append(5);
 
-  // The node to be deleted is not the tail of the list.
-  if (pToBeDeleted->m_pNext != NULL) {
-    ListNode *pNext = pToBeDeleted->m_pNext;
-    pToBeDeleted->m_nValue = pNext->m_nValue;
-    pToBeDeleted->m_pNext = pNext->m_pNext;
+  List expectedResult;
 
-    delete pNext;
-    pNext = NULL;
-  }
-  // The list has only one note. Delete the only node.
-  else if (*pListHead == pToBeDeleted) {
-    delete pToBeDeleted;
-    pToBeDeleted = NULL;
-    *pListHead = NULL;
-  }
-  // Delete the tail node of a list with multiple nodes
-  else {
-    ListNode *pNode = *pListHead;
-    while (pNode->m_pNext != pToBeDeleted) {
-      pNode = pNode->m_pNext;
-    }
+  expectedResult.append(1);
+  expectedResult.append(2);
+  expectedResult.append(4);
+  expectedResult.append(5);
 
-    pNode->m_pNext = NULL;
-    delete pToBeDeleted;
-    pToBeDeleted = NULL;
-  }
+  list.remove(3);
+
+  assert(list == expectedResult);
 }
 
-// ==================== Test Code ====================
-void Test(ListNode *pListHead, ListNode *pNode) {
-  printf("The original list is: \n");
-  PrintList(pListHead);
+void test2() {
+  List list;
+  list.append(1);
+  list.append(2);
+  list.append(3);
+  list.append(4);
+  list.append(5);
 
-  printf("The node to be deleted is: \n");
-  PrintListNode(pNode);
+  List expectedResult;
 
-  DeleteNode(&pListHead, pNode);
+  expectedResult.append(1);
+  expectedResult.append(2);
+  expectedResult.append(3);
+  expectedResult.append(4);
 
-  printf("The result list is: \n");
-  PrintList(pListHead);
-  printf("\n\n");
+  list.remove(5);
+
+  assert(list == expectedResult);
 }
 
-// Delete a node
-void Test1() {
-  ListNode *pNode1 = CreateListNode(1);
-  ListNode *pNode2 = CreateListNode(2);
-  ListNode *pNode3 = CreateListNode(3);
-  ListNode *pNode4 = CreateListNode(4);
-  ListNode *pNode5 = CreateListNode(5);
+void test3() {
+  List list;
+  list.append(1);
+  list.append(2);
+  list.append(3);
+  list.append(4);
+  list.append(5);
 
-  ConnectListNodes(pNode1, pNode2);
-  ConnectListNodes(pNode2, pNode3);
-  ConnectListNodes(pNode3, pNode4);
-  ConnectListNodes(pNode4, pNode5);
+  List expectedResult;
 
-  Test(pNode1, pNode3);
+  expectedResult.append(2);
+  expectedResult.append(3);
+  expectedResult.append(4);
+  expectedResult.append(5);
 
-  DestroyList(pNode1);
+  list.remove(1);
+
+  assert(list == expectedResult);
 }
 
-// Delete a tail
-void Test2() {
-  ListNode *pNode1 = CreateListNode(1);
-  ListNode *pNode2 = CreateListNode(2);
-  ListNode *pNode3 = CreateListNode(3);
-  ListNode *pNode4 = CreateListNode(4);
-  ListNode *pNode5 = CreateListNode(5);
+void test4() {
+  List list;
+  list.append(1);
 
-  ConnectListNodes(pNode1, pNode2);
-  ConnectListNodes(pNode2, pNode3);
-  ConnectListNodes(pNode3, pNode4);
-  ConnectListNodes(pNode4, pNode5);
+  List expectedResult;
 
-  Test(pNode1, pNode5);
+  list.remove(1);
 
-  DestroyList(pNode1);
+  assert(list == expectedResult);
 }
 
-// Delete a header node
-void Test3() {
-  ListNode *pNode1 = CreateListNode(1);
-  ListNode *pNode2 = CreateListNode(2);
-  ListNode *pNode3 = CreateListNode(3);
-  ListNode *pNode4 = CreateListNode(4);
-  ListNode *pNode5 = CreateListNode(5);
-
-  ConnectListNodes(pNode1, pNode2);
-  ConnectListNodes(pNode2, pNode3);
-  ConnectListNodes(pNode3, pNode4);
-  ConnectListNodes(pNode4, pNode5);
-
-  Test(pNode1, pNode1);
-
-  DestroyList(pNode1);
-}
-
-// Delete the only node
-void Test4() {
-  ListNode *pNode1 = CreateListNode(1);
-
-  Test(pNode1, pNode1);
-}
-
-// empty list
-void Test5() { Test(NULL, NULL); }
-
-int main(int argc, char *argv[]) {
-  Test1();
-  Test2();
-  Test3();
-  Test4();
-  Test5();
+int main() {
+  test1();
+  test2();
+  test3();
+  test4();
 
   return 0;
 }

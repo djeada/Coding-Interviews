@@ -20,21 +20,6 @@ ListNode *ReverseList(ListNode *pHead) {
   return pReversedHead;
 }
 
-// ==================== Test Code ====================
-ListNode *Test(ListNode *pHead) {
-  printf("The original list is: \n");
-  PrintList(pHead);
-
-  ListNode *pReversedHead = ReverseList(pHead);
-
-  printf("The reversed list is: \n");
-  PrintList(pReversedHead);
-
-  printf("\n");
-
-  return pReversedHead;
-}
-
 // Multiple nodes
 void Test1() {
   ListNode *pNode1 = CreateListNode(1);
@@ -64,7 +49,7 @@ void Test2() {
 // Empty list
 void Test3() { Test(NULL); }
 
-int main(int argc, char *argv[]) {
+int main() {
   Test1();
   Test2();
   Test3();

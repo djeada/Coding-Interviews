@@ -1,9 +1,4 @@
 #include "list.h"
-#include <iostream>
-#include <stdio.h>
-#include <stdlib.h>
-
-using namespace std;
 
 void Sort(ListNode **pHead) {
   if (pHead == NULL || *pHead == NULL)
@@ -35,7 +30,7 @@ void Sort(ListNode **pHead) {
   }
 }
 
-void Test(char *testName, ListNode **pHead) {
+void test(char *testName, ListNode **pHead) {
   if (testName != NULL) {
     cout << testName << " begins: \n";
   }
@@ -48,7 +43,7 @@ void Test(char *testName, ListNode **pHead) {
   }
 }
 
-void Test1() {
+void test1() {
   ListNode *pNode1 = CreateListNode(1);
   ListNode *pNode2 = CreateListNode(3);
   ListNode *pNode3 = CreateListNode(5);
@@ -67,13 +62,13 @@ void Test1() {
   ConnectListNodes(pNode7, pNode8);
 
   ListNode *pHead = pNode1;
-  Test("Test1", &pHead);
+  test("test1", &pHead);
 
   DestroyList(pHead);
 }
 
 // nodes in a list are already sorted
-void Test2() {
+void test2() {
   ListNode *pNode1 = CreateListNode(1);
   ListNode *pNode2 = CreateListNode(2);
   ListNode *pNode3 = CreateListNode(3);
@@ -92,13 +87,13 @@ void Test2() {
   ConnectListNodes(pNode7, pNode8);
 
   ListNode *pHead = pNode1;
-  Test("Test2", &pHead);
+  test("test2", &pHead);
 
   DestroyList(pHead);
 }
 
 // nodes in a list are decreasingly sorted
-void Test3() {
+void test3() {
   ListNode *pNode1 = CreateListNode(8);
   ListNode *pNode2 = CreateListNode(7);
   ListNode *pNode3 = CreateListNode(6);
@@ -117,62 +112,25 @@ void Test3() {
   ConnectListNodes(pNode7, pNode8);
 
   ListNode *pHead = pNode1;
-  Test("Test3", &pHead);
+  test("test3", &pHead);
 
   DestroyList(pHead);
 }
 
 // A list has only one node
-void Test4() {
+void test4() {
   ListNode *pNode1 = CreateListNode(1);
   ListNode *pHead = pNode1;
-  Test("Test4", &pHead);
+  test("test4", &pHead);
 
   DestroyList(pHead);
 }
 
-// A list has duplicated nodes
-void Test5() {
-  ListNode *pNode1 = CreateListNode(1);
-  ListNode *pNode2 = CreateListNode(2);
-  ListNode *pNode3 = CreateListNode(2);
-  ListNode *pNode4 = CreateListNode(1);
-  ListNode *pNode5 = CreateListNode(4);
-  ListNode *pNode6 = CreateListNode(3);
-  ListNode *pNode7 = CreateListNode(4);
-  ListNode *pNode8 = CreateListNode(2);
-
-  ConnectListNodes(pNode1, pNode2);
-  ConnectListNodes(pNode2, pNode3);
-  ConnectListNodes(pNode3, pNode4);
-  ConnectListNodes(pNode4, pNode5);
-  ConnectListNodes(pNode5, pNode6);
-  ConnectListNodes(pNode6, pNode7);
-  ConnectListNodes(pNode7, pNode8);
-
-  ListNode *pHead = pNode1;
-  Test("Test5", &pHead);
-
-  DestroyList(pHead);
-}
-
-// Empty List
-void Test6() { Test("Test6", NULL); }
-
-// Empty List
-void Test7() {
-  ListNode *pHead = NULL;
-  Test("Test7", &pHead);
-}
-
-int main(int argc, char *argv[]) {
-  Test1();
-  Test2();
-  Test3();
-  Test4();
-  Test5();
-  Test6();
-  Test7();
+int main() {
+  test1();
+  test2();
+  test3();
+  test4();
 
   return 0;
 }

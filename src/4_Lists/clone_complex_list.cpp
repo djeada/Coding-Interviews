@@ -1,198 +1,186 @@
-#include <stdio.h>
+#include <cassert>
 
-struct ComplexListNode {
-  int m_nValue;
-  ComplexListNode *m_pNext;
-  ComplexListNode *m_pSibling;
-};
+class ComplexList {
 
-void CloneNodes(ComplexListNode *pHead);
-void ConnectSiblingNodes(ComplexListNode *pHead);
-ComplexListNode *ReconnectNodes(ComplexListNode *pHead);
+  typedef struct ComplexNode {
+    int value;
+    ComplexNode *next;
+    ComplexNode *sibling;
+  } ComplexNode;
 
-ComplexListNode *Clone(ComplexListNode *pHead) {
-  CloneNodes(pHead);
-  ConnectSiblingNodes(pHead);
-  return ReconnectNodes(pHead);
-}
+  ComplexNode *head;
 
-void CloneNodes(ComplexListNode *pHead) {
-  ComplexListNode *pNode = pHead;
-  while (pNode != NULL) {
-    ComplexListNode *pCloned = new ComplexListNode();
-    pCloned->m_nValue = pNode->m_nValue;
-    pCloned->m_pNext = pNode->m_pNext;
-    pCloned->m_pSibling = NULL;
+public:
+  ComplexList() { head = nullptr; }
 
-    pNode->m_pNext = pCloned;
-    pNode = pCloned->m_pNext;
+  ComplexList(const ComplexList &other) {
+    cloneNodes(other.head);
+    connectSiblingNodes(other.head);
+    reconnectNodes(other.head);
   }
-}
 
-void ConnectSiblingNodes(ComplexListNode *pHead) {
-  ComplexListNode *pNode = pHead;
-  while (pNode != NULL) {
-    ComplexListNode *pCloned = pNode->m_pNext;
-    if (pNode->m_pSibling != NULL) {
-      pCloned->m_pSibling = pNode->m_pSibling->m_pNext;
+  ~ComplexList() {
+    auto node = head;
+    while (node) {
+      head = head->next;
+      delete node;
+      node = head;
+    }
+  }
+
+  void cloneNodes(ComplexNode *otherHead) {
+
+    auto node = otherHead;
+
+    while (node) {
+      auto clonedNode = new ComplexNode();
+      clonedNode->value = node->value;
+      clonedNode->next = node->next;
+      clonedNode->sibling = nullptr;
+
+      node->next = clonedNode;
+      node = clonedNode->next;
+    }
+  }
+
+  void connectSiblingNodes(ComplexNode *otherHead) {
+
+    auto node = otherHead;
+
+    while (node) {
+      auto clonedNode = node->next;
+
+      if (node->sibling) {
+        clonedNode->sibling = node->sibling->next;
+      }
+
+      node = clonedNode->next;
+    }
+  }
+
+  void reconnectNodes(ComplexNode *otherHead) {
+
+    head = nullptr;
+    ComplexNode *clonedNode = nullptr;
+    auto node = otherHead;
+
+    if (node) {
+      head = clonedNode = node->next;
+      node->next = clonedNode->next;
+      node = node->next;
     }
 
-    pNode = pCloned->m_pNext;
-  }
-}
-
-ComplexListNode *ReconnectNodes(ComplexListNode *pHead) {
-  ComplexListNode *pNode = pHead;
-  ComplexListNode *pClonedHead = NULL;
-  ComplexListNode *pClonedNode = NULL;
-
-  if (pNode != NULL) {
-    pClonedHead = pClonedNode = pNode->m_pNext;
-    pNode->m_pNext = pClonedNode->m_pNext;
-    pNode = pNode->m_pNext;
+    while (node) {
+      clonedNode->next = node->next;
+      clonedNode = clonedNode->next;
+      node->next = clonedNode->next;
+      node = node->next;
+    }
   }
 
-  while (pNode != NULL) {
-    pClonedNode->m_pNext = pNode->m_pNext;
-    pClonedNode = pClonedNode->m_pNext;
+  ComplexNode *append(int value) {
+    auto newNode = new ComplexNode();
+    newNode->next = nullptr;
+    newNode->sibling = nullptr;
+    newNode->value = value;
 
-    pNode->m_pNext = pClonedNode->m_pNext;
-    pNode = pNode->m_pNext;
-  }
+    if (head) {
+      auto curr = head;
+      while (curr->next)
+        curr = curr->next;
 
-  return pClonedHead;
-}
+      curr->next = newNode;
+    }
 
-// ==================== Test Code ====================
-ComplexListNode *CreateNode(int nValue) {
-  ComplexListNode *pNode = new ComplexListNode();
-
-  pNode->m_nValue = nValue;
-  pNode->m_pNext = NULL;
-  pNode->m_pSibling = NULL;
-
-  return pNode;
-}
-
-void BuildNodes(ComplexListNode *pNode, ComplexListNode *pNext,
-                ComplexListNode *pSibling) {
-  if (pNode != NULL) {
-    pNode->m_pNext = pNext;
-    pNode->m_pSibling = pSibling;
-  }
-}
-
-void PrintList(ComplexListNode *pHead) {
-  ComplexListNode *pNode = pHead;
-  while (pNode != NULL) {
-    printf("The value of this node is: %d.\n", pNode->m_nValue);
-
-    if (pNode->m_pSibling != NULL)
-      printf("The value of its sibling is: %d.\n", pNode->m_pSibling->m_nValue);
     else
-      printf("This node does not have a sibling.\n");
+      head = newNode;
 
-    printf("\n");
-
-    pNode = pNode->m_pNext;
+    return newNode;
   }
+
+  void setSibling(ComplexNode *node, ComplexNode *sibling) {
+    if (node)
+      node->sibling = sibling;
+  }
+
+  friend bool operator==(const ComplexList &l1, const ComplexList &l2) {
+
+    auto node1 = l1.head;
+    auto node2 = l2.head;
+
+    while (node1 && node2) {
+
+      if (node1->value != node2->value)
+        return false;
+
+      if ((node1->sibling == nullptr) != (node2->sibling == nullptr))
+        return false;
+
+      if (node1->sibling && node2->sibling) {
+        if (node1->sibling->value != node2->sibling->value)
+          return false;
+      }
+
+      node1 = node1->next;
+      node2 = node2->next;
+    }
+
+    return node1 == node2;
+  }
+};
+
+void test1() {
+  ComplexList list;
+  auto node1 = list.append(1);
+  auto node2 = list.append(2);
+  auto node3 = list.append(3);
+  auto node4 = list.append(4);
+  auto node5 = list.append(5);
+
+  list.setSibling(node1, node3);
+  list.setSibling(node2, node5);
+  list.setSibling(node5, node2);
+
+  ComplexList copy(list);
+  if (list == copy)
+    assert(list == copy);
 }
 
-void Test(char *testName, ComplexListNode *pHead) {
-  if (testName != NULL)
-    printf("%s begins:\n", testName);
+void test2() {
+  ComplexList list;
+  auto node1 = list.append(1);
+  auto node2 = list.append(2);
+  auto node3 = list.append(3);
+  auto node4 = list.append(4);
+  auto node5 = list.append(5);
 
-  printf("The original list is:\n");
-  PrintList(pHead);
+  list.setSibling(node1, node2);
+  list.setSibling(node2, node3);
+  list.setSibling(node5, node4);
+  list.setSibling(node4, node1);
 
-  ComplexListNode *pClonedHead = Clone(pHead);
-
-  printf("The cloned list is:\n");
-  PrintList(pClonedHead);
+  ComplexList copy(list);
+  assert(list == copy);
 }
 
-//          -----------------
-//         \|/              |
-//  1-------2-------3-------4-------5
-//  |       |      /|\             /|\
-//  --------+--------               |
-//          -------------------------
-void Test1() {
-  ComplexListNode *pNode1 = CreateNode(1);
-  ComplexListNode *pNode2 = CreateNode(2);
-  ComplexListNode *pNode3 = CreateNode(3);
-  ComplexListNode *pNode4 = CreateNode(4);
-  ComplexListNode *pNode5 = CreateNode(5);
-
-  BuildNodes(pNode1, pNode2, pNode3);
-  BuildNodes(pNode2, pNode3, pNode5);
-  BuildNodes(pNode3, pNode4, NULL);
-  BuildNodes(pNode4, pNode5, pNode2);
-
-  Test("Test1", pNode1);
+void test3() {
+  ComplexList list;
+  auto node1 = list.append(1);
+  ComplexList copy(list);
+  assert(list == copy);
 }
 
-// m_pSibling points back to its owner node
-//          -----------------
-//         \|/              |
-//  1-------2-------3-------4-------5
-//         |       | /|\           /|\
-//         |       | --             |
-//         |------------------------|
-void Test2() {
-  ComplexListNode *pNode1 = CreateNode(1);
-  ComplexListNode *pNode2 = CreateNode(2);
-  ComplexListNode *pNode3 = CreateNode(3);
-  ComplexListNode *pNode4 = CreateNode(4);
-  ComplexListNode *pNode5 = CreateNode(5);
-
-  BuildNodes(pNode1, pNode2, NULL);
-  BuildNodes(pNode2, pNode3, pNode5);
-  BuildNodes(pNode3, pNode4, pNode3);
-  BuildNodes(pNode4, pNode5, pNode2);
-
-  Test("Test2", pNode1);
+void test4() {
+  ComplexList list;
+  ComplexList copy(list);
+  assert(list == copy);
 }
 
-// m_pSibling pointers form a loop
-//          -----------------
-//         \|/              |
-//  1-------2-------3-------4-------5
-//          |              /|\
-//          |               |
-//          |---------------|
-void Test3() {
-  ComplexListNode *pNode1 = CreateNode(1);
-  ComplexListNode *pNode2 = CreateNode(2);
-  ComplexListNode *pNode3 = CreateNode(3);
-  ComplexListNode *pNode4 = CreateNode(4);
-  ComplexListNode *pNode5 = CreateNode(5);
-
-  BuildNodes(pNode1, pNode2, NULL);
-  BuildNodes(pNode2, pNode3, pNode4);
-  BuildNodes(pNode3, pNode4, NULL);
-  BuildNodes(pNode4, pNode5, pNode2);
-
-  Test("Test3", pNode1);
-}
-
-// only one node
-void Test4() {
-  ComplexListNode *pNode1 = CreateNode(1);
-  BuildNodes(pNode1, NULL, pNode1);
-
-  Test("Test4", pNode1);
-}
-
-// empty list
-void Test5() { Test("Test5", NULL); }
-
-int main(int argc, char *argv[]) {
-  Test1();
-  Test2();
-  Test3();
-  Test4();
-  Test5();
+int main() {
+  test1();
+  test2();
+  test3();
+  test4();
 
   return 0;
 }
