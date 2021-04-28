@@ -17,5 +17,5 @@ int main() {
   obj.fp = func2;
   obj.fp(&obj);
 
-  return 1;
+  return 0;
 }

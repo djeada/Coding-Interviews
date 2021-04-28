@@ -1,74 +1,8 @@
 #include <iostream>
 
-using namespace std;
-
-int my_strlen(char *ptr);
-void my_strncpy(char *ptr_dest, char *ptr_src, int n);
-
-class CMyString {
-  char *m_pData;
-  int length;
-
-public:
-  CMyString() {
-    cout << "Default constructor.\n";
-    m_pData = (char *)"Hello";
-    length = my_strlen(m_pData);
-  }
-
-  CMyString(char *pData) {
-    cout << "myString( char * ) constr.\n";
-    length = my_strlen(pData);
-    my_strncpy(m_pData, pData, length); // copy init value into storage
-  }
-
-  CMyString(const CMyString &str) {
-    cout << "myString copy const.\n";
-    length = str.length;
-    my_strncpy(m_pData, str.m_pData, length);
-  }
-
-  ~CMyString(void) {
-    cout << "myString destr.\n";
-    delete[] m_pData;
-  }
-
-  CMyString &operator=(const CMyString &str) {
-    if (this != &str) {
-      CMyString strTemp(str);
-
-      char *pTemp = strTemp.m_pData;
-      strTemp.m_pData = m_pData;
-      m_pData = pTemp;
-    }
-    return *this;
-  }
-
-  int getLen() const { return length; }
-  friend ostream &operator<<(ostream &os, const CMyString &s);
-};
-
-ostream &operator<<(ostream &os, const CMyString &s) {
-  int length = s.getLen();
-  for (int i = 0; i < length; i++) {
-    os.put(s.m_pData[i]);
-  }
-  return os;
-}
-
-int main() {
-  CMyString a = (char *)"Hello ";
-  CMyString b = a;
-  CMyString c;
-
-  cout << a << b << c << endl;
-
-  return 0;
-}
-
-int my_strlen(char *ptr) {
+int strlen(const char *ptr) {
   int len = 0;
-  char *p = ptr;
+  auto p = ptr;
   while (*p != '\0') {
     len++;
     p++;
@@ -76,8 +10,66 @@ int my_strlen(char *ptr) {
   return len;
 }
 
-void my_strncpy(char *ptr_dest, char *ptr_src, int n) {
+void strncpy(char *ptr_dest, const char *ptr_src, int n) {
   for (int i = 0; i < n; i++) {
     ptr_dest[i] = ptr_src[i];
   }
+}
+
+class String {
+  char *data;
+  int length;
+
+public:
+  String() {
+    data = new char[100];
+    length = strlen(data);
+  }
+
+  String(const char *pData) {
+    length = strlen(pData);
+    data = new char[length];
+    strncpy(data, pData, length);
+  }
+
+  String(const String &str) {
+    length = str.length;
+    data = new char[length];
+    strncpy(data, str.data, length);
+  }
+
+  ~String() { delete[] data; }
+
+  String &operator=(const String &str) {
+    if (this != &str) {
+      String strTemp(str);
+
+      char *pTemp = strTemp.data;
+      strTemp.data = data;
+      data = pTemp;
+      delete[] pTemp;
+    }
+    return *this;
+  }
+
+  int size() const { return length; }
+  friend std::ostream &operator<<(std::ostream &os, const String &s) {
+    int length = s.size();
+    for (int i = 0; i < length; i++) {
+      os.put(s.data[i]);
+    }
+    return os;
+  }
+};
+
+int main() {
+  String a("Hello");
+  String b = a;
+  String c;
+
+  std::cout << a << std::endl;
+  std::cout << b << std::endl;
+  std::cout << c << std::endl;
+
+  return 0;
 }
