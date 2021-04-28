@@ -1,6 +1,6 @@
-#include <stdio.h>
+#include <cassert>
 
-int NumberOf1_Solution1(int n) {
+int countOnes1(int n) {
   int count = 0;
   unsigned int flag = 1;
   while (flag) {
@@ -13,7 +13,7 @@ int NumberOf1_Solution1(int n) {
   return count;
 }
 
-int NumberOf1_Solution2(int n) {
+int countOnes2(int n) {
   int count = 0;
 
   while (n) {
@@ -24,41 +24,39 @@ int NumberOf1_Solution2(int n) {
   return count;
 }
 
-// ==================== Test Code ====================
-void Test(int number, unsigned int expected) {
-  int actual = NumberOf1_Solution1(number);
-  if (actual == expected)
-    printf("Solution1: Test for %p passed.\n", number);
-  else
-    printf("Solution1: Test for %p failed.\n", number);
+void test1() {
+  int x = 0;
+  int result = 0;
+  assert(countOnes1(x) == result);
+  assert(countOnes2(x) == result);
+}
 
-  actual = NumberOf1_Solution2(number);
-  if (actual == expected)
-    printf("Solution2: Test for %p passed.\n", number);
-  else
-    printf("Solution2: Test for %p failed.\n", number);
+void test2() {
+  int x = 1;
+  int result = 1;
+  assert(countOnes1(x) == result);
+  assert(countOnes2(x) == result);
+}
 
-  printf("\n");
+void test3() {
+  int x = 10;
+  int result = 2;
+  assert(countOnes1(x) == result);
+  assert(countOnes2(x) == result);
+}
+
+void test4() {
+  int x = 0x7FFFFFFF;
+  int result = 31;
+  assert(countOnes1(x) == result);
+  assert(countOnes2(x) == result);
 }
 
 int main(int argc, char *argv[]) {
-  // input 0, expected output is 0
-  Test(0, 0);
-
-  // input 1, expected output is 1
-  Test(1, 1);
-
-  // input 10, expected output is 2
-  Test(10, 2);
-
-  // input 0x7FFFFFFF, expected output is 31
-  Test(0x7FFFFFFF, 31);
-
-  // input 0xFFFFFFFF (negative), expected output is 32
-  Test(0xFFFFFFFF, 32);
-
-  // input 0x80000000 (negative), expected output is 1
-  Test(0x80000000, 1);
+  test1();
+  test2();
+  test3();
+  test4();
 
   return 0;
 }

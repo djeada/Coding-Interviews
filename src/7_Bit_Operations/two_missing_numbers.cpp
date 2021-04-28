@@ -1,37 +1,62 @@
-#include <bits/stdc++.h>
-#include <iostream>
-#include <math.h>
-#include <stdio.h>
-#include <string.h>
+#include <utility>
 #include <vector>
+#include <cassert>
+#include <cmath>
 
-using namespace std;
+int findFirstBitIs1(int num) {
+  int indexBit = 0;
 
-typedef struct node {
-  int num1;
-  int num2;
-} NumbersOccurringOnce;
+  while (((num & 1) == 0) && (indexBit < 32)) {
+    num = num >> 1;
+    ++indexBit;
+  }
 
-int findFirstBitIs1(int num);
-void getOnce(vector<int> numbers, NumbersOccurringOnce once);
-bool isBit1(int num, int indexBit);
-
-void fillArray(vector<int> &m, int x) {
-  for (int i = 0; i < x; i++)
-    m.push_back(0);
+  return indexBit;
 }
 
-void findMissing_solution1(vector<int> numbers, NumbersOccurringOnce &missing) {
+bool isBitOne(int num, int indexBit) {
+  num = num >> indexBit;
+  return (num & 1) == 1;
+}
+
+void getOnce(std::vector<int> &numbers, std::pair<int, int> &once) {
+
+  if (numbers.size() < 2)
+    return;
+
+  int resultExclusiveOR = 0;
+
+  for (unsigned int i = 0; i < numbers.size(); ++i)
+    resultExclusiveOR ^= numbers[i];
+
+  int indexOf1 = findFirstBitIs1(resultExclusiveOR);
+
+  once.first = once.second = 0;
+
+  for (unsigned int j = 0; j < numbers.size(); ++j) {
+    if (isBitOne(numbers[j], indexOf1))
+      once.second ^= numbers[j];
+    else
+      once.first ^= numbers[j];
+  }
+}
+
+std::pair<int, int> findMissingV1(const std::vector<int> &numbers) {
+
+  std::pair<int, int> missing;
+
   int sum1 = 0;
   int product1 = 1;
-  for (int i = 0; i < numbers.size(); ++i) {
+
+  for (unsigned int i = 0; i < numbers.size(); ++i) {
     sum1 += numbers[i];
     product1 *= numbers[i];
   }
 
   int sum2 = 0;
   int product2 = 1;
-  for (int i = 1; i <= numbers.size() + 2; ++i) {
+
+  for (unsigned int i = 1; i <= numbers.size() + 2; ++i) {
     sum2 += i;
     product2 *= i;
   }
@@ -39,112 +64,66 @@ void findMissing_solution1(vector<int> numbers, NumbersOccurringOnce &missing) {
   int s = sum2 - sum1;
   int p = product2 / product1;
 
-  missing.num1 = (s + (int)(sqrt(s * s - 4 * p))) / 2;
-  missing.num2 = s - missing.num1;
+  missing.first = (s + (int)(sqrt(s * s - 4 * p))) / 2;
+  missing.second = s - missing.first;
+
+  return std::pair<int, int>(missing);
 }
 
-void findMissing_solution2(vector<int> numbers, NumbersOccurringOnce &missing) {
+std::pair<int, int> findMissingV2(const std::vector<int> &numbers) {
+
+  std::pair<int, int> missing;
+
   int originalLength = numbers.size();
   int extendedLength = originalLength * 2 + 2;
-  vector<int> extention;
-  fillArray(extention, extendedLength);
+
+  std::vector<int> extention(extendedLength, 0);
+
   for (int i = 0; i < originalLength; ++i)
     extention[i] = numbers[i];
+
   for (int i = originalLength; i < extendedLength; ++i)
     extention[i] = i - originalLength + 1;
 
   getOnce(extention, missing);
-}
 
-void getOnce(vector<int> numbers, NumbersOccurringOnce once) {
-  if (numbers.size() < 2)
-    return;
-
-  int resultExclusiveOR = 0;
-  for (int i = 0; i < numbers.size(); ++i)
-    resultExclusiveOR ^= numbers[i];
-
-  int indexOf1 = findFirstBitIs1(resultExclusiveOR);
-
-  once.num1 = once.num2 = 0;
-  for (int j = 0; j < numbers.size(); ++j) {
-    if (isBit1(numbers[j], indexOf1))
-      once.num1 ^= numbers[j];
-    else
-      once.num2 ^= numbers[j];
+  if (missing.first < missing.second) {
+   auto temp = missing.first;
+   missing.first = missing.second;
+   missing.second = temp;
   }
+
+  return std::pair<int, int>(missing);
 }
 
-// The first 1 bit from the rightmost
-int findFirstBitIs1(int num) {
-  int indexBit = 0;
-  while (((num & 1) == 0) && (indexBit < 32)) {
-    num = num >> 1;
-    ++indexBit;
-  }
-  return indexBit;
+void test1() {
+  std::vector<int> numbers{1, 3, 5, 6, 4, 7};
+  std::pair<int, int> expected{8, 2};
+
+  assert(findMissingV1(numbers) == expected);
+  assert(findMissingV2(numbers) == expected);
 }
 
-// check whether the bit with index indexBit is 1
-bool isBit1(int num, int indexBit) {
-  num = num >> indexBit;
-  return (num & 1) == 1;
+void test2() {
+  std::vector<int> numbers{1};
+  std::pair<int, int> expected{3, 2};
+
+  assert(findMissingV1(numbers) == expected);
+  assert(findMissingV2(numbers) == expected);
 }
 
-void test(const string &testName, vector<int> numbers,
-          NumbersOccurringOnce &expected) {
+void test3() {
+  std::vector<int> numbers{3, 4};
+  std::pair<int, int> expected{2, 1};
 
-  cout << testName << " begins: ";
-
-  NumbersOccurringOnce missing;
-  findMissing_solution1(numbers, missing);
-
-  if ((missing.num1 == expected.num1 && missing.num2 == expected.num2) ||
-      (missing.num1 == expected.num2 && missing.num2 == expected.num1))
-    cout << "Solution1 passed; ";
-  else
-    cout << "Solution1 FAILED; ";
-
-  findMissing_solution2(numbers, missing);
-
-  if ((missing.num1 == expected.num1 && missing.num2 == expected.num2) ||
-      (missing.num1 == expected.num2 && missing.num2 == expected.num1))
-    cout << "Solution2 passed.\n";
-  else
-    cout << "Solution2 FAILED.\n";
+  assert(findMissingV1(numbers) == expected);
+  assert(findMissingV2(numbers) == expected);
 }
 
-void Test1() {
-  vector<int> numbers{1, 3, 5, 6, 4, 7};
-  NumbersOccurringOnce expected;
-  expected.num1 = 2;
-  expected.num2 = 8;
-
-  test("test1", numbers, expected);
-}
-
-void Test2() {
-  vector<int> numbers{1};
-  NumbersOccurringOnce expected;
-  expected.num1 = 2;
-  expected.num2 = 3;
-
-  test("test2", numbers, expected);
-}
-
-void Test3() {
-  vector<int> numbers{3, 4};
-  NumbersOccurringOnce expected;
-  expected.num1 = 1;
-  expected.num2 = 2;
-
-  test("test3", numbers, expected);
-}
-
-int main(int argc, char *argv[]) {
-  Test1();
-  Test2();
-  Test3();
+int main() {
+  test1();
+  test2();
+  test3();
 
   return 0;
 }
