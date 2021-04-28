@@ -1,29 +1,27 @@
-#include <assert.h>
-#include <iostream>
+#include <cassert>
+#include <stdexcept>
 
-using namespace std;
-
-// ==================== Solution 1 ====================
-long long Fibonacci_Solution1(unsigned int n) {
+long long fibonacci1(unsigned int n) {
   if (n <= 0)
     return 0;
 
   if (n == 1)
     return 1;
 
-  return Fibonacci_Solution1(n - 1) + Fibonacci_Solution1(n - 2);
+  return fibonacci1(n - 1) + fibonacci1(n - 2);
 }
 
-// ==================== Solution 2 ====================
-long long Fibonacci_Solution2(unsigned int n) {
-  int result[2] = {0, 1};
+long long fibonacci2(unsigned int n) {
+  if (n <= 0)
+    return 0;
+
+  if (n == 1)
+    return 1;
+
   long long fibNMinusOne = 1;
   long long fibNMinusTwo = 0;
   long long fibN = 0;
   unsigned int i;
-
-  if (n < 2)
-    return result[n];
 
   for (i = 2; i <= n; ++i) {
     fibN = fibNMinusOne + fibNMinusTwo;
@@ -57,7 +55,9 @@ struct Matrix2By2 MatrixPower(unsigned int n) {
   struct Matrix2By2 result;
   struct Matrix2By2 unit = {1, 1, 1, 0};
 
-  assert(n > 0);
+  if (n < 0)
+    throw std::runtime_error("Not defined for n <= 0.");
+
   if (n == 1) {
     result = unit;
   } else if (n % 2 == 0) {
@@ -72,49 +72,54 @@ struct Matrix2By2 MatrixPower(unsigned int n) {
   return result;
 }
 
-long long Fibonacci_Solution3(unsigned int n) {
+long long fibonacci3(unsigned int n) {
+  if (n <= 0)
+    return 0;
+
+  if (n == 1)
+    return 1;
+
   struct Matrix2By2 PowerNMinus2;
-  int result[2] = {0, 1};
-
-  if (n < 2)
-    return result[n];
-
   PowerNMinus2 = MatrixPower(n - 1);
   return PowerNMinus2.m_00;
 }
 
-// ==================== Test Code ====================
-void Test(int n, int expected) {
-  if (Fibonacci_Solution1(n) == expected)
-    cout << "Test for " << n << " in solution1 passed.\n";
-  else
-    cout << "Test for " << n << " in solution1 failed.\n";
-
-  if (Fibonacci_Solution2(n) == expected)
-    cout << "Test for " << n << " in solution2 passed.\n";
-  else
-    cout << "Test for " << n << " in solution2 failed.\n";
-
-  if (Fibonacci_Solution3(n) == expected)
-    cout << "Test for " << n << " in solution3 passed.\n";
-  else
-    cout << "Test for " << n << " in solution3 failed.\n";
+void test1() {
+  unsigned int n = 0;
+  long long result = 0;
+  assert(fibonacci1(n) == result);
+  assert(fibonacci2(n) == result);
+  assert(fibonacci3(n) == result);
 }
 
-int main(int argc, char *argv[]) {
-  Test(0, 0);
-  Test(1, 1);
-  Test(2, 1);
-  Test(3, 2);
-  Test(4, 3);
-  Test(5, 5);
-  Test(6, 8);
-  Test(7, 13);
-  Test(8, 21);
-  Test(9, 34);
-  Test(10, 55);
+void test2() {
+  unsigned int n = 1;
+  long long result = 1;
+  assert(fibonacci1(n) == result);
+  assert(fibonacci2(n) == result);
+  assert(fibonacci3(n) == result);
+}
 
-  Test(40, 102334155);
+void test3() {
+  unsigned int n = 6;
+  long long result = 8;
+  assert(fibonacci1(n) == result);
+  assert(fibonacci2(n) == result);
+  assert(fibonacci3(n) == result);
+}
 
+void test4() {
+  unsigned int n = 10;
+  long long result = 55;
+  assert(fibonacci1(n) == result);
+  assert(fibonacci2(n) == result);
+  assert(fibonacci3(n) == result);
+}
+
+int main() {
+  test1();
+  test2();
+  test3();
+  test4();
   return 0;
 }
