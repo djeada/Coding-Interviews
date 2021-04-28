@@ -1,129 +1,106 @@
 #include "list.h"
+#include <cassert>
 
-void Sort(ListNode **pHead) {
-  if (pHead == NULL || *pHead == NULL)
-    return;
+class ListWithSorting : public List {
 
-  ListNode *pLastSorted = *pHead;
-  ListNode *pToBeSorted = pLastSorted->m_pNext;
-  while (pToBeSorted != NULL) {
-    if (pToBeSorted->m_nValue < (*pHead)->m_nValue) {
-      pLastSorted->m_pNext = pToBeSorted->m_pNext;
-      pToBeSorted->m_pNext = *pHead;
-      *pHead = pToBeSorted;
-    } else {
-      ListNode *pNode = *pHead;
-      while (pNode != pLastSorted &&
-             pNode->m_pNext->m_nValue < pToBeSorted->m_nValue) {
-        pNode = pNode->m_pNext;
+public:
+  ListWithSorting() : List() {}
+
+  void sort() {
+    if (!head)
+      return;
+
+    auto lastSorted = head;
+    auto toBeSorted = lastSorted->next;
+    while (toBeSorted) {
+      if (toBeSorted->data < head->data) {
+        lastSorted->next = toBeSorted->next;
+        toBeSorted->next = head;
+        head = toBeSorted;
+      } else {
+        auto pNode = head;
+        while (pNode != lastSorted && pNode->next->data < toBeSorted->data) {
+          pNode = pNode->next;
+        }
+
+        if (pNode != lastSorted) {
+          lastSorted->next = toBeSorted->next;
+          toBeSorted->next = pNode->next;
+          pNode->next = toBeSorted;
+        } else
+          lastSorted = lastSorted->next;
       }
 
-      if (pNode != pLastSorted) {
-        pLastSorted->m_pNext = pToBeSorted->m_pNext;
-        pToBeSorted->m_pNext = pNode->m_pNext;
-        pNode->m_pNext = pToBeSorted;
-      } else
-        pLastSorted = pLastSorted->m_pNext;
+      toBeSorted = lastSorted->next;
     }
-
-    pToBeSorted = pLastSorted->m_pNext;
   }
-}
-
-void test(char *testName, ListNode **pHead) {
-  if (testName != NULL) {
-    cout << testName << " begins: \n";
-  }
-  if (pHead != NULL) {
-    PrintList(*pHead);
-  }
-  Sort(pHead);
-  if (pHead != NULL) {
-    PrintList(*pHead);
-  }
-}
+};
 
 void test1() {
-  ListNode *pNode1 = CreateListNode(1);
-  ListNode *pNode2 = CreateListNode(3);
-  ListNode *pNode3 = CreateListNode(5);
-  ListNode *pNode4 = CreateListNode(7);
-  ListNode *pNode5 = CreateListNode(2);
-  ListNode *pNode6 = CreateListNode(4);
-  ListNode *pNode7 = CreateListNode(6);
-  ListNode *pNode8 = CreateListNode(8);
 
-  ConnectListNodes(pNode1, pNode2);
-  ConnectListNodes(pNode2, pNode3);
-  ConnectListNodes(pNode3, pNode4);
-  ConnectListNodes(pNode4, pNode5);
-  ConnectListNodes(pNode5, pNode6);
-  ConnectListNodes(pNode6, pNode7);
-  ConnectListNodes(pNode7, pNode8);
+  ListWithSorting list;
 
-  ListNode *pHead = pNode1;
-  test("test1", &pHead);
+  list.append(2);
+  list.append(4);
+  list.append(5);
+  list.append(1);
+  list.append(3);
 
-  DestroyList(pHead);
+  List expected;
+
+  expected.append(1);
+  expected.append(2);
+  expected.append(3);
+  expected.append(4);
+  expected.append(5);
+
+  list.sort();
+
+  assert(list == expected);
 }
 
-// nodes in a list are already sorted
 void test2() {
-  ListNode *pNode1 = CreateListNode(1);
-  ListNode *pNode2 = CreateListNode(2);
-  ListNode *pNode3 = CreateListNode(3);
-  ListNode *pNode4 = CreateListNode(4);
-  ListNode *pNode5 = CreateListNode(5);
-  ListNode *pNode6 = CreateListNode(6);
-  ListNode *pNode7 = CreateListNode(7);
-  ListNode *pNode8 = CreateListNode(8);
+  ListWithSorting list;
 
-  ConnectListNodes(pNode1, pNode2);
-  ConnectListNodes(pNode2, pNode3);
-  ConnectListNodes(pNode3, pNode4);
-  ConnectListNodes(pNode4, pNode5);
-  ConnectListNodes(pNode5, pNode6);
-  ConnectListNodes(pNode6, pNode7);
-  ConnectListNodes(pNode7, pNode8);
+  list.append(5);
+  list.append(4);
+  list.append(3);
+  list.append(2);
+  list.append(1);
 
-  ListNode *pHead = pNode1;
-  test("test2", &pHead);
+  List expected;
 
-  DestroyList(pHead);
+  expected.append(1);
+  expected.append(2);
+  expected.append(3);
+  expected.append(4);
+  expected.append(5);
+
+  list.sort();
+
+  assert(list == expected);
 }
 
-// nodes in a list are decreasingly sorted
 void test3() {
-  ListNode *pNode1 = CreateListNode(8);
-  ListNode *pNode2 = CreateListNode(7);
-  ListNode *pNode3 = CreateListNode(6);
-  ListNode *pNode4 = CreateListNode(5);
-  ListNode *pNode5 = CreateListNode(4);
-  ListNode *pNode6 = CreateListNode(3);
-  ListNode *pNode7 = CreateListNode(2);
-  ListNode *pNode8 = CreateListNode(1);
+  ListWithSorting list;
+  list.append(1);
 
-  ConnectListNodes(pNode1, pNode2);
-  ConnectListNodes(pNode2, pNode3);
-  ConnectListNodes(pNode3, pNode4);
-  ConnectListNodes(pNode4, pNode5);
-  ConnectListNodes(pNode5, pNode6);
-  ConnectListNodes(pNode6, pNode7);
-  ConnectListNodes(pNode7, pNode8);
+  List expected;
+  expected.append(1);
 
-  ListNode *pHead = pNode1;
-  test("test3", &pHead);
+  list.sort();
 
-  DestroyList(pHead);
+  assert(list == expected);
 }
 
-// A list has only one node
 void test4() {
-  ListNode *pNode1 = CreateListNode(1);
-  ListNode *pHead = pNode1;
-  test("test4", &pHead);
+  ListWithSorting list;
 
-  DestroyList(pHead);
+  List expected;
+
+  list.sort();
+
+  assert(list == expected);
 }
 
 int main() {

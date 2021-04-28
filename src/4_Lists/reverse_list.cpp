@@ -1,58 +1,79 @@
 #include "list.h"
-#include <stdio.h>
+#include <cassert>
 
-ListNode *ReverseList(ListNode *pHead) {
-  ListNode *pReversedHead = NULL;
-  ListNode *pNode = pHead;
-  ListNode *pPrev = NULL;
-  while (pNode != NULL) {
-    ListNode *pNext = pNode->m_pNext;
+class ListWithReversion : public List {
 
-    if (pNext == NULL)
-      pReversedHead = pNode;
+public:
+  ListWithReversion() : List() {}
 
-    pNode->m_pNext = pPrev;
+  void reverse() {
+    Node *reversedHead = nullptr;
+    Node *prev = nullptr;
+    auto node = head;
+    while (node) {
+      auto next = node->next;
 
-    pPrev = pNode;
-    pNode = pNext;
+      if (!next)
+        reversedHead = node;
+
+      node->next = prev;
+      prev = node;
+      node = next;
+    }
+
+    head = reversedHead;
   }
+};
 
-  return pReversedHead;
+void test1() {
+
+  ListWithReversion list;
+
+  list.append(1);
+  list.append(2);
+  list.append(3);
+  list.append(4);
+  list.append(5);
+
+  List expected;
+
+  expected.append(5);
+  expected.append(4);
+  expected.append(3);
+  expected.append(2);
+  expected.append(1);
+
+  list.reverse();
+
+  assert(list == expected);
 }
 
-// Multiple nodes
-void Test1() {
-  ListNode *pNode1 = CreateListNode(1);
-  ListNode *pNode2 = CreateListNode(2);
-  ListNode *pNode3 = CreateListNode(3);
-  ListNode *pNode4 = CreateListNode(4);
-  ListNode *pNode5 = CreateListNode(5);
+void test2() {
+  ListWithReversion list;
+  list.append(1);
 
-  ConnectListNodes(pNode1, pNode2);
-  ConnectListNodes(pNode2, pNode3);
-  ConnectListNodes(pNode3, pNode4);
-  ConnectListNodes(pNode4, pNode5);
+  List expected;
+  expected.append(1);
 
-  ListNode *pReversedHead = Test(pNode1);
+  list.reverse();
 
-  DestroyList(pReversedHead);
+  assert(list == expected);
 }
 
-// Only one node
-void Test2() {
-  ListNode *pNode1 = CreateListNode(1);
+void test3() {
+  ListWithReversion list;
 
-  ListNode *pReversedHead = Test(pNode1);
-  DestroyList(pReversedHead);
+  List expected;
+
+  list.reverse();
+
+  assert(list == expected);
 }
-
-// Empty list
-void Test3() { Test(NULL); }
 
 int main() {
-  Test1();
-  Test2();
-  Test3();
+  test1();
+  test2();
+  test3();
 
   return 0;
 }

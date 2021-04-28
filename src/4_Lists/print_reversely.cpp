@@ -1,76 +1,43 @@
 #include "list.h"
+#include <iostream>
 #include <stack>
-#include <stdio.h>
 
-void PrintListReversingly_Iteratively(ListNode *pHead) {
-  std::stack<ListNode *> nodes;
+void printReverseIter(List &list) {
+  std::stack<int> nodes;
 
-  ListNode *pNode = pHead;
-  while (pNode != NULL) {
-    nodes.push(pNode);
-    pNode = pNode->m_pNext;
-  }
+  for (unsigned int i = 0; i < list.size(); i++)
+    nodes.push(list.get(i));
 
   while (!nodes.empty()) {
-    pNode = nodes.top();
-    printf("%d\t", pNode->m_nValue);
+    std::cout << nodes.top() << std::endl;
     nodes.pop();
   }
 }
 
-void PrintListReversingly_Recursively(ListNode *pHead) {
-  if (pHead != NULL) {
-    if (pHead->m_pNext != NULL) {
-      PrintListReversingly_Recursively(pHead->m_pNext);
-    }
+void printReverseRecursive(List &list, int i = -1) {
 
-    printf("%d\t", pHead->m_nValue);
-  }
+  if (i == list.size() - 1)
+    return;
+
+  i++;
+  printReverseRecursive(list, i);
+  std::cout << list.get(i) << std::endl;
 }
 
-void Test(ListNode *pHead) {
-  PrintList(pHead);
-  PrintListReversingly_Iteratively(pHead);
-  printf("\n");
-  PrintListReversingly_Recursively(pHead);
+int main() {
+
+  List list;
+  list.append(1);
+  list.append(2);
+  list.append(3);
+
+  std::cout << "Printing the list in reverse iteratively: " << std::endl;
+
+  printReverseIter(list);
+
+  std::cout << "Printing the list in reverse recursively: " << std::endl;
+
+  printReverseRecursive(list);
+
+  return 0;
 }
-
-// 1->2->3->4->5
-void Test1() {
-  printf("\nTest1 begins.\n");
-
-  ListNode *pNode1 = CreateListNode(1);
-  ListNode *pNode2 = CreateListNode(2);
-  ListNode *pNode3 = CreateListNode(3);
-  ListNode *pNode4 = CreateListNode(4);
-  ListNode *pNode5 = CreateListNode(5);
-
-  ConnectListNodes(pNode1, pNode2);
-  ConnectListNodes(pNode2, pNode3);
-  ConnectListNodes(pNode3, pNode4);
-  ConnectListNodes(pNode4, pNode5);
-
-  Test(pNode1);
-
-  DestroyList(pNode1);
-}
-
-// Only one node: 1
-void Test2() {
-  printf("\nTest2 begins.\n");
-
-  ListNode *pNode1 = CreateListNode(1);
-
-  Test(pNode1);
-
-  DestroyList(pNode1);
-}
-
-// Empty list
-void Test3() {
-  printf("\nTest3 begins.\n");
-
-  Test(NULL);
-}
-
-int main() { return 0; }
