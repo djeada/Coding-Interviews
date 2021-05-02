@@ -1,68 +1,52 @@
-#include "binaryTree.h"
-#include <iostream>
+#include "binary_tree.h"
+#include <functional>
 
-using namespace std;
+BinaryTree::BinaryTree() : root(nullptr) {}
 
-BinaryTreeNode *CreateBinaryTreeNode(int value) {
-  BinaryTreeNode *pNode = new BinaryTreeNode();
-  pNode->m_nValue = value;
-  pNode->m_pLeft = NULL;
-  pNode->m_pRight = NULL;
+BinaryTree::~BinaryTree() {
 
-  return pNode;
+  std::function<void(Node *)> destroyRecursive;
+  destroyRecursive = [&](Node *node) -> void {
+    if (node) {
+      destroyRecursive(node->left);
+      destroyRecursive(node->right);
+      delete node;
+    }
+  };
+
+  destroyRecursive(root);
 }
 
-void ConnectTreeNodes(BinaryTreeNode *pParent, BinaryTreeNode *pLeft,
-                      BinaryTreeNode *pRight) {
-  if (pParent != NULL) {
-    pParent->m_pLeft = pLeft;
-    pParent->m_pRight = pRight;
-  }
-}
+void BinaryTree ::add(int value) {
 
-void PrintTreeNode(BinaryTreeNode *pNode) {
-  if (pNode != NULL) {
-    cout << "value of this node is: " << pNode->m_nValue << endl;
-
-    if (pNode->m_pLeft != NULL)
-      cout << "value of its left child is: " << pNode->m_pLeft->m_nValue
-           << endl;
-    else
-      cout << "left child is null.\n";
-
-    if (pNode->m_pRight != NULL)
-      cout << "value of its right child is: " << pNode->m_pRight->m_nValue
-           << endl;
-    else
-      cout << "right child is null.\n";
-  } else {
-    cout << "this node is null.\n";
+  if (!root) {
+    root = new Node(value, nullptr, nullptr);
+    return;
   }
 
-  cout << endl;
-}
+  std::function<void(Node *)> _add;
+  _add = [&](Node *node) -> void {
+    if (value < node->value) {
 
-void PrintTree(BinaryTreeNode *pRoot) {
-  PrintTreeNode(pRoot);
+      if (node->left)
+        _add(node->left);
 
-  if (pRoot != NULL) {
-    if (pRoot->m_pLeft != NULL)
-      PrintTree(pRoot->m_pLeft);
+      else
+        node->left = new Node(value, nullptr, nullptr);
+    }
 
-    if (pRoot->m_pRight != NULL)
-      PrintTree(pRoot->m_pRight);
-  }
-}
+    else if (value > node->value) {
 
-void DestroyTree(BinaryTreeNode *pRoot) {
-  if (pRoot != NULL) {
-    BinaryTreeNode *pLeft = pRoot->m_pLeft;
-    BinaryTreeNode *pRight = pRoot->m_pRight;
+      if (node->right)
+        _add(node->right);
 
-    delete pRoot;
-    pRoot = NULL;
+      else
+        node->right = new Node(value, nullptr, nullptr);
+    } else {
+      // throw exception
+      // cout << "The key has already been added to the tree" << endl;
+    }
+  };
 
-    DestroyTree(pLeft);
-    DestroyTree(pRight);
-  }
+  _add(root);
 }
