@@ -4,7 +4,7 @@
 class BinaryTree {
 
 protected:
-  struct Node {
+  typedef struct Node {
     int value;
     Node *left;
     Node *right;
@@ -12,7 +12,7 @@ protected:
   public:
     Node(int _value, Node *_left, Node *_right)
         : value(_value), left(_left), right(_right) {}
-  };
+  } Node;
 
   Node *root;
 
@@ -21,6 +21,7 @@ public:
   ~BinaryTree();
 
   void add(int value);
+  friend bool operator==(const BinaryTree &t1, const BinaryTree &t2);
 };
 
 #endif

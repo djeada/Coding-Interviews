@@ -1,124 +1,85 @@
-#include "binaryTree.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include "binary_tree.h"
+#include <cassert>
+#include <functional>
 
-int TreeDepth(BinaryTreeNode *pRoot) {
-  if (pRoot == NULL)
-    return 0;
+class TreeWithDepth : public BinaryTree {
 
-  int nLeft = TreeDepth(pRoot->m_pLeft);
-  int nRight = TreeDepth(pRoot->m_pRight);
+public:
+  TreeWithDepth() : BinaryTree() {}
 
-  return (nLeft > nRight) ? (nLeft + 1) : (nRight + 1);
+  unsigned int depth() {
+
+    std::function<unsigned int(Node *)> _depth;
+    _depth = [&](Node *node) -> unsigned int {
+      if (!node)
+        return 0;
+
+      int left = _depth(node->left);
+      int right = _depth(node->right);
+
+      return (left > right) ? (left + 1) : (right + 1);
+    };
+
+    return _depth(root);
+  }
+};
+
+void test1() {
+
+  TreeWithDepth tree;
+  tree.add(9);
+  tree.add(8);
+  tree.add(13);
+  tree.add(4);
+  tree.add(10);
+  tree.add(16);
+  tree.add(7);
+  tree.add(15);
+
+  unsigned int result = 4;
+  assert(tree.depth() == result);
 }
 
-// ==================== Test Code ====================
-void Test(char *testName, BinaryTreeNode *pRoot, int expected) {
-  if (testName != NULL)
-    printf("%s begins: ", testName);
+void test2() {
 
-  int result = TreeDepth(pRoot);
-  if (expected == result)
-    printf("Test passed.\n");
-  else
-    printf("Test failed.\n");
+  TreeWithDepth tree;
+  tree.add(5);
+  tree.add(4);
+  tree.add(3);
+  tree.add(2);
+  tree.add(1);
+
+  unsigned int result = 5;
+  assert(tree.depth() == result);
 }
 
-//            1
-//         /      \
-//        2        3
-//       /\         \
-//      4  5         6
-//        /
-//       7
-void Test1() {
-  BinaryTreeNode *pNode1 = CreateBinaryTreeNode(1);
-  BinaryTreeNode *pNode2 = CreateBinaryTreeNode(2);
-  BinaryTreeNode *pNode3 = CreateBinaryTreeNode(3);
-  BinaryTreeNode *pNode4 = CreateBinaryTreeNode(4);
-  BinaryTreeNode *pNode5 = CreateBinaryTreeNode(5);
-  BinaryTreeNode *pNode6 = CreateBinaryTreeNode(6);
-  BinaryTreeNode *pNode7 = CreateBinaryTreeNode(7);
+void test3() {
 
-  ConnectTreeNodes(pNode1, pNode2, pNode3);
-  ConnectTreeNodes(pNode2, pNode4, pNode5);
-  ConnectTreeNodes(pNode3, NULL, pNode6);
-  ConnectTreeNodes(pNode5, pNode7, NULL);
+  TreeWithDepth tree;
+  tree.add(1);
+  tree.add(2);
+  tree.add(3);
+  tree.add(4);
+  tree.add(5);
 
-  Test("Test1", pNode1, 4);
-
-  DestroyTree(pNode1);
+  unsigned int result = 5;
+  assert(tree.depth() == result);
 }
 
-//               1
-//              /
-//             2
-//            /
-//           3
-//          /
-//         4
-//        /
-//       5
-void Test2() {
-  BinaryTreeNode *pNode1 = CreateBinaryTreeNode(1);
-  BinaryTreeNode *pNode2 = CreateBinaryTreeNode(2);
-  BinaryTreeNode *pNode3 = CreateBinaryTreeNode(3);
-  BinaryTreeNode *pNode4 = CreateBinaryTreeNode(4);
-  BinaryTreeNode *pNode5 = CreateBinaryTreeNode(5);
+void test4() {
 
-  ConnectTreeNodes(pNode1, pNode2, NULL);
-  ConnectTreeNodes(pNode2, pNode3, NULL);
-  ConnectTreeNodes(pNode3, pNode4, NULL);
-  ConnectTreeNodes(pNode4, pNode5, NULL);
+  TreeWithDepth tree;
+  tree.add(1);
 
-  Test("Test2", pNode1, 5);
-
-  DestroyTree(pNode1);
+  unsigned int result = 1;
+  assert(tree.depth() == result);
 }
 
-// 1
-//  \
-//   2
-//    \
-//     3
-//      \
-//       4
-//        \
-//         5
-void Test3() {
-  BinaryTreeNode *pNode1 = CreateBinaryTreeNode(1);
-  BinaryTreeNode *pNode2 = CreateBinaryTreeNode(2);
-  BinaryTreeNode *pNode3 = CreateBinaryTreeNode(3);
-  BinaryTreeNode *pNode4 = CreateBinaryTreeNode(4);
-  BinaryTreeNode *pNode5 = CreateBinaryTreeNode(5);
-
-  ConnectTreeNodes(pNode1, NULL, pNode2);
-  ConnectTreeNodes(pNode2, NULL, pNode3);
-  ConnectTreeNodes(pNode3, NULL, pNode4);
-  ConnectTreeNodes(pNode4, NULL, pNode5);
-
-  Test("Test3", pNode1, 5);
-
-  DestroyTree(pNode1);
-}
-
-// Only one node
-void Test4() {
-  BinaryTreeNode *pNode1 = CreateBinaryTreeNode(1);
-  Test("Test4", pNode1, 1);
-
-  DestroyTree(pNode1);
-}
-
-// Empty tree
-void Test5() { Test("Test5", NULL, 0); }
-
-int main(int argc, char *argv[]) {
-  Test1();
-  Test2();
-  Test3();
-  Test4();
-  Test5();
+int main() {
+  test1();
+  test2();
+  test3();
+  test4();
 
   return 0;
 }

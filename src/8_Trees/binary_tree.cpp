@@ -50,3 +50,24 @@ void BinaryTree ::add(int value) {
 
   _add(root);
 }
+
+bool operator==(const BinaryTree &t1, const BinaryTree &t2) {
+
+  auto root1 = t1.root;
+  auto root2 = t2.root;
+
+  std::function<bool(BinaryTree::Node *, BinaryTree::Node *)> isIdentical;
+  isIdentical = [&](BinaryTree::Node *root1, BinaryTree::Node *root2) -> bool {
+    if (root1 == nullptr && root2 == nullptr)
+      return true;
+    else if ((root1 && !root2) || (!root1 && root2))
+      return false;
+    else if (root1->value == root2->value &&
+             isIdentical(root1->left, root2->left) &&
+             isIdentical(root1->right, root2->right))
+      return true;
+    return false;
+  };
+
+  return isIdentical(root1, root2);
+}

@@ -1,173 +1,123 @@
-#include "binaryTree.h"
-#include <exception>
-#include <stdio.h>
+#include "binary_tree.h"
+#include <cassert>
+#include <functional>
+#include <stdexcept>
+#include <vector>
 
-BinaryTreeNode *ConstructCore(int *startPreorder, int *endPreorder,
-                              int *startInorder, int *endInorder);
+class TreeWithConstruct : public BinaryTree {
 
-BinaryTreeNode *Construct(int *preorder, int *inorder, int length) {
-  if (preorder == NULL || inorder == NULL || length <= 0)
-    return NULL;
+  Node *construct(std::vector<int> &inorder, std::vector<int> &preorder,
+                  int start, int end, int &preInd) {
 
-  return ConstructCore(preorder, preorder + length - 1, inorder,
-                       inorder + length - 1);
-}
+    if (start > end)
+      return nullptr;
 
-BinaryTreeNode *ConstructCore(int *startPreorder, int *endPreorder,
-                              int *startInorder, int *endInorder) {
-  // The first number in the pre-order traversal sequence is the root value
-  int rootValue = startPreorder[0];
-  BinaryTreeNode *root = new BinaryTreeNode();
-  root->m_nValue = rootValue;
-  root->m_pLeft = root->m_pRight = NULL;
+    std::function<int(std::vector<int> &, int, int, int)> index;
+    index = [&](std::vector<int> &inorder, int val, int start, int end) -> int {
+      for (auto i = start; i <= end; i++) {
+        if (inorder[i] == val)
+          return i;
+      }
 
-  if (startPreorder == endPreorder) {
-    if (startInorder == endInorder && *startPreorder == *startInorder)
-      return root;
-    else
-      throw std::exception("Invalid input.");
+      return -1;
+    };
+
+    auto val = preorder[preInd];
+    auto _root = new Node(val, nullptr, nullptr);
+    preInd++;
+
+    if (start == end)
+      return _root;
+
+    auto ind = index(inorder, _root->value, start, end);
+
+    _root->left = construct(inorder, preorder, start, ind - 1, preInd);
+    _root->right = construct(inorder, preorder, ind + 1, end, preInd);
+
+    return _root;
   }
 
-  // Get the root value in the in-order traversal sequence
-  int *rootInorder = startInorder;
-  while (rootInorder <= endInorder && *rootInorder != rootValue)
-    ++rootInorder;
+public:
+  TreeWithConstruct() : BinaryTree() {}
 
-  if (rootInorder == endInorder && *rootInorder != rootValue)
-    throw std::exception("Invalid input.");
+  TreeWithConstruct(std::vector<int> &inorder, std::vector<int> &preorder) {
 
-  int leftLength = rootInorder - startInorder;
-  int *leftPreorderEnd = startPreorder + leftLength;
-  if (leftLength > 0) {
-    // Build left subtree
-    root->m_pLeft = ConstructCore(startPreorder + 1, leftPreorderEnd,
-                                  startInorder, rootInorder - 1);
+    if (inorder.empty() || preorder.empty())
+      throw std::runtime_error("Invalid input.");
+
+    int pre = 0;
+    root = construct(inorder, preorder, 0, preorder.size() - 1, pre);
   }
-  if (leftLength < endPreorder - startPreorder) {
-    // Build rigth subtree
-    root->m_pRight = ConstructCore(leftPreorderEnd + 1, endPreorder,
-                                   rootInorder + 1, endInorder);
-  }
+};
 
-  return root;
+void test1() {
+  std::vector<int> preorder{9, 8, 4, 7, 13, 10, 16, 15};
+  std::vector<int> inorder{4, 7, 8, 9, 10, 13, 15, 16};
+
+  TreeWithConstruct tree(inorder, preorder);
+
+  BinaryTree result;
+  result.add(9);
+  result.add(8);
+  result.add(13);
+  result.add(4);
+  result.add(10);
+  result.add(16);
+  result.add(7);
+  result.add(15);
+
+  assert(tree == result);
 }
 
-// ==================== Test Code ====================
-void Test(char *testName, int *preorder, int *inorder, int length) {
-  if (testName != NULL)
-    printf("%s begins:\n", testName);
+void test2() {
+  std::vector<int> inorder{1, 2, 3, 4, 5};
+  std::vector<int> preorder{5, 4, 3, 2, 1};
 
-  printf("The preorder sequence is: ");
-  for (int i = 0; i < length; ++i)
-    printf("%d ", preorder[i]);
-  printf("\n");
+  TreeWithConstruct tree(inorder, preorder);
 
-  printf("The inorder sequence is: ");
-  for (int i = 0; i < length; ++i)
-    printf("%d ", inorder[i]);
-  printf("\n");
+  BinaryTree result;
+  result.add(5);
+  result.add(4);
+  result.add(3);
+  result.add(2);
+  result.add(1);
 
-  try {
-    BinaryTreeNode *root = Construct(preorder, inorder, length);
-    PrintTree(root);
-
-    DestroyTree(root);
-  } catch (std::exception &exception) {
-    printf("Invalid Input.\n");
-  }
+  assert(tree == result);
 }
 
-//              1
-//           /     \
-//          2       3
-//         /       / \
-//        4       5   6
-//         \         /
-//          7       8
-void Test1() {
-  const int length = 8;
-  int preorder[length] = {1, 2, 4, 7, 3, 5, 6, 8};
-  int inorder[length] = {4, 7, 2, 1, 5, 3, 8, 6};
+void test3() {
+  std::vector<int> preorder{1, 2, 3, 4, 5};
+  std::vector<int> inorder{1, 2, 3, 4, 5};
 
-  Test("Test1", preorder, inorder, length);
+  TreeWithConstruct tree(inorder, preorder);
+
+  BinaryTree result;
+  result.add(1);
+  result.add(2);
+  result.add(3);
+  result.add(4);
+  result.add(5);
+
+  assert(tree == result);
 }
 
-//            1
-//           /
-//          2
-//         /
-//        3
-//       /
-//      4
-//     /
-//    5
-void Test2() {
-  const int length = 5;
-  int preorder[length] = {1, 2, 3, 4, 5};
-  int inorder[length] = {5, 4, 3, 2, 1};
+void test4() {
+  std::vector<int> preorder{1};
+  std::vector<int> inorder{1};
 
-  Test("Test2", preorder, inorder, length);
+  TreeWithConstruct tree(inorder, preorder);
+
+  BinaryTree result;
+  result.add(1);
+
+  assert(tree == result);
 }
 
-//            1
-//             \ 
-//              2
-//               \ 
-//                3
-//                 \
-//                  4
-//                   \
-//                    5
-void Test3() {
-  const int length = 5;
-  int preorder[length] = {1, 2, 3, 4, 5};
-  int inorder[length] = {1, 2, 3, 4, 5};
-
-  Test("Test3", preorder, inorder, length);
-}
-
-// Only one node
-void Test4() {
-  const int length = 1;
-  int preorder[length] = {1};
-  int inorder[length] = {1};
-
-  Test("Test4", preorder, inorder, length);
-}
-
-//              1
-//           /     \
-//          2       3
-//         / \     / \
-//        4   5   6   7
-void Test5() {
-  const int length = 7;
-  int preorder[length] = {1, 2, 4, 5, 3, 6, 7};
-  int inorder[length] = {4, 2, 5, 1, 6, 3, 7};
-
-  Test("Test5", preorder, inorder, length);
-}
-
-// empty tree
-void Test6() { Test("Test6", NULL, NULL, 0); }
-
-// ÊäÈëµÄÁ½¸öÐòÁÐ²»Æ¥Åä
-void Test7() {
-  const int length = 7;
-  int preorder[length] = {1, 2, 4, 5, 3, 6, 7};
-  int inorder[length] = {4, 2, 8, 1, 6, 3, 7};
-
-  Test("Test7: for unmatched input", preorder, inorder, length);
-}
-
-int main(int argc, char *argv[]) {
-  Test1();
-  Test2();
-  Test3();
-  Test4();
-  Test5();
-  Test6();
-  Test7();
+int main() {
+  test1();
+  test2();
+  test3();
+  test4();
 
   return 0;
 }
