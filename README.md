@@ -164,4 +164,33 @@ Note:
 </tbody>
 </table>
 
+<h1>Stack and Queue</h1>
+
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Title</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Min in stack</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/3_Stack_Queue/min_in_stack.cpp">C++</a></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Push pop order</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/3_Stack_Queue/stack_push_pop_order.cpp">C++</a></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Stream median</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/3_Stack_Queue/stream_median.cpp">C++</a></td>
+</tr>
+</tbody>
+</table>
+
 
