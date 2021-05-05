@@ -3,10 +3,10 @@ My alternative solutions to problems from Harry He's book "Coding Interviews".
 
 <h1>Motivation</h1>
 
-"Coding Interviews" is an excellent book for people prepearing themselves for coding job. 
-While reading it however I couldn't help but to think that a lot things have changed in a way you write C++ code.
-A lot of solutions were in fact written in C and only disguised as a C++.
-I felt that it would be a great idea to modernize the solutions.
+"Coding Interviews" is an excellent book for anyone preparing for a coding job.
+While reading it, I couldn't help but notice how much has changed in the way you write C++ code.
+Many solutions were actually written in C and disguised as C++.
+I thought it would be a fantastic idea to modernize the solutions.
 Plus you never learn something until you implement it yourself.
 
 The things I tried to change:
