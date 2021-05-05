@@ -8,15 +8,14 @@ void test1() {
   list.append(3);
   list.append(4);
   list.append(5);
+ 
+  list.remove(3);
 
   List expectedResult;
-
   expectedResult.append(1);
   expectedResult.append(2);
   expectedResult.append(4);
   expectedResult.append(5);
-
-  list.remove(3);
 
   assert(list == expectedResult);
 }
@@ -29,14 +28,13 @@ void test2() {
   list.append(4);
   list.append(5);
 
-  List expectedResult;
+  list.remove(5);
 
+  List expectedResult;
   expectedResult.append(1);
   expectedResult.append(2);
   expectedResult.append(3);
   expectedResult.append(4);
-
-  list.remove(5);
 
   assert(list == expectedResult);
 }
@@ -49,14 +47,13 @@ void test3() {
   list.append(4);
   list.append(5);
 
+  list.remove(1);
+  
   List expectedResult;
-
   expectedResult.append(2);
   expectedResult.append(3);
   expectedResult.append(4);
   expectedResult.append(5);
-
-  list.remove(1);
 
   assert(list == expectedResult);
 }
@@ -65,9 +62,9 @@ void test4() {
   List list;
   list.append(1);
 
-  List expectedResult;
-
   list.remove(1);
+
+  List expectedResult;
 
   assert(list == expectedResult);
 }
