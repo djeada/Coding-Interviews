@@ -75,5 +75,53 @@ Note:
 </tbody>
 </table>
 
+<h1>Strings</h1>
+
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Title</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Add numeric string</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/2_Strings/add_numeric_string.cpp">C++</a></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Allocate string</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/2_Strings/allocate_str.c">C++</a></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Anagram</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/2_Strings/anagram.cpp">C++</a></td>
+</tr>
+<tr>
+<td>4</td>
+<td>Combinations</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/2_Strings/combinations.cpp">C++</a></td>
+</tr>
+<tr>
+<td>5</td>
+<td>Delete char</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/2_Strings/delete_char.cpp">C++</a></td>
+</tr>
+<tr>
+<td>6</td>
+<td>Delete duplicate chars</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/2_Strings/delete_duplicate_chars.cpp">C++</a></td>
+</tr>
+  <tr>
+<td>7</td>
+<td>Edit distance</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/2_Strings/edit_distance.cpp">C++</a></td>
+</tr>
+</tbody>
+</table>
 
 
