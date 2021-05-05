@@ -40,37 +40,37 @@ Note:
 <tr>
 <td>1</td>
 <td>Array rotation</td>
-<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/1_Arrays/array_rotation.cpp">Python</a></td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/1_Arrays/array_rotation.cpp">C++</a></td>
 </tr>
 <tr>
 <td>2</td>
 <td>Duplicates</td>
-<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/1_Arrays/duplicates.cpp">Python</a></td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/1_Arrays/duplicates.cpp">C++</a></td>
 </tr>
 <tr>
 <td>3</td>
 <td>Majority element</td>
-<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/1_Arrays/majority_element.cpp">Python</a></td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/1_Arrays/majority_element.cpp">C++</a></td>
 </tr>
 <tr>
 <td>4</td>
 <td>Merge arrays</td>
-<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/1_Arrays/merge_arrays.cpp">Python</a></td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/1_Arrays/merge_arrays.cpp">C++</a></td>
 </tr>
 <tr>
 <td>5</td>
 <td>Min number</td>
-<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/1_Arrays/min_number.cpp">Python</a></td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/1_Arrays/min_number.cpp">C++</a></td>
 </tr>
 <tr>
 <td>6</td>
 <td>Permutations</td>
-<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/1_Arrays/permutations.cpp">Python</a></td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/1_Arrays/permutations.cpp">C++</a></td>
 </tr>
   <tr>
 <td>7</td>
 <td>Reorder numbers</td>
-<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/1_Arrays/reorder_numbers.cpp">Python</a></td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/1_Arrays/reorder_numbers.cpp">C++</a></td>
 </tr>
 </tbody>
 </table>
