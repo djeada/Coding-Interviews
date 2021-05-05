@@ -121,6 +121,46 @@ Note:
 <td>Edit distance</td>
 <td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/2_Strings/edit_distance.cpp">C++</a></td>
 </tr>
+  <tr>
+<td>8</td>
+<td>First char appearing once</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/2_Strings/first_char_appearing_once.cpp">C++</a></td>
+</tr>
+<tr>
+<td>9</td>
+<td>Numeric string</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/2_Strings/numeric_string.cpp">C++</a></td>
+</tr>
+<tr>
+<td>10</td>
+<td>Palindrome number</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/2_Strings/palindrome_number.cpp">C++</a></td>
+</tr>
+<tr>
+<td>11</td>
+<td>Permutations</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/2_Strings/permutations.cpp">C++</a></td>
+</tr>
+<tr>
+<td>12</td>
+<td>Regex</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/2_Strings/regex.cpp">C++</a></td>
+</tr>
+<tr>
+<td>13</td>
+<td>Replace blanks</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/2_Strings/replace_blanks.cpp">C++</a></td>
+</tr>
+<tr>
+<td>14</td>
+<td>Reverse words in a sentence</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/2_Strings/reverse_words_in_sentence.cpp">C++</a></td>
+</tr>
+<tr>
+<td>15</td>
+<td>String path</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/2_Strings/string_path.cpp">C++</a></td>
+</tr>
 </tbody>
 </table>
 
