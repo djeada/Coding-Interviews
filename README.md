@@ -193,4 +193,62 @@ Note:
 </tbody>
 </table>
 
+<h1>List</h1>
+
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Title</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Clone complex list</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/4_Lists/clone_complex_list.cpp">C++</a></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Delete duplicates</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/4_Lists/delete_duplicates.cpp">C++</a></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Delete node>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/4_Lists/delete_node.cpp">C++</a></td>
+</tr>
+<tr>
+<td>4</td>
+<td>Kth node</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/4_Lists/kth_node.cpp">C++</a></td>
+</tr>
+<tr>
+<td>5</td>
+<td>Loops</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/4_Lists/loops.cpp">C++</a></td>
+</tr>
+<tr>
+<td>6</td>
+<td>Merge lists</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/4_Lists/merge.cpp">C++</a></td>
+</tr>
+  <tr>
+<td>7</td>
+<td>Print reversely</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/4_Lists/print_reversely.cpp">C++</a></td>
+</tr>
+  <tr>
+<td>8</td>
+<td>Reverse list</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/4_Lists/reverse_list.cpp">C++</a></td>
+</tr>
+<tr>
+<td>9</td>
+<td>Sort list</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/4_Lists/sort.cpp">C++</a></td>
+</tr>
+</tbody>
+</table>
 
