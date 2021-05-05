@@ -343,3 +343,101 @@ Note:
 </tr>
 </tbody>
 </table>
+
+<h1>Trees</h1>
+
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Title</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Balance</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/8_Trees/balance.cpp">C++</a></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Construct binary tree</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/8_Trees/construct_binary_tree.cpp">C++</a></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Convert to list</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/8_Trees/convert_to_list.cpp">C++</a></td>
+</tr>
+<tr>
+<td>4</td>
+<td>Depth</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/8_Trees/depth.cpp">C++</a></td>
+</tr>
+<tr>
+<td>5</td>
+<td>Largest subtrees</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/8_Trees/largest_subtrees.cpp">C++</a></td>
+</tr>
+<tr>
+<td>6</td>
+<td>Lowest ancestor</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/8_Trees/lowest_ancestor.cpp">C++</a></td>
+</tr>
+  <tr>
+<td>7</td>
+<td>Nodes at k distance</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/8_Trees/nodes_at_k_distance.cpp">C++</a></td>
+</tr>
+  <tr>
+<td>8</td>
+<td>Path</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/8_Trees/path.cpp">C++</a></td>
+</tr>
+<tr>
+<td>9</td>
+<td>Print levels</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/8_Trees/print_levels.cpp">C++</a></td>
+</tr>
+<tr>
+<td>10</td>
+<td>Print zigzag</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/8_Trees/print_zigzag.cpp">C++</a></td>
+</tr>
+</tbody>
+</table>
+
+<h1>Dynamic programming</h1>
+
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Title</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Coin change</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/9_Dynamic_Programming/coin_change.cpp">C++</a></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Eight queens</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/9_Dynamic_Programming/eight_queens.cpp">C++</a></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Greatest sum subarrays</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/9_Dynamic_Programming/greatest_sum_subarrays.cpp">C++</a></td>
+</tr>
+<tr>
+<td>4</td>
+<td>K least numbers</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/9_Dynamic_Programming/k_least_numbers.cpp">C++</a></td>
+</tr>
+</tbody>
+</table>
