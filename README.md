@@ -193,7 +193,7 @@ Note:
 </tbody>
 </table>
 
-<h1>List</h1>
+<h1>Lists</h1>
 
 <table>
 <thead>
@@ -252,3 +252,94 @@ Note:
 </tbody>
 </table>
 
+<h1>Matrices</h1>
+
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Title</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Fibonacci</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/5_Matrices/fibonacci.cpp">C++</a></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Partially sorted matrix</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/5_Matrices/partially_sorted_matrix.cpp">C++</a></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Sorted matrix</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/5_Matrices/sorted_matrix.cpp">C++</a></td>
+</tr>
+</tbody>
+</table>
+
+<h1>Classes</h1>
+
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Title</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Arrow and dot</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/6_Classes/arrow_and_dot.cpp">C++</a></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Assigment operator</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/6_Classes/assigment_operator.cpp">C++</a></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Objective C</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/6_Classes/objective_c.c">C++</a></td>
+</tr>
+</tbody>
+</table>
+
+<h1>Bit operations</h1>
+
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Title</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Count ones</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/7_Bit_Operations/count_ones.cpp">C++</a></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Modify numbers</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/7_Bit_Operations/modify_number.cpp">C++</a></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Two missing numbers</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/7_Bit_Operations/two_missing_numbers.cpp">C++</a></td>
+</tr>
+<tr>
+<td>4</td>
+<td>Uniquely occuring numbers</td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/7_Bit_Operations/uniquely_occuring_numbers.cpp">C++</a></td>
+</tr>
+</tbody>
+</table>
