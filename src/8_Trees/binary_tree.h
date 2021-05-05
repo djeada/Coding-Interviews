@@ -21,6 +21,7 @@ public:
   ~BinaryTree();
 
   void add(int value);
+  bool contains(int value);
   friend bool operator==(const BinaryTree &t1, const BinaryTree &t2);
 };
 

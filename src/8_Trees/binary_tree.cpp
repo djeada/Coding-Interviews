@@ -17,7 +17,7 @@ BinaryTree::~BinaryTree() {
   destroyRecursive(root);
 }
 
-void BinaryTree ::add(int value) {
+void BinaryTree::add(int value) {
 
   if (!root) {
     root = new Node(value, nullptr, nullptr);
@@ -49,6 +49,28 @@ void BinaryTree ::add(int value) {
   };
 
   _add(root);
+}
+
+bool BinaryTree::contains(int value) {
+
+  if (!root)
+    return false;
+
+  std::function<bool(Node *, int)> _contains;
+  _contains = [&](Node *node, int value) -> bool {
+    if (!node)
+      return false;
+
+    if (node->value == value)
+      return true;
+
+    else if (node->value > value)
+      return _contains(node->left, value);
+
+    return _contains(node->right, value);
+  };
+
+  return _contains(root, value);
 }
 
 bool operator==(const BinaryTree &t1, const BinaryTree &t2) {

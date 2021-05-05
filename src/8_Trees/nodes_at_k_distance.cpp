@@ -2,7 +2,7 @@
 #include <cassert>
 #include <functional>
 #include <iostream>
-#include <stdexcept>
+
 class TreeWithDepth : public BinaryTree {
 
 public:
