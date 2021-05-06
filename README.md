@@ -216,7 +216,7 @@ Note:
 </tr>
 <tr>
 <td>3</td>
-<td>Delete node>
+<td>Delete node</td>
 <td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/4_Lists/delete_node.cpp">C++</a></td>
 </tr>
 <tr>
