@@ -94,7 +94,7 @@ Note:
 <tr>
 <td>2</td>
 <td>Allocate string</td>
-<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/2_Strings/allocate_str.c">C++</a></td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/2_Strings/allocate_str.c">C</a></td>
 </tr>
 <tr>
 <td>3</td>
@@ -305,7 +305,7 @@ Note:
 <tr>
 <td>3</td>
 <td>Objective C</td>
-<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/6_Classes/objective_c.c">C++</a></td>
+<td><a href="https://github.com/djeada/CodingInterviews/blob/master/src/6_Classes/objective_c.c">C</a></td>
 </tr>
 </tbody>
 </table>
