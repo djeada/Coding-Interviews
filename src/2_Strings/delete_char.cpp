@@ -1,30 +1,30 @@
 #include <cassert>
 #include <cstring>
 
-void deleteCharacters(char *pString, char const *chars) {
+void deleteCharacters(char *str, char const *chars) {
   int hashTable[256];
-  const char *pTemp = chars;
-  char *pSlow = pString;
-  char *pFast = pString;
+  const char *temp = chars;
+  char *slowPointer = str;
+  char *fastPointer = str;
 
-  if (pString == NULL || chars == NULL)
+  if (str == NULL || chars == NULL)
     return;
 
   memset(hashTable, 0, sizeof(hashTable));
-  while (*pTemp != '\0') {
-    hashTable[*pTemp] = 1;
-    ++pTemp;
+  while (*temp != '\0') {
+    hashTable[*temp] = 1;
+    ++temp;
   }
 
-  while (*pFast != '\0') {
-    if (hashTable[*pFast] != 1) {
-      *pSlow = *pFast;
-      ++pSlow;
+  while (*fastPointer != '\0') {
+    if (hashTable[*fastPointer] != 1) {
+      *slowPointer = *fastPointer;
+      ++slowPointer;
     }
-    ++pFast;
+    ++fastPointer;
   }
 
-  *pSlow = '\0';
+  *slowPointer = '\0';
 }
 
 bool identical(char const *strA, char const *strB) {
