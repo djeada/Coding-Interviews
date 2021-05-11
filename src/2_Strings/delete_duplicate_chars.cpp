@@ -1,28 +1,28 @@
 #include <cassert>
 #include <cstring>
 
-void deleteDuplication(char *pString) {
+void deleteDuplication(char *str) {
   int hashTable[256];
-  char *pSlow = pString;
-  char *pFast = pString;
+  char *slowPointer = str;
+  char *fastPointer = str;
 
-  if (pString == NULL)
+  if (str == NULL)
     return;
 
   memset(hashTable, 0, sizeof(hashTable));
 
-  while (*pFast != '\0') {
-    *pSlow = *pFast;
+  while (*fastPointer != '\0') {
+    *slowPointer = *fastPointer;
 
-    if (hashTable[*pFast] == 0) {
-      ++pSlow;
-      hashTable[*pFast] = 1;
+    if (hashTable[*fastPointer] == 0) {
+      ++slowPointer;
+      hashTable[*fastPointer] = 1;
     }
 
-    ++pFast;
+    ++fastPointer;
   }
 
-  *pSlow = '\0';
+  *slowPointer = '\0';
 }
 
 bool identical(char const *strA, char const *strB) {
