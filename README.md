@@ -13,12 +13,13 @@ The things I tried to change:
 
 - Exceptions instead of error codes.
 - "iostream" instead of "stdlib.h".
-- Assertions insread of console tests.
+- Assertions instead of console tests.
 - Vectors instead of bare arrays.
 - Iterators instead of int counter.
 - Collecions implemented with classes.
 - Refrences instead of pointers.
 - Lambdas for private functions.
+- Stl pair instead of custom structs.
 
 My improvements are only minor and can be further developed, especially with C++20.
 
