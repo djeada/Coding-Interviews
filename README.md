@@ -1,5 +1,5 @@
 # CodingInterviews
-My alternative solutions to problems from Harry He's book "Coding Interviews".
+My alternate solutions to challenges from Harry He's book "Coding Interviews."
 
 <h1>Motivation</h1>
 
