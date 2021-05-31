@@ -16,7 +16,7 @@ The things I tried to change:
 - Assertions instead of console tests.
 - Vectors instead of bare arrays.
 - Iterators instead of int counter.
-- Collecions implemented with classes.
+- Collections implemented with classes.
 - Refrences instead of pointers.
 - Lambdas for private functions.
 - Stl pair instead of custom structs.
