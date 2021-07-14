@@ -8,7 +8,7 @@ void test1() {
   list.append(3);
   list.append(4);
   list.append(5);
- 
+
   list.remove(3);
 
   List expectedResult;
@@ -48,7 +48,7 @@ void test3() {
   list.append(5);
 
   list.remove(1);
-  
+
   List expectedResult;
   expectedResult.append(2);
   expectedResult.append(3);

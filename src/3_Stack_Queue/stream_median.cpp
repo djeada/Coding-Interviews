@@ -1,7 +1,7 @@
 #include <algorithm>
+#include <cassert>
 #include <exception>
 #include <vector>
-#include <cassert>
 
 template <typename T> class DynamicArray {
 public:

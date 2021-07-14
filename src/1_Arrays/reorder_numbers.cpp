@@ -1,6 +1,6 @@
-#include <vector>
 #include <cassert>
 #include <set>
+#include <vector>
 
 bool check(int num) {
   if ((num & 0x1) == 0)
@@ -9,10 +9,10 @@ bool check(int num) {
 }
 
 std::vector<int> reorderOddEven1(std::vector<int> arr) {
-  
+
   int begin = 0;
   int end = arr.size() - 1;
-  
+
   while (begin < end) {
     while (begin < end && (arr[begin] & 0x1) != 0)
       begin++;
@@ -28,10 +28,10 @@ std::vector<int> reorderOddEven1(std::vector<int> arr) {
 }
 
 std::vector<int> reorderOddEven2(std::vector<int> arr) {
-  
+
   int begin = 0;
   int end = arr.size() - 1;
-  
+
   while (begin < end) {
     while (begin < end && !check(arr[begin]))
       begin++;

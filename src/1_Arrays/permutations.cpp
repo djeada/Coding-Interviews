@@ -1,7 +1,7 @@
-#include <functional>
 #include <cassert>
-#include <vector>
+#include <functional>
 #include <set>
+#include <vector>
 
 std::vector<std::set<int>> permute(std::vector<std::vector<int>> &arrays) {
 
@@ -46,9 +46,9 @@ void test1() {
 void test2() {
   std::vector<std::vector<int>> arrays{{1, 2, 3, 4, 5}};
 
-  std::vector<std::set<int>> result{
-      std::set<int>({1}), std::set<int>({2}), std::set<int>({3}),
-      std::set<int>({4}), std::set<int>({5})};
+  std::vector<std::set<int>> result{std::set<int>({1}), std::set<int>({2}),
+                                    std::set<int>({3}), std::set<int>({4}),
+                                    std::set<int>({5})};
 
   assert(permute(arrays) == result);
 }

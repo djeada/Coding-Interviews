@@ -2,8 +2,8 @@
 #include <cstring>
 #include <stack>
 
-bool hasPathCore(char *matrix, int rows, int cols, int row, int col, char const *str,
-                 int &pathLength, bool *visited) {
+bool hasPathCore(char *matrix, int rows, int cols, int row, int col,
+                 char const *str, int &pathLength, bool *visited) {
   if (str[pathLength] == '\0')
     return true;
 

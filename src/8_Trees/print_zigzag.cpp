@@ -8,41 +8,40 @@ public:
   TreeWithPrint() : BinaryTree() {}
   void print() {
 
-  if (!root)
-    return;
+    if (!root)
+      return;
 
-  std::stack<Node *> levels[2];
-  int current = 0;
-  int next = 1;
+    std::stack<Node *> levels[2];
+    int current = 0;
+    int next = 1;
 
-  levels[current].push(root);
-  while (!levels[0].empty() || !levels[1].empty()) {
-    auto node = levels[current].top();
-    levels[current].pop();
+    levels[current].push(root);
+    while (!levels[0].empty() || !levels[1].empty()) {
+      auto node = levels[current].top();
+      levels[current].pop();
 
-    std::cout << node->value << " ";
+      std::cout << node->value << " ";
 
-    if (current == 0) {
-      if (node->left)
-        levels[next].push(node->left);
-      if (node->right)
-        levels[next].push(node->right);
-    } else {
-      if (node->right)
-        levels[next].push(node->right);
-      if (node->left)
-        levels[next].push(node->left);
-    }
+      if (current == 0) {
+        if (node->left)
+          levels[next].push(node->left);
+        if (node->right)
+          levels[next].push(node->right);
+      } else {
+        if (node->right)
+          levels[next].push(node->right);
+        if (node->left)
+          levels[next].push(node->left);
+      }
 
-    if (levels[current].empty()) {
-      std::cout << std::endl;
-      current = 1 - current;
-      next = 1 - next;
+      if (levels[current].empty()) {
+        std::cout << std::endl;
+        current = 1 - current;
+        next = 1 - next;
+      }
     }
   }
-}
-
-   };
+};
 
 int main() {
   TreeWithPrint tree;
@@ -56,4 +55,3 @@ int main() {
 
   return 0;
 }
-

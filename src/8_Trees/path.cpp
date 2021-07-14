@@ -36,14 +36,14 @@ public:
       }
 
       if (node->left) {
-        if ( !leftResult)
+        if (!leftResult)
           path.pop_back();
 
         return leftResult;
       }
 
       if (node->right) {
-        if ( !rightResult)
+        if (!rightResult)
           path.pop_back();
 
         return rightResult;

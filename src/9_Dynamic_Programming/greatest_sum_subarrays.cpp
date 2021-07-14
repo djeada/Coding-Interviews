@@ -19,16 +19,6 @@ int getGreatestSumOfSubArray(vector<int> numbers) {
   return greatestSum;
 }
 
-//================= Test Code =================
-void test(const string &testName, vector<int> numbers, int expected) {
-  cout << testName << " begins: ";
-
-  if (getGreatestSumOfSubArray(numbers) == expected)
-    cout << "passed.\n";
-  else
-    cout << "FAILED.\n";
-}
-
 void test1() {
   vector<int> numbers{1, -2, 3, 10, -4, 7, 2, -5};
   int expected = 18;

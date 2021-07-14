@@ -1,7 +1,7 @@
-#include <utility>
-#include <vector>
 #include <cassert>
 #include <cmath>
+#include <utility>
+#include <vector>
 
 int findFirstBitIs1(int num) {
   int indexBit = 0;
@@ -88,9 +88,9 @@ std::pair<int, int> findMissingV2(const std::vector<int> &numbers) {
   getOnce(extention, missing);
 
   if (missing.first < missing.second) {
-   auto temp = missing.first;
-   missing.first = missing.second;
-   missing.second = temp;
+    auto temp = missing.first;
+    missing.first = missing.second;
+    missing.second = temp;
   }
 
   return std::pair<int, int>(missing);
