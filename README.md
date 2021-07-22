@@ -3,11 +3,7 @@ My alternate solutions to challenges from Harry He's book "Coding Interviews."
 
 <h1>Motivation</h1>
 
-"Coding Interviews" is an excellent book for anyone preparing for a coding job.
-However while reading it, I couldn't help but notice how much has changed in the way you write C++ code.
-Many solutions were actually written in C and disguised as C++.
-I thought that it would be a fantastic idea to modernize the solutions.
-Plus you can never really learn something until you implement it yourself.
+"Coding Interviews" is an excellent book for anyone preparing for a coding job. However, while reading it, I couldn't help but notice how much has changed in the way you write C++ code. Many solutions were actually written in C and disguised as C++. I thought that it would be a fantastic idea to modernize the solutions. Plus, you can never really learn something until you implement it yourself.
 
 The things I tried to change:
 
@@ -15,18 +11,19 @@ The things I tried to change:
 - "iostream" instead of "stdlib.h".
 - Assertions instead of console tests.
 - Vectors instead of bare arrays.
-- Iterators instead of int counter.
-- Collections implemented with classes.
+- Iterators instead of int counters.
+- Collections are implemented with classes.
 - Refrences instead of pointers.
 - Lambdas for private functions.
-- Stl pair instead of custom structs.
-- <i>auto</i> keyword for type deduction.
+- Stl pairs instead of custom structs.
+- <i>auto</i> keyword for type deduction.
+- My improvements are only minor and can be further developed, especially with C++20.
 
-My improvements are only minor and can be further developed, especially with C++20.
+Note:
 
-Note: 
-- not all problems from the book have solutions in this repository.
-- not all solutions in this repository are for the problems found in the book.
+Not all the problems from the book have solutions in this repository.
+Not all solutions in this repository are for the problems found in the book.
+
 <h1>
     Arrays</h1>
 
