@@ -17,7 +17,8 @@ The things I tried to change:
 - Lambdas for private functions.
 - Stl pairs instead of custom structs.
 - <i>auto</i> keyword for type deduction.
-- My improvements are only minor and can be further developed, especially with C++20.
+
+My improvements are only minor and can be further developed, especially with C++20.
 
 Note:
 
