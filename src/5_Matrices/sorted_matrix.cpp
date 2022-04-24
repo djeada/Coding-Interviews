@@ -1,7 +1,7 @@
 #include <cassert>
 #include <vector>
 
-bool find(std::vector<std::vector<int>> &matrix, int value) {
+bool contains(std::vector<std::vector<int>> &matrix, int value) {
   if (matrix.empty())
     return false;
 
@@ -31,25 +31,25 @@ bool find(std::vector<std::vector<int>> &matrix, int value) {
 void test1() {
   std::vector<std::vector<int>> matrix{{1, 3, 5}, {7, 9, 11}, {13, 15, 17}};
   int value = 7;
-  assert(find(matrix, value));
+  assert(contains(matrix, value));
 }
 
 void test2() {
   std::vector<std::vector<int>> matrix{{1, 3, 5}, {7, 9, 11}, {13, 15, 17}};
   int value = 1;
-  assert(find(matrix, value));
+  assert(contains(matrix, value));
 }
 
 void test3() {
   std::vector<std::vector<int>> matrix{{1, 3, 5}, {7, 9, 11}, {13, 15, 17}};
   int value = 17;
-  assert(find(matrix, value));
+  assert(contains(matrix, value));
 }
 
 void test4() {
   std::vector<std::vector<int>> matrix{{1, 3, 5}, {7, 9, 11}, {13, 15, 17}};
   int value = 6;
-  assert(!find(matrix, value));
+  assert(!contains(matrix, value));
 }
 
 int main() {
