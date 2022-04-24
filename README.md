@@ -22,8 +22,8 @@ My improvements are only minor and can be further developed, especially with C++
 
 Note:
 
-Not all the problems from the book have solutions in this repository.
-Not all solutions in this repository are for the problems found in the book.
+This repository does not contain solutions to all of the problems in the book.
+Not all of the solutions in this repository are for problems from the book.
 
 <h1>
     Arrays</h1>
@@ -408,7 +408,7 @@ Not all solutions in this repository are for the problems found in the book.
     </tbody>
 </table>
 
-<h1>Dynamic programming</h1>
+<h1>Other</h1>
 
 <table>
     <thead>
