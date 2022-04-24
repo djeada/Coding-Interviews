@@ -7,6 +7,7 @@ It is local!
 char *allocateMemory() {
         char str[20] = "Hello world";
         return str;
+}
 */
 
 char *pointer = NULL;
