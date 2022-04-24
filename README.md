@@ -1,6 +1,6 @@
 # CodingInterviews
-My alternate solutions to challenges from Harry He's book "Coding Interviews."
-
+My alternative solutions to challenges from Harry He's book "Coding Interviews."
+ 
 <h1>Motivation</h1>
 
 "Coding Interviews" is an excellent book for anyone preparing for a coding job. However, while reading it, I couldn't help but notice how much has changed in the way you write C++ code. Many solutions were actually written in C and disguised as C++. I thought that it would be a fantastic idea to modernize the solutions. Plus, you can never really learn something until you implement it yourself.
