@@ -1,7 +1,9 @@
-# CodingInterviews
+# Coding Interviews
 My alternative solutions to challenges from Harry He's book "Coding Interviews."
- 
-<h1>Motivation</h1>
+
+![Capture](https://user-images.githubusercontent.com/37275728/186154277-b2ef19e7-1d07-4e4f-8bb6-ba6887e05519.PNG)
+
+## Motivation
 
 "Coding Interviews" is an excellent book for anyone preparing for a coding job. However, while reading it, I couldn't help but notice how much has changed in the way you write C++ code. Many solutions were actually written in C and disguised as C++. I thought that it would be a fantastic idea to modernize the solutions. Plus, you can never really learn something until you implement it yourself.
 
@@ -25,8 +27,7 @@ Note:
 This repository does not contain solutions to all of the problems in the book.
 Not all of the solutions in this repository are for problems from the book.
 
-<h1>
-    Arrays</h1>
+## Arrays
 
 <table>
     <thead>
@@ -75,7 +76,7 @@ Not all of the solutions in this repository are for problems from the book.
     </tbody>
 </table>
 
-<h1>Strings</h1>
+## Strings
 
 <table>
     <thead>
@@ -164,7 +165,7 @@ Not all of the solutions in this repository are for problems from the book.
     </tbody>
 </table>
 
-<h1>Stack and Queue</h1>
+## Stack and Queue
 
 <table>
     <thead>
@@ -193,7 +194,7 @@ Not all of the solutions in this repository are for problems from the book.
     </tbody>
 </table>
 
-<h1>Lists</h1>
+## Lists
 
 <table>
     <thead>
@@ -252,7 +253,7 @@ Not all of the solutions in this repository are for problems from the book.
     </tbody>
 </table>
 
-<h1>Matrices</h1>
+## Matrices
 
 <table>
     <thead>
@@ -281,7 +282,7 @@ Not all of the solutions in this repository are for problems from the book.
     </tbody>
 </table>
 
-<h1>Classes</h1>
+## Classes
 
 <table>
     <thead>
@@ -310,7 +311,7 @@ Not all of the solutions in this repository are for problems from the book.
     </tbody>
 </table>
 
-<h1>Bit operations</h1>
+## Bit operations
 
 <table>
     <thead>
@@ -344,7 +345,7 @@ Not all of the solutions in this repository are for problems from the book.
     </tbody>
 </table>
 
-<h1>Trees</h1>
+## Trees
 
 <table>
     <thead>
@@ -408,7 +409,7 @@ Not all of the solutions in this repository are for problems from the book.
     </tbody>
 </table>
 
-<h1>Other</h1>
+## Other
 
 <table>
     <thead>
