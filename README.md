@@ -1,6 +1,8 @@
 # Coding Interviews
 My alternative solutions to challenges from Harry He's book "Coding Interviews."
 
+You can buy the book from the Amazon: <a href="https://www.amazon.de/Coding-Interviews-Questions-Solutions-Programming/dp/1430247614">link</a>.
+
 ![Capture](https://user-images.githubusercontent.com/37275728/186154277-b2ef19e7-1d07-4e4f-8bb6-ba6887e05519.PNG)
 
 ## Motivation
