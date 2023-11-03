@@ -1,62 +1,57 @@
+/**
+ * This program contains two functions to count the number of set bits (1s)
+ * in an integer and test cases to validate their correctness.
+ */
+
 #include <cassert>
+#include <iostream>
 
-int countOnes1(int n) {
+/**
+ * @brief Counts the number of set bits (1s) in the binary representation of a
+ * given integer using bit masking.
+ *
+ * @param number The integer whose set bits are to be counted.
+ * @return The count of set bits in the input number.
+ */
+int countSetBitsUsingMask(int number) {
   int count = 0;
-  unsigned int flag = 1;
-  while (flag) {
-    if (n & flag)
+  unsigned int mask = 1;
+  while (mask) {
+    if (number & mask) {
       count++;
-
-    flag = flag << 1;
+    }
+    mask = mask << 1;
   }
-
   return count;
 }
 
-int countOnes2(int n) {
+/**
+ * @brief Counts the number of set bits (1s) in the binary representation of a
+ * given integer using Brian Kernighan's Algorithm.
+ *
+ * @param number The integer whose set bits are to be counted.
+ * @return The count of set bits in the input number.
+ */
+int countSetBitsUsingKernighan(int number) {
   int count = 0;
-
-  while (n) {
+  while (number) {
     ++count;
-    n = (n - 1) & n;
+    number = (number - 1) & number;
   }
-
   return count;
 }
 
-void test1() {
-  int x = 0;
-  int result = 0;
-  assert(countOnes1(x) == result);
-  assert(countOnes2(x) == result);
+void runTests() {
+  std::pair<int, int> testCases[] = {{0, 0}, {1, 1}, {10, 2}, {0x7FFFFFFF, 31}};
+
+  for (const auto &[input, expectedResult] : testCases) {
+    assert(countSetBitsUsingMask(input) == expectedResult);
+    assert(countSetBitsUsingKernighan(input) == expectedResult);
+  }
+  std::cout << "All tests passed!\n";
 }
 
-void test2() {
-  int x = 1;
-  int result = 1;
-  assert(countOnes1(x) == result);
-  assert(countOnes2(x) == result);
-}
-
-void test3() {
-  int x = 10;
-  int result = 2;
-  assert(countOnes1(x) == result);
-  assert(countOnes2(x) == result);
-}
-
-void test4() {
-  int x = 0x7FFFFFFF;
-  int result = 31;
-  assert(countOnes1(x) == result);
-  assert(countOnes2(x) == result);
-}
-
-int main(int argc, char *argv[]) {
-  test1();
-  test2();
-  test3();
-  test4();
-
+int main() {
+  runTests();
   return 0;
 }

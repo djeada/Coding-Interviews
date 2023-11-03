@@ -1,90 +1,81 @@
+/**
+ * This program calculates the Levenshtein distance (edit distance) between two
+ * strings. The edit distance is the minimum number of operations (insertions,
+ * deletions, substitutions) required to transform one string into another.
+ */
+
+#include <algorithm>
 #include <cassert>
+#include <iostream>
 #include <string>
 #include <vector>
 
-int min(int num1, int num2, int num3) {
-  int less = (num1 < num2) ? num1 : num2;
-  return (less < num3) ? less : num3;
-}
-
-int getEditDistanceHelp(const std::string &str1, const std::string &str2,
+/**
+ * Helper function to compute the Levenshtein distance.
+ * @param str1: The first string.
+ * @param str2: The second string.
+ * @param distances: A 2D vector to store intermediate distances.
+ * @param len1: The length of the first string.
+ * @param len2: The length of the second string.
+ * @return: The Levenshtein distance between str1 and str2.
+ */
+int computeEditDistance(const std::string &str1, const std::string &str2,
                         std::vector<std::vector<int>> &distances, int len1,
                         int len2) {
-  for (int i = 0; i < len2 + 1; ++i)
+  for (int i = 0; i <= len2; ++i)
     distances[i][0] = i;
 
-  for (int j = 0; j < len1 + 1; ++j)
+  for (int j = 0; j <= len1; ++j)
     distances[0][j] = j;
 
-  for (int i = 1; i < len2 + 1; ++i) {
-    for (int j = 1; j < len1 + 1; ++j) {
+  for (int i = 1; i <= len2; ++i) {
+    for (int j = 1; j <= len1; ++j) {
       if (str1[j - 1] == str2[i - 1])
         distances[i][j] = distances[i - 1][j - 1];
       else {
-        int deletion = distances[i][j - 1] + 1;
-        int insertion = distances[i - 1][j] + 1;
-        int substitution = distances[i - 1][j - 1] + 1;
-        distances[i][j] = min(deletion, insertion, substitution);
+        distances[i][j] =
+            std::min({distances[i][j - 1] + 1, distances[i - 1][j] + 1,
+                      distances[i - 1][j - 1] + 1});
       }
     }
   }
   return distances[len2][len1];
 }
 
-void fillMatrix(std::vector<std::vector<int>> &m, int x, int y) {
-  for (int i = 0; i < y; i++) {
-    m.push_back({});
-    for (int j = 0; j < x; j++) {
-      m[i].push_back(0);
-    }
-  }
-}
-
+/**
+ * Calculates the Levenshtein distance between two strings.
+ * @param str1: The first string.
+ * @param str2: The second string.
+ * @return: The Levenshtein distance between str1 and str2.
+ */
 int getEditDistance(const std::string &str1, const std::string &str2) {
   int len1 = str1.length();
   int len2 = str2.length();
-
-  std::vector<std::vector<int>> distances;
-  fillMatrix(distances, len1 + 1, len2 + 1);
-
-  int editDistance = getEditDistanceHelp(str1, str2, distances, len1, len2);
-
-  return editDistance;
+  std::vector<std::vector<int>> distances(len2 + 1,
+                                          std::vector<int>(len1 + 1, 0));
+  return computeEditDistance(str1, str2, distances, len1, len2);
 }
 
-void test1() {
-  std::string strA = "kitten";
-  std::string strB = "kitten";
-  int result = 0;
-  assert(getEditDistance(strA, strB) == result);
-}
+/**
+ * Run tests to validate the getEditDistance function.
+ */
+void runTests() {
+  // Test Case 1
+  assert(getEditDistance("kitten", "kitten") == 0);
 
-void test2() {
-  std::string strA = "bob";
-  std::string strB = "bub";
-  int result = 1;
-  assert(getEditDistance(strA, strB) == result);
-}
+  // Test Case 2
+  assert(getEditDistance("bob", "bub") == 1);
 
-void test3() {
-  std::string strA = "ROBOT";
-  std::string strB = "robot";
-  int result = 5;
-  assert(getEditDistance(strA, strB) == result);
-}
+  // Test Case 3
+  assert(getEditDistance("ROBOT", "robot") == 5);
 
-void test4() {
-  std::string strA = "church";
-  std::string strB = "ChUrCh";
-  int result = 3;
-  assert(getEditDistance(strA, strB) == result);
+  // Test Case 4
+  assert(getEditDistance("church", "ChUrCh") == 3);
+
+  std::cout << "All tests passed!\n";
 }
 
 int main() {
-  test1();
-  test2();
-  test3();
-  test4();
-
+  runTests();
   return 0;
 }

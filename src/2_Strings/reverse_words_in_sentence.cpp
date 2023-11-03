@@ -1,51 +1,44 @@
+/**
+ * This program changes the order of words in a given string.
+ */
+
 #include <cassert>
+#include <iostream>
 #include <string>
 
-void reversed(std::string &s, int l, int r) {
-  while (l < r) {
-    std::swap(s[l], s[r]);
-    l++;
-    r--;
+void reverseSubstring(std::string &str, int left, int right) {
+  while (left < right) {
+    std::swap(str[left], str[right]);
+    left++;
+    right--;
   }
 }
 
-std::string reverse(std::string str) {
-  str.insert(str.end(), ' ');
+std::string reverseWords(const std::string &input) {
+  std::string str = input + ' ';
 
-  int n = str.length();
-
-  int j = 0;
-
-  for (int i = 0; i < n; i++) {
+  int startIndex = 0;
+  for (int i = 0; i < str.length(); i++) {
     if (str[i] == ' ') {
-      reversed(str, j, i - 1);
-      j = i + 1;
+      reverseSubstring(str, startIndex, i - 1);
+      startIndex = i + 1;
     }
   }
 
   str.pop_back();
-
-  reversed(str, 0, str.length() - 1);
+  reverseSubstring(str, 0, str.length() - 1);
 
   return str;
 }
 
-void test1() {
-  std::string str = "hello world";
-  std::string wynik = "world hello";
+void runTests() {
+  assert(reverseWords("hello world") == "world hello");
+  assert(reverseWords("adam") == "adam");
 
-  assert(reverse(str) == wynik);
-}
-
-void test2() {
-  std::string str = "adam";
-  std::string wynik = "adam";
-
-  assert(reverse(str) == wynik);
+  std::cout << "All tests passed!\n";
 }
 
 int main() {
-  test1();
-  test2();
+  runTests();
   return 0;
 }

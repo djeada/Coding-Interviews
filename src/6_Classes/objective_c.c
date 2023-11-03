@@ -1,21 +1,47 @@
 #include <stdio.h>
 
-struct X {
-  int x;
-  void (*fp)(struct X *);
+/**
+ * @struct Object
+ * @brief Simulates class-like behavior in C by encapsulating data and function
+ * pointers.
+ */
+struct Object {
+  int data;                             // Encapsulated data
+  void (*execute)(struct Object *self); // Function pointer to emulate a method
 };
 
-void func1(struct X *xobj) { printf("%s, %d\n", __FUNCTION__, xobj->x); }
-void func2(struct X *xobj) { printf("%s, %d\n", __FUNCTION__, xobj->x); }
+/**
+ * @brief Function emulating a class method, prints the name of the function and
+ * the encapsulated data.
+ *
+ * @param self A pointer to the instance of Object invoking this method.
+ */
+void method1(struct Object *self) {
+  printf("%s, %d\n", __FUNCTION__, self->data);
+}
+
+/**
+ * @brief Another function emulating a class method, prints the name of the
+ * function and the encapsulated data.
+ *
+ * @param self A pointer to the instance of Object invoking this method.
+ */
+void method2(struct Object *self) {
+  printf("%s, %d\n", __FUNCTION__, self->data);
+}
 
 int main() {
-  struct X obj;
-  obj.x = 10;
-  obj.fp = func1;
-  obj.fp(&obj);
-  obj.x = 20;
-  obj.fp = func2;
-  obj.fp(&obj);
+  struct Object obj1, obj2;
+
+  // Initializing and invoking method1
+  obj1.data = 10;
+  obj1.execute = method1;
+  obj1.execute(&obj1);
+
+  // Initializing and invoking method2
+  obj2.data = 20;
+  obj2.execute = method2;
+  obj2.execute(&obj2);
 
   return 0;
 }

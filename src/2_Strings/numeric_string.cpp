@@ -1,151 +1,83 @@
+/**
+ * This program checks if a given string can represent a valid number.
+ * Valid numbers can be in the form of integers, floating points, or exponential
+ * notation.
+ */
+
 #include <cassert>
 #include <string>
 
-bool onlyDigits(std::string &str) {
+bool containsOnlyDigits(const std::string &str) {
   for (auto c : str) {
-    if (!(c >= '0' && c <= '9'))
+    if (!isdigit(c))
       return false;
   }
-
   return true;
 }
 
-bool isExponential(std::string &str) {
-
-  if (str.size() < 2)
-    return false;
-
-  if (str.front() != 'e' && str.front() != 'E')
+bool isValidExponential(const std::string &str) {
+  if (str.size() < 2 || (str.front() != 'e' && str.front() != 'E'))
     return false;
 
   unsigned int i = 2;
-
   if (str[i] == '+' || str[i] == '-') {
     if (str.size() == 2)
       return false;
     i++;
   }
 
-  std::string numeric = str.substr(i, str.size() - 2);
-
-  return onlyDigits(numeric);
+  return containsOnlyDigits(str.substr(i));
 }
 
-bool isNumeric(std::string &str) {
-
+bool isValidNumericString(const std::string &str) {
   if (str.empty())
     return false;
 
-  unsigned int i = 1;
-
-  if (str[i] == '+' || str[i] == '-') {
-    if (str.size() == 1)
-      return false;
-    i++;
-  }
+  unsigned int i = (str[0] == '+' || str[0] == '-') ? 1 : 0;
 
   bool numeric = true;
 
-  while (i < str.size() && str[i] >= '0' && str[i] <= '9')
+  while (i < str.size() && isdigit(str[i]))
     i++;
 
-  if (i != str.size()) {
+  if (i < str.size()) {
     if (str[i] == '.') {
       i++;
-
-      while (i < str.size() && str[i] >= '0' && str[i] <= '9')
+      while (i < str.size() && isdigit(str[i]))
         i++;
-
       if (i < str.size() && (str[i] == 'e' || str[i] == 'E')) {
-        auto rest = str.substr(i, str.size() - i);
-        numeric = isExponential(rest);
+        numeric = isValidExponential(str.substr(i));
         i = str.size();
       }
     } else if (str[i] == 'e' || str[i] == 'E') {
-      auto rest = str.substr(i, str.size() - i);
-      numeric = isExponential(rest);
+      numeric = isValidExponential(str.substr(i));
       i = str.size();
-    } else
+    } else {
       numeric = false;
+    }
   }
 
   return numeric && i == str.size();
 }
 
-void test1() {
-  std::string str = "100";
-  assert(isNumeric(str));
-}
+void runTests() {
+  assert(isValidNumericString("100"));
+  assert(isValidNumericString("123.45e+6"));
+  assert(isValidNumericString("+500"));
+  assert(isValidNumericString("5e2"));
+  assert(isValidNumericString("3.145"));
+  assert(isValidNumericString("600."));
+  assert(isValidNumericString("-.123"));
+  assert(isValidNumericString("1.484278348325E+308"));
+  assert(!isValidNumericString("12e"));
+  assert(!isValidNumericString("1a3.14"));
+  assert(isValidNumericString("+-5"));
+  assert(!isValidNumericString("11.2.3"));
 
-void test2() {
-  std::string str = "123.45e+6";
-  assert(isNumeric(str));
-}
-
-void test3() {
-  std::string str = "+500";
-  assert(isNumeric(str));
-}
-
-void test4() {
-  std::string str = "5e2";
-  assert(isNumeric(str));
-}
-
-void test5() {
-  std::string str = "3.145";
-  assert(isNumeric(str));
-}
-
-void test6() {
-  std::string str = "600.";
-  assert(isNumeric(str));
-}
-
-void test7() {
-  std::string str = "-.123";
-  assert(isNumeric(str));
-}
-
-void test8() {
-  std::string str = "1.484278348325E+308";
-  assert(isNumeric(str));
-}
-
-void test9() {
-  std::string str = "12e";
-  assert(!isNumeric(str));
-}
-
-void test10() {
-  std::string str = "1a3.14";
-  assert(!isNumeric(str));
-}
-
-void test11() {
-  std::string str = "+-5";
-  assert(isNumeric(str));
-}
-
-void test12() {
-  std::string str = "11.2.3";
-  assert(!isNumeric(str));
+  std::cout << "All tests passed!\n";
 }
 
 int main() {
-
-  test1();
-  test2();
-  test3();
-  test4();
-  test5();
-  test6();
-  test7();
-  test8();
-  test9();
-  test10();
-  test11();
-  test12();
-
+  runTests();
   return 0;
 }

@@ -1,70 +1,50 @@
 #include "binary_tree.h"
 #include <cassert>
-#include <functional>
+#include <cmath>
 
 class TreeWithBalanceCheck : public BinaryTree {
-
-private:
-  int _depth(Node *node) {
-    if (!node)
-      return 0;
-
-    int left = _depth(node->left);
-    int right = _depth(node->right);
-
-    return (left > right) ? (left + 1) : (right + 1);
-  }
-
 public:
   TreeWithBalanceCheck() : BinaryTree() {}
-
-  int depth() { return _depth(root); }
-
-  bool isBalanced1() {
-
-    std::function<bool(Node *)> _isBalanced;
-    _isBalanced = [&](Node *node) -> bool {
-      if (!node)
-        return true;
-
-      int left = _depth(node->left);
-      int right = _depth(node->right);
-      int diff = left - right;
-
-      if (diff > 1 || diff < -1)
-        return false;
-
-      return _isBalanced(node->left) && _isBalanced(node->right);
-    };
-
-    return _isBalanced(root);
+  int depth() const { return depth(root); }
+  bool isBalanced1() const { return isBalanced1(root); }
+  bool isBalanced2() const {
+    int depth = 0;
+    return isBalanced2(root, depth);
   }
 
-  bool isBalanced2() {
+private:
+  int depth(const std::unique_ptr<Node> &node) const {
+    if (!node)
+      return 0;
+    int left = depth(node->left);
+    int right = depth(node->right);
+    return std::max(left, right) + 1;
+  }
 
-    std::function<bool(Node *, int *)> _isBalanced;
-    _isBalanced = [&](Node *node, int *depth) -> bool {
-      if (!node) {
-        *depth = 0;
+  bool isBalanced1(const std::unique_ptr<Node> &node) const {
+    if (!node)
+      return true;
+    int left = depth(node->left);
+    int right = depth(node->right);
+    int diff = left - right;
+    return std::abs(diff) <= 1 && isBalanced1(node->left) &&
+           isBalanced1(node->right);
+  }
+
+  bool isBalanced2(const std::unique_ptr<Node> &node, int &depth) const {
+    if (!node) {
+      depth = 0;
+      return true;
+    }
+    int left, right;
+    if (isBalanced2(node->left, left) && isBalanced2(node->right, right)) {
+      int diff = left - right;
+      if (std::abs(diff) <= 1) {
+        depth = std::max(left, right) + 1;
         return true;
       }
-
-      int left, right;
-      if (_isBalanced(node->left, &left) && _isBalanced(node->right, &right)) {
-
-        int diff = left - right;
-
-        if (diff <= 1 && diff >= -1) {
-          *depth = 1 + (left > right ? left : right);
-          return true;
-        }
-      }
-
-      return false;
-    };
-
-    int depth = 0;
-    return _isBalanced(root, &depth);
+    }
+    return false;
   }
 };
 
@@ -117,11 +97,10 @@ void test4() {
 }
 
 int main() {
-
   test1();
-  //  test2();
-  //  test3();
-  //  test4();
+  test2();
+  test3();
+  test4();
 
   return 0;
 }

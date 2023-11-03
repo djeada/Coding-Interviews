@@ -1,96 +1,83 @@
-#include <bits/stdc++.h>
+#include <cassert>
 #include <iostream>
-#include <stdio.h>
-#include <string.h>
 #include <vector>
 
-using namespace std;
-
-typedef struct node {
+/**
+ * @struct NumbersOccurringOnce
+ * @brief A structure to store two numbers that occur only once in an array.
+ */
+struct NumbersOccurringOnce {
   int num1;
   int num2;
-} NumbersOccurringOnce;
+};
 
-bool isBit1(int num, int indexBit);
-int findFirstBitIs1(int num);
-
-void getOnce(vector<int> numbers, NumbersOccurringOnce &once) {
-  once.num1 = 0;
-  once.num2 = 0;
-  if (numbers.size() < 2)
-    return;
-
-  int resultExclusiveOR = 0;
-  for (int i = 0; i < numbers.size(); ++i)
-    resultExclusiveOR ^= numbers[i];
-
-  int indexOf1 = findFirstBitIs1(resultExclusiveOR);
-
-  for (int j = 0; j < numbers.size(); ++j) {
-    if (isBit1(numbers[j], indexOf1))
-      once.num1 ^= numbers[j];
-    else
-      once.num2 ^= numbers[j];
-  }
-}
-
-// The first 1 bit from the rightmost
-int findFirstBitIs1(int num) {
+/**
+ * @brief Finds the position of the first bit set to 1 in a number.
+ *
+ * @param num The input number.
+ * @return The position of the first set bit.
+ */
+int findFirstSetBit(int num) {
   int indexBit = 0;
   while (((num & 1) == 0) && (indexBit < 32)) {
-    num = num >> 1;
+    num >>= 1;
     ++indexBit;
   }
   return indexBit;
 }
 
-bool isBit1(int num, int indexBit) {
-  num = num >> indexBit;
+/**
+ * @brief Checks if the bit at a specified position is set to 1.
+ *
+ * @param num The input number.
+ * @param indexBit The position to check.
+ * @return true if the bit at the specified position is 1, otherwise false.
+ */
+bool isBitSet(int num, int indexBit) {
+  num >>= indexBit;
   return (num & 1) == 1;
 }
 
-void test(const string &testName, vector<int> numbers,
-          NumbersOccurringOnce expected) {
-  cout << testName << " begins: ";
+/**
+ * @brief Finds two numbers that appear only once in a given array.
+ *
+ * @param numbers The input array of integers.
+ * @param once A reference to the struct storing the two numbers.
+ */
+void findSingleOccurrences(const std::vector<int> &numbers,
+                           NumbersOccurringOnce &once) {
+  once.num1 = once.num2 = 0;
+  if (numbers.size() < 2)
+    return;
 
+  int resultXOR = 0;
+  for (const auto &num : numbers)
+    resultXOR ^= num;
+
+  int indexOf1 = findFirstSetBit(resultXOR);
+
+  for (const auto &num : numbers) {
+    if (isBitSet(num, indexOf1))
+      once.num1 ^= num;
+    else
+      once.num2 ^= num;
+  }
+}
+
+void test(const std::string &testName, const std::vector<int> &numbers,
+          const NumbersOccurringOnce &expected) {
   NumbersOccurringOnce once;
-  getOnce(numbers, once);
+  findSingleOccurrences(numbers, once);
 
-  if ((once.num1 == expected.num1 && once.num2 == expected.num2) ||
-      (once.num1 == expected.num2 && once.num2 == expected.num1))
-    cout << "passed.\n";
-  else
-    cout << "FAILED.\n";
+  bool condition = (once.num1 == expected.num1 && once.num2 == expected.num2) ||
+                   (once.num1 == expected.num2 && once.num2 == expected.num1);
+  assert(condition);
 }
 
-void Test1() {
-  vector<int> numbers{2, 4, 3, 6, 3, 2, 5, 5};
-  NumbersOccurringOnce expected;
-  expected.num1 = 4;
-  expected.num2 = 6;
-  test("test1", numbers, expected);
-}
-
-void Test2() {
-  vector<int> numbers{4, 6};
-  NumbersOccurringOnce expected;
-  expected.num1 = 4;
-  expected.num2 = 6;
-  test("test2", numbers, expected);
-}
-
-void Test3() {
-  vector<int> numbers{4, 6, 1, 1, 1, 1};
-  NumbersOccurringOnce expected;
-  expected.num1 = 4;
-  expected.num2 = 6;
-  test("test3", numbers, expected);
-}
-
-int main(int argc, char *argv[]) {
-  Test1();
-  Test2();
-  Test3();
+int main() {
+  test("Test1", {2, 4, 3, 6, 3, 2, 5, 5}, {4, 6});
+  test("Test2", {4, 6}, {4, 6});
+  test("Test3", {4, 6, 1, 1, 1, 1}, {4, 6});
 
   return 0;
 }

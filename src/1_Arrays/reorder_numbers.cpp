@@ -1,84 +1,42 @@
+#include <algorithm>
 #include <cassert>
-#include <set>
 #include <vector>
 
-bool check(int num) {
-  if ((num & 0x1) == 0)
-    return true;
-  return false;
-}
+/**
+ * This program reorders an integer vector such that all odd numbers come before
+ * all even numbers. The relative order of odd numbers and even numbers is not
+ * guaranteed to be preserved.
+ */
 
-std::vector<int> reorderOddEven1(std::vector<int> arr) {
+bool isEven(int num) { return (num & 0x1) == 0; }
 
-  int begin = 0;
-  int end = arr.size() - 1;
-
-  while (begin < end) {
-    while (begin < end && (arr[begin] & 0x1) != 0)
-      begin++;
-
-    while (begin < end && (arr[end] & 0x1) == 0)
-      end--;
-
-    if (begin < end)
-      std::swap(arr[begin], arr[end]);
-  }
-
+std::vector<int> reorderOddEven(std::vector<int> arr) {
+  auto it = std::partition(arr.begin(), arr.end(),
+                           [](int num) { return !isEven(num); });
   return arr;
 }
 
-std::vector<int> reorderOddEven2(std::vector<int> arr) {
-
-  int begin = 0;
-  int end = arr.size() - 1;
-
-  while (begin < end) {
-    while (begin < end && !check(arr[begin]))
-      begin++;
-
-    while (begin < end && check(arr[end]))
-      end--;
-
-    if (begin < end)
-      std::swap(arr[begin], arr[end]);
+void testReorderOddEven() {
+  // Test Case 1
+  {
+    std::vector<int> arr{1, 2, 3, 4, 5, 6, 7};
+    std::vector<int> result = reorderOddEven(arr);
+    assert(std::all_of(result.begin(), result.end() - 3,
+                       [](int num) { return !isEven(num); }));
+    assert(std::all_of(result.end() - 3, result.end(), isEven));
   }
 
-  return arr;
-}
-
-void test1() {
-  std::vector<int> arr{1, 2, 3, 4, 5, 6, 7};
-  std::set<int> result{1, 3, 5, 7, 2, 4, 6};
-  auto ans = reorderOddEven1(arr);
-  assert(std::set<int>(ans.begin(), ans.end()) == result);
-}
-
-void test2() {
-  std::vector<int> arr{1, 2, 3, 4, 5, 6, 7};
-  std::set<int> result{1, 3, 5, 7, 2, 4, 6};
-  auto ans = reorderOddEven1(arr);
-  assert(std::set<int>(ans.begin(), ans.end()) == result);
-}
-
-void test3() {
-  std::vector<int> arr{1, 3, 5, 7, 2, 4, 6};
-  std::set<int> result{1, 3, 5, 7, 2, 4, 6};
-  auto ans = reorderOddEven1(arr);
-  assert(std::set<int>(ans.begin(), ans.end()) == result);
-}
-
-void test4() {
-  std::vector<int> arr{1, 3, 5, 7, 2, 4, 6};
-  std::set<int> result{1, 3, 5, 7, 2, 4, 6};
-  auto ans = reorderOddEven1(arr);
-  assert(std::set<int>(ans.begin(), ans.end()) == result);
+  // Test Case 2
+  {
+    std::vector<int> arr{1, 3, 5, 7, 2, 4, 6};
+    std::vector<int> result = reorderOddEven(arr);
+    assert(std::all_of(result.begin(), result.end() - 3,
+                       [](int num) { return !isEven(num); }));
+    assert(std::all_of(result.end() - 3, result.end(), isEven));
+  }
 }
 
 int main() {
-  test1();
-  test2();
-  test3();
-  test4();
-
+  testReorderOddEven();
   return 0;
 }

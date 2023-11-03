@@ -1,62 +1,77 @@
+/**
+ * This program finds two missing numbers from a sequence [1, 2, ..., n]
+ * given n-2 numbers using two methods.
+ */
+
 #include <cassert>
 #include <cmath>
+#include <iostream>
 #include <utility>
 #include <vector>
 
-int findFirstBitIs1(int num) {
+/**
+ * @brief Finds the position of the first bit that is set to 1.
+ *
+ * @param num The input number.
+ * @return The position of the first set bit.
+ */
+int findFirstSetBitPosition(int num) {
   int indexBit = 0;
-
   while (((num & 1) == 0) && (indexBit < 32)) {
-    num = num >> 1;
+    num >>= 1;
     ++indexBit;
   }
-
   return indexBit;
 }
 
-bool isBitOne(int num, int indexBit) {
-  num = num >> indexBit;
+/**
+ * @brief Checks if the bit at a specified position is set to 1.
+ *
+ * @param num The input number.
+ * @param indexBit The position to check.
+ * @return true if the bit at the specified position is 1, otherwise false.
+ */
+bool isBitSet(int num, int indexBit) {
+  num >>= indexBit;
   return (num & 1) == 1;
 }
 
-void getOnce(std::vector<int> &numbers, std::pair<int, int> &once) {
-
+/**
+ * @brief Finds two numbers that appear only once in a given array.
+ *
+ * @param numbers Input array of integers.
+ * @param once Pair to store the two numbers that appear only once.
+ */
+void findSingleOccurrences(std::vector<int> &numbers,
+                           std::pair<int, int> &once) {
   if (numbers.size() < 2)
     return;
 
-  int resultExclusiveOR = 0;
+  int resultXOR = 0;
+  for (const auto &num : numbers)
+    resultXOR ^= num;
 
-  for (unsigned int i = 0; i < numbers.size(); ++i)
-    resultExclusiveOR ^= numbers[i];
-
-  int indexOf1 = findFirstBitIs1(resultExclusiveOR);
-
+  int indexOf1 = findFirstSetBitPosition(resultXOR);
   once.first = once.second = 0;
 
-  for (unsigned int j = 0; j < numbers.size(); ++j) {
-    if (isBitOne(numbers[j], indexOf1))
-      once.second ^= numbers[j];
+  for (const auto &num : numbers) {
+    if (isBitSet(num, indexOf1))
+      once.second ^= num;
     else
-      once.first ^= numbers[j];
+      once.first ^= num;
   }
 }
 
-std::pair<int, int> findMissingV1(const std::vector<int> &numbers) {
-
+std::pair<int, int> findMissingNumbersMethod1(const std::vector<int> &numbers) {
   std::pair<int, int> missing;
+  int sum1 = 0, product1 = 1, sum2 = 0, product2 = 1;
 
-  int sum1 = 0;
-  int product1 = 1;
-
-  for (unsigned int i = 0; i < numbers.size(); ++i) {
-    sum1 += numbers[i];
-    product1 *= numbers[i];
+  for (const auto &num : numbers) {
+    sum1 += num;
+    product1 *= num;
   }
 
-  int sum2 = 0;
-  int product2 = 1;
-
-  for (unsigned int i = 1; i <= numbers.size() + 2; ++i) {
+  for (int i = 1; i <= numbers.size() + 2; ++i) {
     sum2 += i;
     product2 *= i;
   }
@@ -64,66 +79,44 @@ std::pair<int, int> findMissingV1(const std::vector<int> &numbers) {
   int s = sum2 - sum1;
   int p = product2 / product1;
 
-  missing.first = (s + (int)(sqrt(s * s - 4 * p))) / 2;
+  missing.first = (s + static_cast<int>(sqrt(s * s - 4 * p))) / 2;
   missing.second = s - missing.first;
 
-  return std::pair<int, int>(missing);
+  return missing;
 }
 
-std::pair<int, int> findMissingV2(const std::vector<int> &numbers) {
-
+std::pair<int, int> findMissingNumbersMethod2(const std::vector<int> &numbers) {
   std::pair<int, int> missing;
+  int extendedLength = numbers.size() * 2 + 2;
+  std::vector<int> extension(extendedLength, 0);
 
-  int originalLength = numbers.size();
-  int extendedLength = originalLength * 2 + 2;
+  for (int i = 0; i < numbers.size(); ++i)
+    extension[i] = numbers[i];
+  for (int i = numbers.size(); i < extendedLength; ++i)
+    extension[i] = i - numbers.size() + 1;
 
-  std::vector<int> extention(extendedLength, 0);
+  findSingleOccurrences(extension, missing);
 
-  for (int i = 0; i < originalLength; ++i)
-    extention[i] = numbers[i];
+  if (missing.first > missing.second)
+    std::swap(missing.first, missing.second);
+  return missing;
+}
 
-  for (int i = originalLength; i < extendedLength; ++i)
-    extention[i] = i - originalLength + 1;
+void runTests() {
+  std::vector<std::pair<std::vector<int>, std::pair<int, int>>> testCases = {
+      {{1, 3, 5, 6, 4, 7}, {2, 8}},
+      {{1}, {2, 3}},
+      {{3, 4}, {1, 2}},
+  };
 
-  getOnce(extention, missing);
-
-  if (missing.first < missing.second) {
-    auto temp = missing.first;
-    missing.first = missing.second;
-    missing.second = temp;
+  for (const auto &[input, expected] : testCases) {
+    assert(findMissingNumbersMethod1(input) == expected);
+    assert(findMissingNumbersMethod2(input) == expected);
   }
-
-  return std::pair<int, int>(missing);
-}
-
-void test1() {
-  std::vector<int> numbers{1, 3, 5, 6, 4, 7};
-  std::pair<int, int> expected{8, 2};
-
-  assert(findMissingV1(numbers) == expected);
-  assert(findMissingV2(numbers) == expected);
-}
-
-void test2() {
-  std::vector<int> numbers{1};
-  std::pair<int, int> expected{3, 2};
-
-  assert(findMissingV1(numbers) == expected);
-  assert(findMissingV2(numbers) == expected);
-}
-
-void test3() {
-  std::vector<int> numbers{3, 4};
-  std::pair<int, int> expected{2, 1};
-
-  assert(findMissingV1(numbers) == expected);
-  assert(findMissingV2(numbers) == expected);
+  std::cout << "All tests passed!\n";
 }
 
 int main() {
-  test1();
-  test2();
-  test3();
-
+  runTests();
   return 0;
 }

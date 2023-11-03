@@ -1,116 +1,74 @@
-#include <cassert>
-#include <cstring>
-#include <stack>
+/**
+ * This program checks if a path exists in a matrix such that,
+ * traversing from an initial point, the characters along the path form a given
+ * string. It uses Depth First Search to explore the matrix for the path.
+ */
 
-bool hasPathCore(char *matrix, int rows, int cols, int row, int col,
-                 char const *str, int &pathLength, bool *visited) {
-  if (str[pathLength] == '\0')
+#include <cassert>
+#include <iostream>
+#include <string>
+#include <vector>
+
+bool isPathPresent(const std::vector<std::string> &matrix, int row, int col,
+                   const std::string &str, int pathLength,
+                   std::vector<std::vector<bool>> &visited) {
+  if (pathLength == str.length())
     return true;
 
-  bool hasPath = false;
+  bool pathExists = false;
+  int rows = matrix.size();
+  int cols = matrix[0].size();
+
   if (row >= 0 && row < rows && col >= 0 && col < cols &&
-      matrix[row * cols + col] == str[pathLength] &&
-      !visited[row * cols + col]) {
-    ++pathLength;
-    visited[row * cols + col] = true;
+      matrix[row][col] == str[pathLength] && !visited[row][col]) {
+    pathLength++;
+    visited[row][col] = true;
 
-    hasPath =
-        hasPathCore(matrix, rows, cols, row, col - 1, str, pathLength,
-                    visited) ||
-        hasPathCore(matrix, rows, cols, row - 1, col, str, pathLength,
-                    visited) ||
-        hasPathCore(matrix, rows, cols, row, col + 1, str, pathLength,
-                    visited) ||
-        hasPathCore(matrix, rows, cols, row + 1, col, str, pathLength, visited);
+    pathExists =
+        isPathPresent(matrix, row, col - 1, str, pathLength, visited) ||
+        isPathPresent(matrix, row - 1, col, str, pathLength, visited) ||
+        isPathPresent(matrix, row, col + 1, str, pathLength, visited) ||
+        isPathPresent(matrix, row + 1, col, str, pathLength, visited);
 
-    if (!hasPath) {
-      --pathLength;
-      visited[row * cols + col] = false;
+    if (!pathExists) {
+      pathLength--;
+      visited[row][col] = false;
     }
   }
 
-  return hasPath;
+  return pathExists;
 }
 
-bool hasPath(char *matrix, int rows, int cols, char const *str) {
-  if (matrix == NULL || rows < 1 || cols < 1 || str == NULL)
+bool hasPath(const std::vector<std::string> &matrix, const std::string &str) {
+  if (matrix.empty() || matrix[0].empty() || str.empty())
     return false;
 
-  bool *visited = new bool[rows * cols];
-  memset(visited, 0, rows * cols);
-
+  int rows = matrix.size();
+  int cols = matrix[0].size();
+  std::vector<std::vector<bool>> visited(rows, std::vector<bool>(cols, false));
   int pathLength = 0;
+
   for (int row = 0; row < rows; ++row) {
     for (int col = 0; col < cols; ++col) {
-      if (hasPathCore(matrix, rows, cols, row, col, str, pathLength, visited))
+      if (isPathPresent(matrix, row, col, str, pathLength, visited))
         return true;
     }
   }
 
-  delete[] visited;
-
   return false;
 }
 
-// ABCE
-// SFCS
-// ADEE
+void runTests() {
+  assert(hasPath({"ABCE", "SFCS", "ADEE"}, "ABCCED"));
+  assert(hasPath({"ABCE", "SFCS", "ADEE"}, "SEE"));
+  assert(!hasPath({"ABCE", "SFCS", "ADEE"}, "ABCB"));
+  assert(hasPath({"ABCEHJIG", "SFCSLOPQ", "ADEEMNOE", "ADIDEJFM", "VCEIFGGS"},
+                 "SLHECCEIDEJFGGFIE"));
 
-// ABCCED
-void test1() {
-  char matrix[] = "ABCESFCSADEE";
-  char const *str = "ABCCED";
-  int rows = 3;
-  int cols = 4;
-  assert(hasPath(matrix, rows, cols, str));
+  std::cout << "All tests passed!\n";
 }
 
-// ABCE
-// SFCS
-// ADEE
-
-// SEE
-void test2() {
-  char matrix[] = "ABCESFCSADEE";
-  char const *str = "SEE";
-  int rows = 3;
-  int cols = 4;
-  assert(hasPath(matrix, rows, cols, str));
-}
-
-// ABCE
-// SFCS
-// ADEE
-
-// ABCB
-void test3() {
-  char matrix[] = "ABCESFCSADEE";
-  char const *str = "ABCB";
-  int rows = 3;
-  int cols = 4;
-  assert(!hasPath(matrix, rows, cols, str));
-}
-
-// ABCEHJIG
-// SFCSLOPQ
-// ADEEMNOE
-// ADIDEJFM
-// VCEIFGGS
-
-// SLHECCEIDEJFGGFIE
-void test4() {
-  char matrix[] = "ABCEHJIGSFCSLOPQADEEMNOEADIDEJFMVCEIFGGS";
-  char const *str = "SLHECCEIDEJFGGFIE";
-  int rows = 5;
-  int cols = 8;
-  assert(hasPath(matrix, rows, cols, str));
-}
-
-int main(int argc, char *argv[]) {
-  test1();
-  test2();
-  test3();
-  test4();
-
+int main() {
+  runTests();
   return 0;
 }

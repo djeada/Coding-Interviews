@@ -1,115 +1,69 @@
+/**
+ * This program adds two large positive numbers represented as strings.
+ */
+#include <algorithm> // For std::reverse
 #include <cassert>
 #include <string>
 
-int checkInvalidInput(std::string &num1, std::string &num2, std::string &sum) {
-  int length1, length2, i;
-
+// Checks if the input strings are valid numbers and if the sum string is empty.
+bool isValidInput(const std::string &num1, const std::string &num2,
+                  const std::string &sum) {
   if (num1.empty() || num2.empty() || !sum.empty())
-    return -1;
+    return false;
 
-  length1 = num1.size();
-  for (i = 0; i < length1; ++i) {
-    if (num1[i] < '0' || num1[i] > '9')
-      return -1;
+  return all_of(num1.begin(), num1.end(), ::isdigit) &&
+         all_of(num2.begin(), num2.end(), ::isdigit);
+}
+
+// Adds two numbers represented as strings.
+bool addStrings(const std::string &num1, const std::string &num2,
+                std::string &sum) {
+  if (!isValidInput(num1, num2, sum))
+    return false;
+
+  int carry = 0, i = num1.size() - 1, j = num2.size() - 1;
+  while (i >= 0 || j >= 0 || carry) {
+    int digit1 = i >= 0 ? num1[i--] - '0' : 0;
+    int digit2 = j >= 0 ? num2[j--] - '0' : 0;
+
+    int sumDigit = digit1 + digit2 + carry;
+    carry = sumDigit / 10;
+    sumDigit %= 10;
+
+    sum.push_back(sumDigit + '0');
   }
 
-  length2 = num2.size();
-  for (i = 0; i < length2; ++i) {
-    if (num2[i] < '0' || num2[i] > '9')
-      return -1;
+  std::reverse(sum.begin(), sum.end());
+  return true;
+}
+
+void testAddStrings() {
+  // Test Case 1
+  {
+    std::string num1 = "999", num2 = "3", sum, result = "1002";
+    assert(addStrings(num1, num2, sum) && sum == result);
   }
 
-  return 0;
-}
+  // Test Case 2
+  {
+    std::string num1 = "33", num2 = "9999", sum, result = "10032";
+    assert(addStrings(num1, num2, sum) && sum == result);
+  }
 
-void reverse(std::string &str) {
-  int length = str.size();
-  char temp;
+  // Test Case 3
+  {
+    std::string num1 = "3333333", num2 = "222", sum, result = "3333555";
+    assert(addStrings(num1, num2, sum) && sum == result);
+  }
 
-  for (int i = 0; i < length / 2; ++i) {
-    temp = str[i];
-    str[i] = str[length - 1 - i];
-    str[length - 1 - i] = temp;
+  // Test Case 4 (Invalid Input)
+  {
+    std::string num1 = "33abc33", num2 = "222", sum, result = "";
+    assert(!addStrings(num1, num2, sum) && sum == result);
   }
 }
 
-int add(std::string &num1, std::string &num2, std::string &sum) {
-  unsigned int index1, index2, indexSum;
-  int sumDigit, carry, digit1, digit2;
-
-  if (checkInvalidInput(num1, num2, sum))
-    return -1;
-
-  reverse(num1);
-  reverse(num2);
-
-  index1 = index2 = indexSum = 0;
-  carry = 0;
-  while (index1 < num1.size() || index2 < num2.size()) {
-    digit1 = (index1 == num1.size()) ? 0 : num1[index1] - '0';
-    digit2 = (index2 == num2.size()) ? 0 : num2[index2] - '0';
-
-    sumDigit = digit1 + digit2 + carry;
-    carry = (sumDigit >= 10) ? 1 : 0;
-    sumDigit = (sumDigit >= 10) ? sumDigit - 10 : sumDigit;
-
-    sum += std::string(1, sumDigit + '0');
-
-    if (index1 < num1.size())
-      ++index1;
-    if (index2 < num2.size())
-      ++index2;
-  }
-
-  if (carry != 0)
-    sum += std::string(1, carry + '0');
-
-  reverse(sum);
-
-  return 0;
-}
-
-void test1() {
-  std::string num1 = "999";
-  std::string num2 = "3";
-  std::string sum;
-  std::string result = "1002";
-  add(num1, num2, sum);
-  assert(sum == result);
-}
-
-void test2() {
-  std::string num1 = "33";
-  std::string num2 = "9999";
-  std::string sum;
-  std::string result = "10032";
-  add(num1, num2, sum);
-  assert(sum == result);
-}
-
-void test3() {
-  std::string num1 = "3333333";
-  std::string num2 = "222";
-  std::string sum;
-  std::string result = "3333555";
-  add(num1, num2, sum);
-  assert(sum == result);
-}
-
-void test4() {
-  std::string num1 = "33abc33";
-  std::string num2 = "222";
-  std::string sum;
-  std::string result = "";
-  add(num1, num2, sum);
-  assert(sum == result);
-}
-
-int main(int argc, char *argv[]) {
-  test1();
-  test2();
-  test3();
-  test4();
-
+int main() {
+  testAddStrings();
   return 0;
 }

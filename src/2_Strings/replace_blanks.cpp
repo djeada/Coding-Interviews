@@ -1,79 +1,73 @@
+/**
+ * This program replaces all spaces in a C-style string with '%20'.
+ * It performs the replacement in-place considering the capacity of the input
+ * array.
+ */
+
 #include <cassert>
 #include <cstring>
+#include <iostream>
 
-void replaceBlank(char string[], int capacity) {
-  int originalLength, numberOfBlank, newLength;
-  int i, indexOfOriginal, indexOfNew;
-
-  if (string == NULL || capacity <= 0)
+void replaceSpaces(char str[], int capacity) {
+  if (str == nullptr || capacity <= 0) {
     return;
+  }
 
-  originalLength = numberOfBlank = i = 0;
-  while (string[i] != '\0') {
+  int originalLength = 0;
+  int spaceCount = 0;
+  int i = 0;
+  while (str[i] != '\0') {
     originalLength++;
-
-    if (string[i] == ' ')
-      numberOfBlank++;
-
+    if (str[i] == ' ') {
+      spaceCount++;
+    }
     i++;
   }
 
-  newLength = originalLength + numberOfBlank * 2;
-  if (newLength > capacity)
+  int newLength = originalLength + spaceCount * 2;
+  if (newLength > capacity) {
     return;
+  }
 
-  indexOfOriginal = originalLength;
-  indexOfNew = newLength;
-  while (indexOfOriginal >= 0 && indexOfNew > indexOfOriginal) {
-    if (string[indexOfOriginal] == ' ') {
-      string[indexOfNew--] = '0';
-      string[indexOfNew--] = '2';
-      string[indexOfNew--] = '%';
+  int originalIndex = originalLength;
+  int newIndex = newLength;
+  while (originalIndex >= 0 && newIndex > originalIndex) {
+    if (str[originalIndex] == ' ') {
+      str[newIndex--] = '0';
+      str[newIndex--] = '2';
+      str[newIndex--] = '%';
     } else {
-      string[indexOfNew--] = string[indexOfOriginal];
+      str[newIndex--] = str[originalIndex];
     }
-
-    indexOfOriginal--;
+    originalIndex--;
   }
 }
 
-bool identical(char const *strA, char const *strB) {
-  return 0 == strcmp(strA, strB);
+bool areStringsIdentical(const char *strA, const char *strB) {
+  return strcmp(strA, strB) == 0;
 }
 
-void test1() {
-  char string[100] = "hello world";
-  char const *result = "hello%20world";
-  replaceBlank(string, 100);
-  assert(identical(string, result));
+void runTests() {
+  char str1[100] = "hello world";
+  replaceSpaces(str1, 100);
+  assert(areStringsIdentical(str1, "hello%20world"));
+
+  char str2[100] = " helloworld";
+  replaceSpaces(str2, 100);
+  assert(areStringsIdentical(str2, "%20helloworld"));
+
+  char str3[100] = "helloworld ";
+  replaceSpaces(str3, 100);
+  assert(areStringsIdentical(str3, "helloworld%20"));
+
+  char str4[100] = "hello  world";
+  replaceSpaces(str4, 100);
+  assert(areStringsIdentical(str4, "hello%20%20world"));
+
+  std::cout << "All tests passed!\n";
 }
 
-void test2() {
-  char string[100] = " helloworld";
-  char const *result = "%20helloworld";
-  replaceBlank(string, 100);
-  assert(identical(string, result));
-}
-
-void test3() {
-  char string[100] = "helloworld ";
-  char const *result = "helloworld%20";
-  replaceBlank(string, 100);
-  assert(identical(string, result));
-}
-
-void test4() {
-  char string[100] = "hello  world";
-  char const *result = "hello%20%20world";
-  replaceBlank(string, 100);
-  assert(identical(string, result));
-}
-
-int main(int argc, char *argv[]) {
-  test1();
-  test2();
-  test3();
-  test4();
-
+int main() {
+  runTests();
   return 0;
 }

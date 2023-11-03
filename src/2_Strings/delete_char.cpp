@@ -1,73 +1,94 @@
+/**
+ * This program removes specified characters from a given string.
+ * It demonstrates two approaches:
+ * 1. Using a hash table to efficiently determine whether a character should be
+ * deleted.
+ * 2. Comparing strings to ensure the deletion works as expected.
+ */
+
 #include <cassert>
 #include <cstring>
+#include <iostream>
 
-void deleteCharacters(char *str, char const *chars) {
-  int hashTable[256];
-  const char *temp = chars;
-  char *slowPointer = str;
-  char *fastPointer = str;
-
-  if (str == NULL || chars == NULL)
+/**
+ * Deletes specified characters from a string.
+ * @param str: The input string from which characters are to be deleted.
+ * @param charsToDelete: The characters to be deleted from the input string.
+ */
+void deleteCharacters(char *str, const char *charsToDelete) {
+  if (!str || !charsToDelete)
     return;
 
-  memset(hashTable, 0, sizeof(hashTable));
-  while (*temp != '\0') {
-    hashTable[*temp] = 1;
-    ++temp;
+  bool shouldDelete[256] = {false};
+
+  while (*charsToDelete) {
+    shouldDelete[*charsToDelete++] = true;
   }
 
-  while (*fastPointer != '\0') {
-    if (hashTable[*fastPointer] != 1) {
-      *slowPointer = *fastPointer;
-      ++slowPointer;
+  char *writePtr = str;
+  for (char *readPtr = str; *readPtr; ++readPtr) {
+    if (!shouldDelete[*readPtr]) {
+      *writePtr++ = *readPtr;
     }
-    ++fastPointer;
   }
 
-  *slowPointer = '\0';
+  *writePtr = '\0';
 }
 
-bool identical(char const *strA, char const *strB) {
-  return 0 == strcmp(strA, strB);
+/**
+ * Compares two strings for equality.
+ * @param strA: First string to be compared.
+ * @param strB: Second string to be compared.
+ * @return: True if the strings are identical, False otherwise.
+ */
+bool areStringsIdentical(const char *strA, const char *strB) {
+  return strcmp(strA, strB) == 0;
 }
 
-void test1() {
-  char const *chars = "aeiou";
-  char const *result = "W r stdnts";
-  deleteCharacters(string, chars);
-  assert(identical(string, result));
-}
+/**
+ * Run tests to validate the deleteCharacters function.
+ */
+void runTests() {
+  // Test Case 1
+  {
+    char str[] = "We are students";
+    const char *charsToDelete = "aeiou";
+    const char *expectedResult = "W r stdnts";
+    deleteCharacters(str, charsToDelete);
+    assert(areStringsIdentical(str, expectedResult));
+  }
 
-void test2() {
-  char string[] = "We are students";
-  char const *chars = "wxyz";
-  char const *result = "We are students";
-  deleteCharacters(string, chars);
-  assert(identical(string, result));
-}
+  // Test Case 2
+  {
+    char str[] = "We are students";
+    const char *charsToDelete = "wxyz";
+    const char *expectedResult = "We are students";
+    deleteCharacters(str, charsToDelete);
+    assert(areStringsIdentical(str, expectedResult));
+  }
 
-void test3() {
-  char string[] = "8613761352066";
-  char const *chars = "1234567890";
-  char const *result = "";
-  deleteCharacters(string, chars);
-  assert(identical(string, result));
-}
+  // Test Case 3
+  {
+    char str[] = "8613761352066";
+    const char *charsToDelete = "1234567890";
+    const char *expectedResult = "";
+    deleteCharacters(str, charsToDelete);
+    assert(areStringsIdentical(str, expectedResult));
+  }
 
-void test4() {
-  char string[] = "119911";
-  char const *chars = "";
-  char const *result = "119911";
-  deleteCharacters(string, chars);
-  assert(identical(string, result));
+  // Test Case 4
+  {
+    char str[] = "119911";
+    const char *charsToDelete = "";
+    const char *expectedResult = "119911";
+    deleteCharacters(str, charsToDelete);
+    assert(areStringsIdentical(str, expectedResult));
+  }
+
+  std::cout << "All tests passed!\n";
 }
 
 int main() {
-
-  test1();
-  test2();
-  test3();
-  test4();
-
+  runTests();
   return 0;
 }

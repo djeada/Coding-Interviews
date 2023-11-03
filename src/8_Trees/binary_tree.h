@@ -1,28 +1,27 @@
-#ifndef _BINARYTREE_H
-#define _BINARYTREE_H
+#pragma once
+#include <functional>
+#include <memory>
 
 class BinaryTree {
-
-protected:
-  typedef struct Node {
-    int value;
-    Node *left;
-    Node *right;
-
-  public:
-    Node(int _value, Node *_left, Node *_right)
-        : value(_value), left(_left), right(_right) {}
-  } Node;
-
-  Node *root;
-
 public:
   BinaryTree();
   ~BinaryTree();
 
   void add(int value);
-  bool contains(int value);
+  bool contains(int value) const;
   friend bool operator==(const BinaryTree &t1, const BinaryTree &t2);
-};
 
-#endif
+protected:
+  struct Node {
+    int value;
+    std::unique_ptr<Node> left, right;
+    Node(int val) : value(val), left(nullptr), right(nullptr) {}
+  };
+
+  std::unique_ptr<Node> root;
+
+  void add(int value, std::unique_ptr<Node> &node);
+  bool contains(int value, const std::unique_ptr<Node> &node) const;
+  static bool isIdentical(const std::unique_ptr<Node> &a,
+                          const std::unique_ptr<Node> &b);
+};

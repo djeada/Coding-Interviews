@@ -3,69 +3,66 @@
 #include <set>
 #include <vector>
 
-std::vector<std::set<int>> permute(std::vector<std::vector<int>> &arrays) {
+/**
+ * This program generates all permutations of the elements from a given list of
+ * integer vectors. Each permutation is represented as a set of integers.
+ */
 
-  std::vector<std::set<int>> result;
+std::vector<std::set<int>>
+generatePermutations(const std::vector<std::vector<int>> &inputVectors) {
 
-  std::function<void(std::vector<std::vector<int>> &, std::set<int> &)>
-      permuteCore;
-  permuteCore = [&](std::vector<std::vector<int>> &arrays,
-                    std::set<int> &permutation) {
-    if (permutation.size() == arrays.size()) {
-      result.push_back(permutation);
+  std::vector<std::set<int>> permutations;
+
+  std::function<void(const std::vector<std::vector<int>> &, std::set<int> &)>
+      computePermutations;
+  computePermutations = [&](const std::vector<std::vector<int>> &inputVectors,
+                            std::set<int> &currentPermutation) {
+    if (currentPermutation.size() == inputVectors.size()) {
+      permutations.push_back(currentPermutation);
       return;
     }
 
-    std::vector<int> array = arrays[permutation.size()];
+    const auto &currentVector = inputVectors[currentPermutation.size()];
 
-    for (unsigned int i = 0; i < array.size(); ++i) {
-      permutation.insert(array[i]);
-      permuteCore(arrays, permutation);
-      permutation.erase(array[i]);
+    for (const auto &value : currentVector) {
+      currentPermutation.insert(value);
+      computePermutations(inputVectors, currentPermutation);
+      currentPermutation.erase(value);
     }
   };
 
-  std::set<int> permutation;
-  permuteCore(arrays, permutation);
+  std::set<int> currentPermutation;
+  computePermutations(inputVectors, currentPermutation);
 
-  return result;
+  return permutations;
 }
 
-void test1() {
-  std::vector<std::vector<int>> arrays{{1, 2}, {3, 4}, {5, 6}};
+void testGeneratePermutations() {
+  // Test Case 1
+  {
+    std::vector<std::vector<int>> inputVectors{{1, 2}, {3, 4}, {5, 6}};
+    std::vector<std::set<int>> expectedPermutations{
+        {5, 3, 1}, {6, 3, 1}, {5, 4, 1}, {6, 4, 1},
+        {5, 3, 2}, {6, 3, 2}, {5, 4, 2}, {6, 4, 2}};
+    assert(generatePermutations(inputVectors) == expectedPermutations);
+  }
 
-  std::vector<std::set<int>> result{
-      std::set<int>({5, 3, 1}), std::set<int>({6, 3, 1}),
-      std::set<int>({5, 4, 1}), std::set<int>({6, 4, 1}),
-      std::set<int>({5, 3, 2}), std::set<int>({6, 3, 2}),
-      std::set<int>({5, 4, 2}), std::set<int>({6, 4, 2})};
+  // Test Case 2
+  {
+    std::vector<std::vector<int>> inputVectors{{1, 2, 3, 4, 5}};
+    std::vector<std::set<int>> expectedPermutations{{1}, {2}, {3}, {4}, {5}};
+    assert(generatePermutations(inputVectors) == expectedPermutations);
+  }
 
-  assert(permute(arrays) == result);
-}
-
-void test2() {
-  std::vector<std::vector<int>> arrays{{1, 2, 3, 4, 5}};
-
-  std::vector<std::set<int>> result{std::set<int>({1}), std::set<int>({2}),
-                                    std::set<int>({3}), std::set<int>({4}),
-                                    std::set<int>({5})};
-
-  assert(permute(arrays) == result);
-}
-
-void test3() {
-  std::vector<std::vector<int>> arrays{{6}, {7}, {8}, {9}};
-
-  std::vector<std::set<int>> result{std::set<int>({6, 7, 8, 9})};
-
-  assert(permute(arrays) == result);
+  // Test Case 3
+  {
+    std::vector<std::vector<int>> inputVectors{{6}, {7}, {8}, {9}};
+    std::vector<std::set<int>> expectedPermutations{{6, 7, 8, 9}};
+    assert(generatePermutations(inputVectors) == expectedPermutations);
+  }
 }
 
 int main() {
-
-  test1();
-  test2();
-  test3();
-
+  testGeneratePermutations();
   return 0;
 }

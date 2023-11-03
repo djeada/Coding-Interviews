@@ -1,50 +1,55 @@
+/**
+ * This program generates all permutations of a given input string.
+ * It uses a recursive approach to construct each permutation by removing a
+ * character from the input string and appending it to the output string until
+ * the input string is empty. The resulting permutations are then stored in a
+ * vector.
+ */
+
 #include <algorithm>
 #include <cassert>
 #include <string>
 #include <vector>
 
-void permutation(std::string &strIn, std::string &strOut,
-                 std::vector<std::string> &result) {
-  if (strIn.empty()) {
-    result.push_back(strOut);
+// Helper function to generate permutations recursively
+void generatePermutations(const std::string &input, std::string &output,
+                          std::vector<std::string> &results) {
+  if (input.empty()) {
+    results.push_back(output);
     return;
   }
 
-  for (unsigned int i = 0; i < strIn.length(); ++i) {
-    std::string newStrIn = strIn;
-    std::string newStrOut = strOut;
-    newStrIn.erase(i, 1);
-    newStrOut += strIn.at(i);
-    permutation(newStrIn, newStrOut, result);
+  for (size_t i = 0; i < input.length(); ++i) {
+    std::string newInput = input.substr(0, i) + input.substr(i + 1);
+    std::string newOutput = output + input[i];
+    generatePermutations(newInput, newOutput, results);
   }
 }
 
-std::vector<std::string> permutations(std::string &strIn) {
-
-  std::vector<std::string> result;
-
-  std::string strOut;
-  permutation(strIn, strOut, result);
-
-  return result;
+// Function to generate and return all permutations of a given string
+std::vector<std::string> getAllPermutations(const std::string &input) {
+  std::vector<std::string> results;
+  std::string output;
+  generatePermutations(input, output, results);
+  return results;
 }
 
-void test1() {
-  std::string slowo = "Dora";
-
-  std::vector<std::string> listOfPermutations = permutations(slowo);
-
-  std::vector<std::string> result{
+void runTests() {
+  std::string word = "Dora";
+  std::vector<std::string> expectedPermutations{
       "Droa", "Daor", "aDor", "aroD", "aDro", "aorD", "raDo", "roDa",
       "rDoa", "raoD", "aoDr", "arDo", "oraD", "oaDr", "orDa", "rDao",
       "oDar", "roaD", "oarD", "oDra", "Dora", "Daro", "Doar", "Drao"};
 
-  sort(listOfPermutations.begin(), listOfPermutations.end());
-  sort(result.begin(), result.end());
-  assert(listOfPermutations == result);
+  std::vector<std::string> generatedPermutations = getAllPermutations(word);
+  std::sort(generatedPermutations.begin(), generatedPermutations.end());
+  std::sort(expectedPermutations.begin(), expectedPermutations.end());
+
+  assert(generatedPermutations == expectedPermutations);
+  std::cout << "Test passed!\n";
 }
 
 int main() {
-  test1();
+  runTests();
   return 0;
 }

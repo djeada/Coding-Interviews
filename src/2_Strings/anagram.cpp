@@ -1,50 +1,65 @@
+/**
+ * This program checks if two strings are anagrams of each other.
+ * An anagram is a word or phrase formed by rearranging the letters of a
+ * different word or phrase, typically using all the original letters exactly
+ * once. For instance, "silent" and "listen" are anagrams.
+ */
+
 #include <cassert>
+#include <iostream>
 #include <string>
 #include <unordered_map>
 
-bool containsKey(std::unordered_map<char, int> hist, char key) {
-  if (hist.find(key) != hist.end())
-    return true;
-  return false;
+/**
+ * Check if the given character exists as a key in the provided histogram.
+ * @param histogram: An unordered_map containing characters as keys and their
+ * frequencies as values.
+ * @param key: The character to be checked.
+ * @return: True if the key is present, otherwise False.
+ */
+bool containsKey(const std::unordered_map<char, int> &histogram, char key) {
+  return histogram.find(key) != histogram.end();
 }
 
-bool anagrams(const std::string &str1, const std::string &str2) {
+/**
+ * Check if two strings are anagrams of each other.
+ * @param str1: The first string.
+ * @param str2: The second string.
+ * @return: True if the strings are anagrams, otherwise False.
+ */
+bool areAnagrams(const std::string &str1, const std::string &str2) {
   if (str1.size() != str2.size())
     return false;
 
-  std::unordered_map<char, int> times;
-  for (int i = 0; i < str1.size(); ++i) {
-    char ch = str1.at(i);
-    if (containsKey(times, ch))
-      times[ch] += 1;
+  std::unordered_map<char, int> charFrequency;
+  for (const auto &ch : str1) {
+    if (containsKey(charFrequency, ch))
+      charFrequency[ch]++;
     else
-      times[ch] = 1;
+      charFrequency[ch] = 1;
   }
 
-  for (int i = 0; i < str2.size(); ++i) {
-    char ch = str2.at(i);
-    if (!containsKey(times, ch))
+  for (const auto &ch : str2) {
+    if (!containsKey(charFrequency, ch))
       return false;
 
-    times[ch] -= 1;
+    charFrequency[ch]--;
+    if (charFrequency[ch] == 0)
+      charFrequency.erase(ch);
   }
 
-  return true;
+  return charFrequency.empty();
 }
 
-void test1() { assert(anagrams("silent", "listen")); }
+void testAnagrams() {
+  assert(areAnagrams("silent", "listen"));
+  assert(areAnagrams("evil", "live"));
+  assert(areAnagrams("eleven plus two", "twelve plus one"));
+  assert(!areAnagrams("there", "their"));
+  std::cout << "All tests passed!\n";
+}
 
-void test2() { assert(anagrams("evil", "live")); }
-
-void test3() { assert(anagrams("eleven plus two", "twelve plus one")); }
-
-void test4() { assert(!anagrams("there", "their")); }
-
-int main(int argc, char *argv[]) {
-  test1();
-  test2();
-  test3();
-  test4();
-
+int main() {
+  testAnagrams();
   return 0;
 }

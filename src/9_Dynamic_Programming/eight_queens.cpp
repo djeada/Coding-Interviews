@@ -1,59 +1,58 @@
+/**
+ * This program finds all the solutions to the N-Queens puzzle for N=8 using
+ * permutations. The N-Queens puzzle is the problem of placing eight chess
+ * queens on an 8×8 chessboard so that no two queens threaten each other. The
+ * solution requires that no two queens share the same row, column, or diagonal.
+ * The program returns the total number of valid solutions.
+ */
+
 #include <cassert>
 #include <functional>
 #include <vector>
 
-int eightQueen() {
-  std::vector<int> columnIndex{0, 1, 2, 3, 4, 5, 6, 7};
+int countEightQueensSolutions() {
+  std::vector<int> columnIndices{0, 1, 2, 3, 4, 5, 6, 7};
+  int solutionCount = 0;
 
-  int count = 0;
-
-  auto check = [](std::vector<int> &columnIndex, int length) {
-    int i, j;
-
-    for (i = 0; i < length; ++i) {
-      for (j = i + 1; j < length; ++j) {
-        if ((i - j == columnIndex[i] - columnIndex[j]) ||
-            (j - i == columnIndex[i] - columnIndex[j]))
-          return 0;
+  // Lambda function to check if the current board arrangement is a valid
+  // solution
+  auto isValidBoard = [](const std::vector<int> &columnIndices, int length) {
+    for (int i = 0; i < length; ++i) {
+      for (int j = i + 1; j < length; ++j) {
+        if ((i - j == columnIndices[i] - columnIndices[j]) ||
+            (j - i == columnIndices[i] - columnIndices[j])) {
+          return false;
+        }
       }
     }
-
-    return 1;
+    return true;
   };
 
-  std::function<void(std::vector<int> &, int, int, int &)> permutation;
-  permutation = [&](std::vector<int> &columnIndex, int length, int index,
-                    int &count) -> void {
-    int i, temp;
-
+  // Recursive function to generate all permutations of the board arrangement
+  // and check for valid solutions
+  std::function<void(std::vector<int> &, int, int, int &)> generatePermutations;
+  generatePermutations = [&](std::vector<int> &columnIndices, int length,
+                             int index, int &solutionCount) -> void {
     if (index == length) {
-      if (check(columnIndex, length) != 0) {
-        count++;
+      if (isValidBoard(columnIndices, length)) {
+        solutionCount++;
       }
     } else {
-      for (i = index; i < length; ++i) {
-        temp = columnIndex[i];
-        columnIndex[i] = columnIndex[index];
-        columnIndex[index] = temp;
-
-        permutation(columnIndex, length, index + 1, count);
-
-        temp = columnIndex[index];
-        columnIndex[index] = columnIndex[i];
-        columnIndex[i] = temp;
+      for (int i = index; i < length; ++i) {
+        std::swap(columnIndices[i], columnIndices[index]);
+        generatePermutations(columnIndices, length, index + 1, solutionCount);
+        std::swap(columnIndices[index], columnIndices[i]);
       }
     }
   };
 
-  permutation(columnIndex, 8, 0, count);
-
-  return count;
+  generatePermutations(columnIndices, 8, 0, solutionCount);
+  return solutionCount;
 }
 
-void test() { assert(eightQueen() == 92); }
+void testEightQueens() { assert(countEightQueensSolutions() == 92); }
 
 int main() {
-
-  test();
+  testEightQueens();
   return 0;
 }

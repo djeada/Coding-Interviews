@@ -4,39 +4,58 @@
 class Human {
 private:
   int age;
+  std::string occupation;
 
 public:
   std::string name;
 
-  Human(int humanAge, std::string humanName)
-      : age(humanAge), name(std::move(humanName)) {}
+  // Constructor to initialize a Human object
+  Human(int humanAge, const std::string &humanName,
+        const std::string &humanOccupation)
+      : age(humanAge), name(humanName), occupation(humanOccupation) {}
 
-  void DoSomething() { std::cout << age << std::endl; }
+  // Member function to simulate an action
+  void DoSomething() const {
+    std::cout << name << " of age " << age << " is doing something.\n";
+  }
 
+  // Member function to set occupation
+  void SetOccupation(const std::string &newOccupation) {
+    occupation = newOccupation;
+  }
+
+  // Member function to display occupation
+  void DisplayOccupation() const {
+    std::cout << name << " works as a " << occupation << ".\n";
+  }
+
+  // Static function to display age of a Human object
   static void DisplayAge(const Human &person) {
-    std::cout << person.age << std::endl;
+    std::cout << person.name << " is " << person.age << " years old.\n";
   }
 };
 
 int main() {
   // Usage of Dot(.)
-  Human firstMan(13, "Jim"); // firstMan is an instance of class Human
-  std::cout << firstMan.name << std::endl; // accessing member attributes
-  firstMan.DoSomething();                  // accessing member functions
+  Human firstMan(13, "Jim", "Student");
+  std::cout << "Name: " << firstMan.name << std::endl;
+  firstMan.DoSomething();
+  firstMan.DisplayOccupation();
 
   // Usage of Pointer Operator (->)
-  Human *secondMan = new Human(24, "Tom");
-  std::cout << secondMan->name << std::endl;   // accessing member attributes
-  secondMan->DoSomething();                    // accessing member functions
-  std::cout << (*secondMan).name << std::endl; // accessing member attributes
-  (*secondMan).DoSomething();                  // accessing member functions
+  Human *secondMan = new Human(24, "Tom", "Engineer");
+  std::cout << "Name: " << secondMan->name << std::endl;
+  secondMan->DoSomething();
+  secondMan->DisplayOccupation();
+
+  // Change occupation
+  secondMan->SetOccupation("Data Scientist");
+  secondMan->DisplayOccupation();
 
   // Usage of Double Colon (::)
   Human::DisplayAge(firstMan);
-  firstMan.DisplayAge(firstMan);   // ok but not recommended
-  secondMan->DisplayAge(firstMan); // ok but not recommended
 
-  delete (secondMan);
+  delete secondMan;
 
   return 0;
 }

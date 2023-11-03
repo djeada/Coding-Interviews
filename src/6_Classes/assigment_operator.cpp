@@ -1,63 +1,50 @@
+#include <cstring> // For standard strlen and strncpy
 #include <iostream>
-
-int strlen(const char *ptr) {
-  int len = 0;
-  auto p = ptr;
-  while (*p != '\0') {
-    len++;
-    p++;
-  }
-  return len;
-}
-
-void strncpy(char *ptr_dest, const char *ptr_src, int n) {
-  for (int i = 0; i < n; i++) {
-    ptr_dest[i] = ptr_src[i];
-  }
-}
 
 class String {
   char *data;
   int length;
 
 public:
-  String() {
-    data = new char[100];
-    length = strlen(data);
-  }
+  // Default Constructor
+  String() : data(new char[1]{'\0'}), length(0) {}
 
+  // Parameterized Constructor
   String(const char *pData) {
-    length = strlen(pData);
-    data = new char[length];
-    strncpy(data, pData, length);
+    length = std::strlen(pData);
+    data = new char[length + 1]; // +1 for null terminator
+    std::strncpy(data, pData, length);
+    data[length] = '\0'; // Null-terminate the string
   }
 
-  String(const String &str) {
-    length = str.length;
-    data = new char[length];
-    strncpy(data, str.data, length);
+  // Copy Constructor
+  String(const String &str)
+      : length(str.length), data(new char[str.length + 1]) {
+    std::strncpy(data, str.data, length);
+    data[length] = '\0'; // Null-terminate the string
   }
 
+  // Destructor
   ~String() { delete[] data; }
 
+  // Copy Assignment Operator
   String &operator=(const String &str) {
     if (this != &str) {
-      String strTemp(str);
-
-      char *pTemp = strTemp.data;
-      strTemp.data = data;
-      data = pTemp;
-      delete[] pTemp;
+      delete[] data; // Deallocate existing memory
+      length = str.length;
+      data = new char[length + 1];
+      std::strncpy(data, str.data, length);
+      data[length] = '\0'; // Null-terminate the string
     }
     return *this;
   }
 
+  // Function to return size of the string
   int size() const { return length; }
+
+  // Overloading stream insertion operator to print the String object
   friend std::ostream &operator<<(std::ostream &os, const String &s) {
-    int length = s.size();
-    for (int i = 0; i < length; i++) {
-      os.put(s.data[i]);
-    }
+    os << s.data;
     return os;
   }
 };
@@ -67,9 +54,9 @@ int main() {
   String b = a;
   String c;
 
-  std::cout << a << std::endl;
-  std::cout << b << std::endl;
-  std::cout << c << std::endl;
+  std::cout << "String a: " << a << std::endl;
+  std::cout << "String b: " << b << std::endl;
+  std::cout << "String c: " << c << std::endl;
 
   return 0;
 }

@@ -2,7 +2,6 @@
 #include <cassert>
 
 class ListWithSorting : public List {
-
 public:
   ListWithSorting() : List() {}
 
@@ -10,8 +9,8 @@ public:
     if (!head)
       return;
 
-    auto lastSorted = head;
-    auto toBeSorted = lastSorted->next;
+    std::shared_ptr<Node> lastSorted = head;
+    std::shared_ptr<Node> toBeSorted = lastSorted->next;
     while (toBeSorted) {
       if (toBeSorted->data < head->data) {
         lastSorted->next = toBeSorted->next;
@@ -27,8 +26,9 @@ public:
           lastSorted->next = toBeSorted->next;
           toBeSorted->next = pNode->next;
           pNode->next = toBeSorted;
-        } else
+        } else {
           lastSorted = lastSorted->next;
+        }
       }
 
       toBeSorted = lastSorted->next;

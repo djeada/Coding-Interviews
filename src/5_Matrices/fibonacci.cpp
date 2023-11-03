@@ -1,31 +1,37 @@
 #include <cassert>
 #include <stdexcept>
+#include <vector>
 
+/**
+ * @brief Computes the nth Fibonacci number using recursion.
+ * @param n The position of the Fibonacci number to be calculated.
+ * @return The nth Fibonacci number.
+ */
 long long fibonacci1(unsigned int n) {
-  if (n <= 0)
+  if (n == 0)
     return 0;
-
   if (n == 1)
     return 1;
-
   return fibonacci1(n - 1) + fibonacci1(n - 2);
 }
 
+/**
+ * @brief Computes the nth Fibonacci number using iterative dynamic programming.
+ * @param n The position of the Fibonacci number to be calculated.
+ * @return The nth Fibonacci number.
+ */
 long long fibonacci2(unsigned int n) {
-  if (n <= 0)
+  if (n == 0)
     return 0;
-
   if (n == 1)
     return 1;
 
   long long fibNMinusOne = 1;
   long long fibNMinusTwo = 0;
   long long fibN = 0;
-  unsigned int i;
 
-  for (i = 2; i <= n; ++i) {
+  for (unsigned int i = 2; i <= n; ++i) {
     fibN = fibNMinusOne + fibNMinusTwo;
-
     fibNMinusTwo = fibNMinusOne;
     fibNMinusOne = fibN;
   }
@@ -33,55 +39,57 @@ long long fibonacci2(unsigned int n) {
   return fibN;
 }
 
-struct Matrix2By2 {
-  long long m_00;
-  long long m_01;
-  long long m_10;
-  long long m_11;
-};
+class Matrix2By2 {
+public:
+  long long m_00, m_01, m_10, m_11;
 
-struct Matrix2By2 MatrixMultiply(const struct Matrix2By2 *matrix1,
-                                 const struct Matrix2By2 *matrix2) {
-  struct Matrix2By2 result;
-  result.m_00 = matrix1->m_00 * matrix2->m_00 + matrix1->m_01 * matrix2->m_10;
-  result.m_01 = matrix1->m_00 * matrix2->m_01 + matrix1->m_01 * matrix2->m_11;
-  result.m_10 = matrix1->m_10 * matrix2->m_00 + matrix1->m_11 * matrix2->m_10;
-  result.m_11 = matrix1->m_10 * matrix2->m_01 + matrix1->m_11 * matrix2->m_11;
+  Matrix2By2() : m_00(1), m_01(1), m_10(1), m_11(0) {}
 
-  return result;
-}
-
-struct Matrix2By2 MatrixPower(unsigned int n) {
-  struct Matrix2By2 result;
-  struct Matrix2By2 unit = {1, 1, 1, 0};
-
-  if (n < 0)
-    throw std::runtime_error("Not defined for n <= 0.");
-
-  if (n == 1) {
-    result = unit;
-  } else if (n % 2 == 0) {
-    result = MatrixPower(n / 2);
-    result = MatrixMultiply(&result, &result);
-  } else if (n % 2 == 1) {
-    result = MatrixPower((n - 1) / 2);
-    result = MatrixMultiply(&result, &result);
-    result = MatrixMultiply(&result, &unit);
+  /**
+   * @brief Multiplies two 2x2 matrices.
+   * @param matrix Another 2x2 matrix to multiply with.
+   * @return The resulting 2x2 matrix.
+   */
+  Matrix2By2 multiply(const Matrix2By2 &matrix) const {
+    Matrix2By2 result;
+    result.m_00 = m_00 * matrix.m_00 + m_01 * matrix.m_10;
+    result.m_01 = m_00 * matrix.m_01 + m_01 * matrix.m_11;
+    result.m_10 = m_10 * matrix.m_00 + m_11 * matrix.m_10;
+    result.m_11 = m_10 * matrix.m_01 + m_11 * matrix.m_11;
+    return result;
   }
 
-  return result;
-}
+  /**
+   * @brief Computes the power of the matrix to the n.
+   * @param n The exponent.
+   * @return The matrix raised to the power of n.
+   */
+  Matrix2By2 power(unsigned int n) const {
+    if (n == 1) {
+      return *this;
+    } else if (n % 2 == 0) {
+      Matrix2By2 halfPower = power(n / 2);
+      return halfPower.multiply(halfPower);
+    } else {
+      Matrix2By2 halfPower = power((n - 1) / 2);
+      return halfPower.multiply(halfPower).multiply(*this);
+    }
+  }
+};
 
+/**
+ * @brief Computes the nth Fibonacci number using matrix exponentiation.
+ * @param n The position of the Fibonacci number to be calculated.
+ * @return The nth Fibonacci number.
+ */
 long long fibonacci3(unsigned int n) {
-  if (n <= 0)
+  if (n == 0)
     return 0;
-
   if (n == 1)
     return 1;
 
-  struct Matrix2By2 PowerNMinus2;
-  PowerNMinus2 = MatrixPower(n - 1);
-  return PowerNMinus2.m_00;
+  Matrix2By2 matrix;
+  return matrix.power(n - 1).m_00;
 }
 
 void test1() {

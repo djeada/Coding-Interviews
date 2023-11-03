@@ -1,95 +1,49 @@
 #include "binary_tree.h"
-#include <functional>
 
 BinaryTree::BinaryTree() : root(nullptr) {}
 
-BinaryTree::~BinaryTree() {
+BinaryTree::~BinaryTree() = default;
 
-  std::function<void(Node *)> destroyRecursive;
-  destroyRecursive = [&](Node *node) -> void {
-    if (node) {
-      destroyRecursive(node->left);
-      destroyRecursive(node->right);
-      delete node;
-    }
-  };
+void BinaryTree::add(int value) { add(value, root); }
 
-  destroyRecursive(root);
-}
-
-void BinaryTree::add(int value) {
-
-  if (!root) {
-    root = new Node(value, nullptr, nullptr);
-    return;
+void BinaryTree::add(int value, std::unique_ptr<Node> &node) {
+  if (!node) {
+    node = std::make_unique<Node>(value);
+  } else if (value < node->value) {
+    add(value, node->left);
+  } else if (value > node->value) {
+    add(value, node->right);
+  } else {
+    // Value already exists
   }
-
-  std::function<void(Node *)> _add;
-  _add = [&](Node *node) -> void {
-    if (value < node->value) {
-
-      if (node->left)
-        _add(node->left);
-
-      else
-        node->left = new Node(value, nullptr, nullptr);
-    }
-
-    else if (value > node->value) {
-
-      if (node->right)
-        _add(node->right);
-
-      else
-        node->right = new Node(value, nullptr, nullptr);
-    } else {
-      // throw exception
-      // cout << "The key has already been added to the tree" << endl;
-    }
-  };
-
-  _add(root);
 }
 
-bool BinaryTree::contains(int value) {
+bool BinaryTree::contains(int value) const { return contains(value, root); }
 
-  if (!root)
+bool BinaryTree::contains(int value, const std::unique_ptr<Node> &node) const {
+  if (!node) {
     return false;
-
-  std::function<bool(Node *, int)> _contains;
-  _contains = [&](Node *node, int value) -> bool {
-    if (!node)
-      return false;
-
-    if (node->value == value)
-      return true;
-
-    else if (node->value > value)
-      return _contains(node->left, value);
-
-    return _contains(node->right, value);
-  };
-
-  return _contains(root, value);
+  }
+  if (node->value == value) {
+    return true;
+  }
+  if (value < node->value) {
+    return contains(value, node->left);
+  }
+  return contains(value, node->right);
 }
 
 bool operator==(const BinaryTree &t1, const BinaryTree &t2) {
+  return BinaryTree::isIdentical(t1.root, t2.root);
+}
 
-  auto root1 = t1.root;
-  auto root2 = t2.root;
-
-  std::function<bool(BinaryTree::Node *, BinaryTree::Node *)> isIdentical;
-  isIdentical = [&](BinaryTree::Node *root1, BinaryTree::Node *root2) -> bool {
-    if (root1 == nullptr && root2 == nullptr)
-      return true;
-    else if ((root1 && !root2) || (!root1 && root2))
-      return false;
-    else if (root1->value == root2->value &&
-             isIdentical(root1->left, root2->left) &&
-             isIdentical(root1->right, root2->right))
-      return true;
-    return false;
-  };
-
-  return isIdentical(root1, root2);
+bool BinaryTree::isIdentical(const std::unique_ptr<Node> &a,
+                             const std::unique_ptr<Node> &b) {
+  if (!a && !b) {
+    return true;
+  }
+  if (a && b && a->value == b->value) {
+    return isIdentical(a->left, b->left) && isIdentical(a->right, b->right);
+  }
+  return false;
 }

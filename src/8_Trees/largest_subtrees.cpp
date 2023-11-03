@@ -1,108 +1,86 @@
 #include "binary_tree.h"
+#include <algorithm>
 #include <cassert>
-#include <functional>
 #include <limits>
 
 class TreeWithSubtree : public BinaryTree {
-
 public:
   TreeWithSubtree() : BinaryTree() {}
 
-  int largestBST() {
+  int largestBST() const {
     int min, max, largestSize;
-
-    std::function<bool(Node *, int &, int &, int &)> _largestBST;
-    _largestBST = [&](Node *node, int &min, int &max,
-                      int &largestSize) -> bool {
-      if (!node) {
-        max = 0x80000000;
-        min = 0x7FFFFFFF;
-        largestSize = 0;
-        return true;
-      }
-
-      int minLeft, maxLeft, leftSize;
-      bool left = _largestBST(node->left, minLeft, maxLeft, leftSize);
-
-      int minRight, maxRight, rightSize;
-      bool right = _largestBST(node->right, minRight, maxRight, rightSize);
-
-      bool overall = false;
-      if (left && right && node->value >= maxLeft && node->value <= minRight) {
-        largestSize = leftSize + rightSize + 1;
-        overall = true;
-
-        min = (node->value < minLeft) ? node->value : minLeft;
-        max = (node->value > maxRight) ? node->value : maxRight;
-      } else
-        largestSize = (leftSize > rightSize) ? leftSize : rightSize;
-
-      return overall;
-    };
-
-    _largestBST(root, min, max, largestSize);
+    _largestBST(root.get(), min, max, largestSize);
     return largestSize;
+  }
+
+private:
+  bool _largestBST(const Node *node, int &min, int &max,
+                   int &largestSize) const {
+    if (!node) {
+      max = std::numeric_limits<int>::min();
+      min = std::numeric_limits<int>::max();
+      largestSize = 0;
+      return true;
+    }
+
+    int minLeft, maxLeft, leftSize;
+    bool left = _largestBST(node->left.get(), minLeft, maxLeft, leftSize);
+
+    int minRight, maxRight, rightSize;
+    bool right = _largestBST(node->right.get(), minRight, maxRight, rightSize);
+
+    if (left && right && node->value >= maxLeft && node->value <= minRight) {
+      largestSize = leftSize + rightSize + 1;
+      min = std::min(node->value, minLeft);
+      max = std::max(node->value, maxRight);
+      return true;
+    }
+
+    largestSize = std::max(leftSize, rightSize);
+    return false;
   }
 };
 
-void test1() {
-  TreeWithSubtree tree;
-  tree.add(8);
-  tree.add(6);
-  tree.add(10);
-  tree.add(5);
-  tree.add(7);
-  tree.add(9);
-  tree.add(11);
-
-  int result = 7;
-  assert(tree.largestBST() == result);
-}
-
-void test2() {
-  TreeWithSubtree tree;
-  tree.add(11);
-  tree.add(6);
-  tree.add(16);
-  tree.add(5);
-  tree.add(7);
-  tree.add(19);
-
-  int result = 6;
-  assert(tree.largestBST() == result);
-}
-
-void test3() {
-
-  TreeWithSubtree tree;
-  tree.add(12);
-  tree.add(6);
-  tree.add(9);
-  tree.add(5);
-  tree.add(8);
-  tree.add(10);
-
-  int result = 6;
-  assert(tree.largestBST() == result);
-}
-
-void test4() {
-  TreeWithSubtree tree;
-  tree.add(5);
-  tree.add(3);
-  tree.add(4);
-  tree.add(2);
-  tree.add(1);
-
-  int result = 5;
-  assert(tree.largestBST() == result);
+void testTreeWithSubtree(const TreeWithSubtree &tree, int expectedSize) {
+  assert(tree.largestBST() == expectedSize);
 }
 
 int main() {
-  test1();
-  test2();
-  test3();
-  test4();
+  testTreeWithSubtree(
+      [] {
+        TreeWithSubtree tree;
+        for (int val : {8, 6, 10, 5, 7, 9, 11})
+          tree.add(val);
+        return tree;
+      }(),
+      7);
+
+  testTreeWithSubtree(
+      [] {
+        TreeWithSubtree tree;
+        for (int val : {11, 6, 16, 5, 7, 19})
+          tree.add(val);
+        return tree;
+      }(),
+      6);
+
+  testTreeWithSubtree(
+      [] {
+        TreeWithSubtree tree;
+        for (int val : {12, 6, 9, 5, 8, 10})
+          tree.add(val);
+        return tree;
+      }(),
+      6);
+
+  testTreeWithSubtree(
+      [] {
+        TreeWithSubtree tree;
+        for (int val : {5, 3, 4, 2, 1})
+          tree.add(val);
+        return tree;
+      }(),
+      5);
 
   return 0;
 }

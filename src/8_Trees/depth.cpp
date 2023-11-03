@@ -1,85 +1,62 @@
 #include "binary_tree.h"
+#include <algorithm>
 #include <cassert>
-#include <functional>
 
 class TreeWithDepth : public BinaryTree {
-
 public:
   TreeWithDepth() : BinaryTree() {}
 
-  unsigned int depth() {
+  unsigned int depth() const { return _depth(root.get()); }
 
-    std::function<unsigned int(Node *)> _depth;
-    _depth = [&](Node *node) -> unsigned int {
-      if (!node)
-        return 0;
-
-      int left = _depth(node->left);
-      int right = _depth(node->right);
-
-      return (left > right) ? (left + 1) : (right + 1);
-    };
-
-    return _depth(root);
+private:
+  unsigned int _depth(const Node *node) const {
+    if (!node)
+      return 0;
+    unsigned int left = _depth(node->left.get());
+    unsigned int right = _depth(node->right.get());
+    return std::max(left, right) + 1;
   }
 };
 
-void test1() {
-
-  TreeWithDepth tree;
-  tree.add(9);
-  tree.add(8);
-  tree.add(13);
-  tree.add(4);
-  tree.add(10);
-  tree.add(16);
-  tree.add(7);
-  tree.add(15);
-
-  unsigned int result = 4;
-  assert(tree.depth() == result);
-}
-
-void test2() {
-
-  TreeWithDepth tree;
-  tree.add(5);
-  tree.add(4);
-  tree.add(3);
-  tree.add(2);
-  tree.add(1);
-
-  unsigned int result = 5;
-  assert(tree.depth() == result);
-}
-
-void test3() {
-
-  TreeWithDepth tree;
-  tree.add(1);
-  tree.add(2);
-  tree.add(3);
-  tree.add(4);
-  tree.add(5);
-
-  unsigned int result = 5;
-  assert(tree.depth() == result);
-}
-
-void test4() {
-
-  TreeWithDepth tree;
-  tree.add(1);
-
-  unsigned int result = 1;
-  assert(tree.depth() == result);
+void testTreeWithDepth(const TreeWithDepth &tree, unsigned int expectedDepth) {
+  assert(tree.depth() == expectedDepth);
 }
 
 int main() {
-  test1();
-  test2();
-  test3();
-  test4();
+  testTreeWithDepth(
+      [] {
+        TreeWithDepth tree;
+        for (int val : {9, 8, 13, 4, 10, 16, 7, 15})
+          tree.add(val);
+        return tree;
+      }(),
+      4);
+
+  testTreeWithDepth(
+      [] {
+        TreeWithDepth tree;
+        for (int val : {5, 4, 3, 2, 1})
+          tree.add(val);
+        return tree;
+      }(),
+      5);
+
+  testTreeWithDepth(
+      [] {
+        TreeWithDepth tree;
+        for (int val : {1, 2, 3, 4, 5})
+          tree.add(val);
+        return tree;
+      }(),
+      5);
+
+  testTreeWithDepth(
+      [] {
+        TreeWithDepth tree;
+        tree.add(1);
+        return tree;
+      }(),
+      1);
 
   return 0;
 }

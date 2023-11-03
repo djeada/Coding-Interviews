@@ -1,103 +1,65 @@
 #include "binary_tree.h"
 #include <cassert>
-#include <functional>
-#include <vector>
+#include <stdexcept>
 
-class TreeWithLCA : public BinaryTree {
-
+class TreeWithLowestCommonAncestor : public BinaryTree {
 public:
-  TreeWithLCA() : BinaryTree() {}
+  TreeWithLowestCommonAncestor() : BinaryTree() {}
 
-  int lowestCommonAncestor(int val1, int val2) {
+  int findLowestCommonAncestor(int value1, int value2) const {
+    if (!root || !contains(value1) || !contains(value2)) {
+      throw std::invalid_argument("Values are not present in the tree.");
+    }
+    return findLCA(root.get(), value1, value2);
+  }
 
-    if (!root || !contains(val1) || !contains(val2))
-      throw std::runtime_error("Invalid input.");
-
-    std::function<int(Node *, int, int)> _lca;
-    _lca = [&](Node *node, int val1, int val2) -> int {
-      if (node->left && node->value > val1 && node->value > val2)
-        return _lca(node->left, val1, val2);
-
-      if (node->right && node->value < val1 && node->value < val2)
-        return _lca(node->right, val1, val2);
-
-      return node->value;
-    };
-
-    return _lca(root, val1, val2);
+private:
+  int findLCA(const Node *node, int value1, int value2) const {
+    if (node->left && node->value > value1 && node->value > value2) {
+      return findLCA(node->left.get(), value1, value2);
+    }
+    if (node->right && node->value < value1 && node->value < value2) {
+      return findLCA(node->right.get(), value1, value2);
+    }
+    return node->value;
   }
 };
 
-void test1() {
-  TreeWithLCA tree;
-  tree.add(20);
-  tree.add(8);
-  tree.add(22);
-  tree.add(4);
-  tree.add(12);
-  tree.add(10);
-  tree.add(14);
+void runTests() {
+  {
+    TreeWithLowestCommonAncestor tree;
+    for (const auto &value : {20, 8, 22, 4, 12, 10, 14}) {
+      tree.add(value);
+    }
+    assert(tree.findLowestCommonAncestor(10, 14) == 12);
+  }
 
-  int val1 = 10;
-  int val2 = 14;
-  int result = 12;
+  {
+    TreeWithLowestCommonAncestor tree;
+    for (const auto &value : {20, 8, 22, 4, 12, 10, 14}) {
+      tree.add(value);
+    }
+    assert(tree.findLowestCommonAncestor(8, 14) == 8);
+  }
 
-  assert(tree.lowestCommonAncestor(val1, val2) == result);
-}
+  {
+    TreeWithLowestCommonAncestor tree;
+    for (const auto &value : {20, 8, 22, 4, 12, 10, 14}) {
+      tree.add(value);
+    }
+    assert(tree.findLowestCommonAncestor(10, 22) == 20);
+  }
 
-void test2() {
-  TreeWithLCA tree;
-  tree.add(20);
-  tree.add(8);
-  tree.add(22);
-  tree.add(4);
-  tree.add(12);
-  tree.add(10);
-  tree.add(14);
-
-  int val1 = 8;
-  int val2 = 14;
-  int result = 8;
-
-  assert(tree.lowestCommonAncestor(val1, val2) == result);
-}
-
-void test3() {
-  TreeWithLCA tree;
-  tree.add(20);
-  tree.add(8);
-  tree.add(22);
-  tree.add(4);
-  tree.add(12);
-  tree.add(10);
-  tree.add(14);
-
-  int val1 = 10;
-  int val2 = 22;
-  int result = 20;
-
-  assert(tree.lowestCommonAncestor(val1, val2) == result);
-}
-
-void test4() {
-  TreeWithLCA tree;
-  tree.add(5);
-  tree.add(4);
-  tree.add(3);
-  tree.add(2);
-  tree.add(1);
-
-  int val1 = 1;
-  int val2 = 3;
-  int result = 3;
-
-  assert(tree.lowestCommonAncestor(val1, val2) == result);
+  {
+    TreeWithLowestCommonAncestor tree;
+    for (const auto &value : {5, 4, 3, 2, 1}) {
+      tree.add(value);
+    }
+    assert(tree.findLowestCommonAncestor(1, 3) == 3);
+  }
 }
 
 int main() {
-  test1();
-  test2();
-  test3();
-  test4();
+  runTests();
   return 0;
 }

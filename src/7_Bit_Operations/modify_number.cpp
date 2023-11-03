@@ -1,54 +1,45 @@
+/**
+ * This program calculates the number of bits needed to be flipped
+ * to convert one integer to another.
+ */
+
 #include <cassert>
+#include <iostream>
+#include <utility>
 
-int bitsToModify(int number1, int number2) {
-  int temp = number1 ^ number2;
+/**
+ * @brief Computes the number of bits that need to be flipped to convert one
+ * integer to another.
+ *
+ * @param number1 The first integer.
+ * @param number2 The second integer.
+ * @return The number of bits that need to be flipped to convert number1 to
+ * number2.
+ */
+int countBitsToModify(int number1, int number2) {
+  int xorResult = number1 ^ number2;
 
-  int bits = 0;
-  while (temp != 0) {
-    ++bits;
-    temp = (temp - 1) & temp;
+  int bitCount = 0;
+  while (xorResult != 0) {
+    ++bitCount;
+    xorResult = (xorResult - 1) & xorResult;
   }
 
-  return bits;
+  return bitCount;
 }
 
-void test1() {
-  int number1 = 0;
-  int number2 = 13;
-  int expected = 3;
+void runTests() {
+  std::pair<std::pair<int, int>, int> testCases[] = {
+      {{0, 13}, 3}, {{0, 15}, 4}, {{7, 0}, 3}, {{7, 7}, 0}};
 
-  assert(bitsToModify(number1, number2) == expected);
-}
-
-void test2() {
-  int number1 = 0;
-  int number2 = 15;
-  int expected = 4;
-
-  assert(bitsToModify(number1, number2) == expected);
-}
-
-void test3() {
-  int number1 = 7;
-  int number2 = 0;
-  int expected = 3;
-
-  assert(bitsToModify(number1, number2) == expected);
-}
-
-void test4() {
-  int number1 = 7;
-  int number2 = 7;
-  int expected = 0;
-
-  assert(bitsToModify(number1, number2) == expected);
+  for (const auto &[input, expectedResult] : testCases) {
+    const auto &[number1, number2] = input;
+    assert(countBitsToModify(number1, number2) == expectedResult);
+  }
+  std::cout << "All tests passed!\n";
 }
 
 int main() {
-  test1();
-  test2();
-  test3();
-  test4();
-
+  runTests();
   return 0;
 }

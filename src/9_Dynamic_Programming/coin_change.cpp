@@ -1,64 +1,49 @@
+/**
+ * This program determines the minimum number of coins required to make up a
+ * given total amount. Given a vector of coin denominations and a total amount,
+ * it uses dynamic programming to compute the fewest number of coins needed to
+ * make up that amount. If it's impossible to make the total with the given
+ * coins, it returns INT_MAX.
+ */
+
 #include <cassert>
 #include <climits>
 #include <vector>
 
-int getMinCount(unsigned int total, std::vector<int> &coins) {
-  std::vector<int> counts(total + 1);
+int findMinCoinCount(unsigned int targetAmount,
+                     const std::vector<int> &coinDenominations) {
+  std::vector<int> minCoinsForAmount(targetAmount + 1, INT_MAX);
+  minCoinsForAmount[0] =
+      0; // Base case: 0 coins are needed to make a total of 0
 
-  const int MAX = INT_MAX;
-
-  for (int i = 1; i <= total; ++i) {
-    int count = MAX;
-    for (unsigned int j = 0; j < coins.size(); ++j) {
-      if (i - coins[j] >= 0 && count > counts[i - coins[j]])
-        count = counts[i - coins[j]];
+  for (int currentAmount = 1; currentAmount <= targetAmount; ++currentAmount) {
+    for (const auto &coin : coinDenominations) {
+      if (currentAmount - coin >= 0 && minCoinsForAmount[currentAmount - coin] <
+                                           minCoinsForAmount[currentAmount]) {
+        minCoinsForAmount[currentAmount] =
+            minCoinsForAmount[currentAmount - coin] + 1;
+      }
     }
-    if (count < MAX)
-      counts[i] = count + 1;
-    else
-      counts[i] = MAX;
   }
 
-  return counts[total];
+  return minCoinsForAmount[targetAmount];
 }
 
-void test1() {
-  std::vector<int> coins{1, 5, 10, 20, 25};
-  unsigned int total = 40;
-  int expected = 2;
+void testMinimumCoinCount() {
+  std::vector<int> testCoins1{1, 5, 10, 20, 25};
+  assert(findMinCoinCount(40, testCoins1) == 2);
 
-  assert(getMinCount(total, coins) == expected);
-}
+  std::vector<int> testCoins2{1, 3, 9, 10};
+  assert(findMinCoinCount(15, testCoins2) == 3);
 
-void test2() {
-  std::vector<int> coins{1, 3, 9, 10};
-  unsigned int total = 15;
-  int expected = 3;
+  std::vector<int> testCoins3{1, 2, 5, 21, 25};
+  assert(findMinCoinCount(63, testCoins3) == 3);
 
-  assert(getMinCount(total, coins) == expected);
-}
-
-void test3() {
-  std::vector<int> coins{1, 2, 5, 21, 25};
-  unsigned int total = 63;
-  int expected = 3;
-
-  assert(getMinCount(total, coins) == expected);
-}
-
-void test4() {
-  std::vector<int> coins{2, 4, 8, 16};
-  unsigned int total = 63;
-  int expected = INT_MAX;
-
-  assert(getMinCount(total, coins) == expected);
+  std::vector<int> testCoins4{2, 4, 8, 16};
+  assert(findMinCoinCount(63, testCoins4) == INT_MAX);
 }
 
 int main() {
-  test1();
-  test2();
-  test3();
-  test4();
-
+  testMinimumCoinCount();
   return 0;
 }

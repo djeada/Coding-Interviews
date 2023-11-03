@@ -2,19 +2,19 @@
 #include <cassert>
 
 class ListWithReversion : public List {
-
 public:
   ListWithReversion() : List() {}
 
   void reverse() {
-    Node *reversedHead = nullptr;
-    Node *prev = nullptr;
+    std::shared_ptr<Node> reversedHead = nullptr;
+    std::shared_ptr<Node> prev = nullptr;
     auto node = head;
     while (node) {
       auto next = node->next;
 
-      if (!next)
+      if (!next) {
         reversedHead = node;
+      }
 
       node->next = prev;
       prev = node;

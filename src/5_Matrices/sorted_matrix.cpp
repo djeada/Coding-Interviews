@@ -1,12 +1,22 @@
+/**
+ * This program searches for a specified value within a 2D matrix,
+ * which is assumed to be sorted such that each row and each column
+ * are in ascending order. The program provides a function `contains`
+ * which implements a binary search algorithm to efficiently locate
+ * the value, returning true if found and false otherwise. The program
+ * also includes a set of test cases to validate the correctness of
+ * the `contains` function.
+ */
+
 #include <cassert>
 #include <vector>
 
-bool contains(std::vector<std::vector<int>> &matrix, int value) {
-  if (matrix.empty())
+bool contains(const std::vector<std::vector<int>> &matrix, int value) {
+  if (matrix.empty() || matrix.front().empty())
     return false;
 
-  int rows = matrix.size();
-  int cols = matrix.front().size();
+  const int rows = static_cast<int>(matrix.size());
+  const int cols = static_cast<int>(matrix.front().size());
   int start = 0;
   int end = rows * cols - 1;
 

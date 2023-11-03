@@ -3,33 +3,28 @@
 #include <stdexcept>
 
 class ListWithFind : public List {
-
 public:
   ListWithFind() : List() {}
 
   int findKthToTail(unsigned int k) {
-    if (!head)
+    if (empty())
       throw std::out_of_range("Index out of range!");
 
-    curr = head;
-    Node *prev = nullptr;
+    auto current = head.get();
+    auto follower = head.get();
 
     for (unsigned int i = 0; i < k; ++i) {
-
-      if (curr->next)
-        curr = curr->next;
-
-      else
+      if (!current->next)
         throw std::out_of_range("Index out of range!");
+      current = current->next.get();
     }
 
-    prev = head;
-    while (curr->next) {
-      curr = curr->next;
-      prev = prev->next;
+    while (current->next) {
+      current = current->next.get();
+      follower = follower->next.get();
     }
 
-    return prev->data;
+    return follower->data;
   }
 };
 
@@ -43,7 +38,6 @@ void test1() {
 
   int k = 0;
   int result = 5;
-
   assert(list.findKthToTail(k) == result);
 }
 
@@ -57,7 +51,6 @@ void test2() {
 
   int k = 4;
   int result = 1;
-
   assert(list.findKthToTail(k) == result);
 }
 
@@ -71,7 +64,6 @@ void test3() {
 
   int k = 1;
   int result = 4;
-
   assert(list.findKthToTail(k) == result);
 }
 
@@ -84,7 +76,6 @@ void test4() {
   list.append(5);
 
   int k = 10;
-
   bool exceptionThrown = false;
 
   try {
@@ -97,11 +88,9 @@ void test4() {
 }
 
 int main() {
-
   test1();
   test2();
   test3();
   test4();
-
   return 0;
 }

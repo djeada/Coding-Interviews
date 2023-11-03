@@ -1,100 +1,71 @@
 #include "binary_tree.h"
 #include <cassert>
-#include <functional>
-#include <iostream>
+#include <vector>
 
-class TreeWithDepth : public BinaryTree {
-
+class TreeWithKDistanceNodes : public BinaryTree {
 public:
-  TreeWithDepth() : BinaryTree() {}
+  TreeWithKDistanceNodes() : BinaryTree() {}
 
-  std::vector<int> kDistanceNodes(unsigned int k) {
-
+  std::vector<int> findNodesAtDistance(unsigned int k) const {
     std::vector<int> result;
-
-    if (!root)
-      return result;
-
-    std::function<void(Node *, int, std::vector<int> &)> nodesDown;
-    nodesDown = [&](Node *node, int k, std::vector<int> &result) -> void {
-      if (!node || k < 0)
-        return;
-
-      if (k == 0) {
-        result.push_back(node->value);
-        return;
-      }
-
-      nodesDown(node->left, k - 1, result);
-      nodesDown(node->right, k - 1, result);
-    };
-
-    nodesDown(root, k, result);
-
+    findNodesAtDistanceFromNode(root.get(), k, result);
     return result;
+  }
+
+private:
+  void findNodesAtDistanceFromNode(const Node *node, int distance,
+                                   std::vector<int> &result) const {
+    if (!node || distance < 0) {
+      return;
+    }
+
+    if (distance == 0) {
+      result.push_back(node->value);
+      return;
+    }
+
+    findNodesAtDistanceFromNode(node->left.get(), distance - 1, result);
+    findNodesAtDistanceFromNode(node->right.get(), distance - 1, result);
   }
 };
 
-void test1() {
+void runTests() {
+  {
+    TreeWithKDistanceNodes tree;
+    for (const auto &value : {9, 8, 13, 4, 10, 16, 7, 15}) {
+      tree.add(value);
+    }
+    const auto result = tree.findNodesAtDistance(3);
+    assert((result == std::vector<int>{7, 15}));
+  }
 
-  TreeWithDepth tree;
-  tree.add(9);
-  tree.add(8);
-  tree.add(13);
-  tree.add(4);
-  tree.add(10);
-  tree.add(16);
-  tree.add(7);
-  tree.add(15);
+  {
+    TreeWithKDistanceNodes tree;
+    for (const auto &value : {5, 4, 3, 2, 1}) {
+      tree.add(value);
+    }
+    const auto result = tree.findNodesAtDistance(4);
+    assert((result == std::vector<int>{1}));
+  }
 
-  unsigned int k = 3;
-  std::vector<int> result{7, 15};
-  assert(tree.kDistanceNodes(k) == result);
-}
+  {
+    TreeWithKDistanceNodes tree;
+    for (const auto &value : {1, 2, 3, 4, 5}) {
+      tree.add(value);
+    }
+    const auto result = tree.findNodesAtDistance(4);
+    assert((result == std::vector<int>{5}));
+  }
 
-void test2() {
-
-  TreeWithDepth tree;
-  tree.add(5);
-  tree.add(4);
-  tree.add(3);
-  tree.add(2);
-  tree.add(1);
-
-  unsigned int k = 4;
-  std::vector<int> result{1};
-  assert(tree.kDistanceNodes(k) == result);
-}
-
-void test3() {
-
-  TreeWithDepth tree;
-  tree.add(1);
-  tree.add(2);
-  tree.add(3);
-  tree.add(4);
-  tree.add(5);
-
-  unsigned int k = 4;
-  std::vector<int> result{5};
-  assert(tree.kDistanceNodes(k) == result);
-}
-
-void test4() {
-
-  TreeWithDepth tree;
-  tree.add(1);
-
-  unsigned int k = 1;
-  std::vector<int> result;
-  assert(tree.kDistanceNodes(k) == result);
+  {
+    TreeWithKDistanceNodes tree;
+    tree.add(1);
+    const auto result = tree.findNodesAtDistance(1);
+    assert(result.empty());
+  }
 }
 
 int main() {
-  test1();
-  test2();
-  test3();
-  test4();
-
+  runTests();
   return 0;
 }

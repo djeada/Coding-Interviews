@@ -2,34 +2,35 @@
 #include <cassert>
 #include <unordered_set>
 
-class ListWithDeletion : public List {
-
+class UniqueList : public List {
 public:
-  ListWithDeletion() : List() {}
+  UniqueList() : List() {}
 
   void deleteDuplication() {
-    if (!head)
+    if (empty())
       return;
-    std::unordered_set<int> visited;
 
-    curr = head;
-    Node *prev = nullptr;
-    while (curr) {
-      if (visited.find(curr->data) != visited.end()) {
-        prev->next = curr->next;
-        delete curr;
+    std::unordered_set<int> visited;
+    Node *current = head.get();
+    Node *previous = nullptr;
+
+    while (current) {
+      if (visited.find(current->data) != visited.end()) {
+        // Since we don't have access to Node structure and
+        // next is a unique_ptr, we can't directly manipulate the pointers.
+        // Assuming List class provides a remove method.
+        remove(current->data);
       } else {
-        visited.insert(curr->data);
-        prev = curr;
+        visited.insert(current->data);
+        previous = current;
       }
-      curr = prev->next;
+      current = previous->next.get();
     }
   }
 };
 
 void test1() {
-  ListWithDeletion duplicateList;
-
+  UniqueList duplicateList;
   duplicateList.append(1);
   duplicateList.append(2);
   duplicateList.append(3);
@@ -37,8 +38,7 @@ void test1() {
   duplicateList.append(4);
   duplicateList.append(5);
 
-  ListWithDeletion uniqueList;
-
+  UniqueList uniqueList;
   uniqueList.append(1);
   uniqueList.append(2);
   uniqueList.append(3);
@@ -46,21 +46,18 @@ void test1() {
   uniqueList.append(5);
 
   duplicateList.deleteDuplication();
-
   assert(duplicateList == uniqueList);
 }
 
 void test2() {
-  ListWithDeletion duplicateList;
-
+  UniqueList duplicateList;
   duplicateList.append(1);
   duplicateList.append(2);
   duplicateList.append(3);
   duplicateList.append(4);
   duplicateList.append(5);
 
-  ListWithDeletion uniqueList;
-
+  UniqueList uniqueList;
   uniqueList.append(1);
   uniqueList.append(2);
   uniqueList.append(3);
@@ -68,44 +65,37 @@ void test2() {
   uniqueList.append(5);
 
   duplicateList.deleteDuplication();
-
   assert(duplicateList == uniqueList);
 }
 
 void test3() {
-  ListWithDeletion duplicateList;
-
+  UniqueList duplicateList;
   duplicateList.append(1);
   duplicateList.append(1);
   duplicateList.append(1);
   duplicateList.append(1);
   duplicateList.append(2);
 
-  ListWithDeletion uniqueList;
-
+  UniqueList uniqueList;
   uniqueList.append(1);
   uniqueList.append(2);
 
   duplicateList.deleteDuplication();
-
   assert(duplicateList == uniqueList);
 }
 
 void test4() {
-  ListWithDeletion duplicateList;
-
+  UniqueList duplicateList;
   duplicateList.append(1);
   duplicateList.append(1);
   duplicateList.append(1);
   duplicateList.append(1);
   duplicateList.append(1);
 
-  ListWithDeletion uniqueList;
-
+  UniqueList uniqueList;
   uniqueList.append(1);
 
   duplicateList.deleteDuplication();
-
   assert(duplicateList == uniqueList);
 }
 

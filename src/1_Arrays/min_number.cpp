@@ -2,40 +2,27 @@
 #include <cassert>
 #include <vector>
 
-int minNumber(std::vector<int> &arr) {
-  std::sort(arr.begin(), arr.end());
-  return arr.front();
+/**
+ * This program finds the smallest number in a given vector of integers.
+ */
+
+int findMinNumber(const std::vector<int> &arr) {
+  return *std::min_element(arr.begin(), arr.end());
 }
 
-void test1() {
-  std::vector<int> numbers{3, 5, 1, 4, 2};
-  int result = 1;
-  assert(minNumber(numbers) == result);
-}
+void testFindMinNumber() {
+  std::vector<std::pair<std::vector<int>, int>> testCases = {
+      {{3, 5, 1, 4, 2}, 1},
+      {{-3, -5, -1, -4, -2}, -5},
+      {{10, 20, 30, 40, 5}, 5},
+      {{1, 1, 1, 1, 1}, 1}};
 
-void test2() {
-  std::vector<int> numbers{3, 5, 1, 4, 2};
-  int result = 1;
-  assert(minNumber(numbers) == result);
-}
-
-void test3() {
-  std::vector<int> numbers{3, 5, 1, 4, 2};
-  int result = 1;
-  assert(minNumber(numbers) == result);
-}
-
-void test4() {
-  std::vector<int> numbers{3, 5, 1, 4, 2};
-  int result = 1;
-  assert(minNumber(numbers) == result);
+  for (const auto &[numbers, expected] : testCases) {
+    assert(findMinNumber(numbers) == expected);
+  }
 }
 
 int main() {
-  test1();
-  test2();
-  test3();
-  test4();
-
+  testFindMinNumber();
   return 0;
 }

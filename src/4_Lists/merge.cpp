@@ -2,45 +2,31 @@
 #include <cassert>
 #include <iostream>
 
-List merge(List &list1, List &list2) {
-  if (list1.empty())
-    return List(list2);
-
-  if (list2.empty())
-    return List(list1);
-
+List merge(const List &list1, const List &list2) {
   List result;
 
-  unsigned int i = 0;
-  unsigned int j = 0;
+  unsigned int i = 0, j = 0;
 
   while (i < list1.size() && j < list2.size()) {
-
     auto data1 = list1.get(i);
     auto data2 = list2.get(j);
 
     if (data1 < data2) {
       result.append(data1);
-      i++;
-    }
-
-    else {
+      ++i;
+    } else {
       result.append(data2);
-      j++;
+      ++j;
     }
   }
 
-  while (i < list1.size()) {
+  // Append remaining elements
+  for (; i < list1.size(); ++i)
     result.append(list1.get(i));
-    i++;
-  }
-
-  while (j < list2.size()) {
+  for (; j < list2.size(); ++j)
     result.append(list2.get(j));
-    j++;
-  }
 
-  return List(result);
+  return result;
 }
 
 void test1() {

@@ -1,84 +1,48 @@
+/**
+ * This program finds the smallest 'k' numbers from a given list of numbers.
+ * It uses a max heap (priority queue) to keep track of the smallest numbers
+ * encountered so far.
+ */
+
 #include <algorithm>
 #include <cassert>
 #include <queue>
 #include <vector>
 
-std::vector<int> getLeastNumbers(std::vector<int> input, int k) {
-
+std::vector<int> findSmallestKNumbers(const std::vector<int> &input, int k) {
   std::vector<int> output;
-  std::priority_queue<int> maxQueue;
+  std::priority_queue<int> maxHeap;
 
-  auto compare = [](int num1, int num2) {
-    if (num1 < num2)
-      return 1;
-    else if (num1 == num2)
-      return 0;
-    return -1;
-  };
-
-  auto _getLeastNumbers = [&](std::vector<int> input,
-                              std::priority_queue<int> &output, int k) {
-    output = std::priority_queue<int>();
-
-    for (int i = 0; i < input.size(); ++i) {
-      if (output.size() < k)
-        output.push(input[i]);
-      else {
-        int max = output.top();
-        int number = input[i];
-        if (compare(number, max) > 0) {
-          output.pop();
-          output.push(number);
-        }
-      }
+  for (const auto &num : input) {
+    if (maxHeap.size() < k) {
+      maxHeap.push(num);
+    } else if (num < maxHeap.top()) {
+      maxHeap.pop();
+      maxHeap.push(num);
     }
-  };
+  }
 
-  _getLeastNumbers(input, maxQueue, k);
-
-  int i = 0;
-  while (!maxQueue.empty()) {
-    output.push_back(maxQueue.top());
-    maxQueue.pop();
-    i++;
+  while (!maxHeap.empty()) {
+    output.push_back(maxHeap.top());
+    maxHeap.pop();
   }
 
   std::sort(output.begin(), output.end());
   return output;
 }
 
-void test1() {
-  std::vector<int> numbers{4, 5, 1, 6, 2, 7, 3, 8};
-  std::vector<int> expected{1, 2, 3, 4};
-
-  assert(getLeastNumbers(numbers, expected.size()) == expected);
-}
-
-void test2() {
-  std::vector<int> numbers{4, 5, 1, 6, 2, 7, 3, 8};
-  std::vector<int> expected{1, 2, 3, 4, 5, 6, 7, 8};
-
-  assert(getLeastNumbers(numbers, expected.size()) == expected);
-}
-
-void test3() {
-  std::vector<int> numbers{4, 5, 1, 6, 2, 7, 3, 8};
-  std::vector<int> expected{1};
-
-  assert(getLeastNumbers(numbers, expected.size()) == expected);
-}
-
-void test4() {
-  std::vector<int> numbers{4, 5, 1, 6, 2, 7, 2, 8};
-  std::vector<int> expected{1, 2};
-
-  assert(getLeastNumbers(numbers, expected.size()) == expected);
+void testFindSmallestKNumbers() {
+  assert(findSmallestKNumbers({4, 5, 1, 6, 2, 7, 3, 8}, 4) ==
+         std::vector<int>{1, 2, 3, 4});
+  assert(findSmallestKNumbers({4, 5, 1, 6, 2, 7, 3, 8}, 8) ==
+         std::vector<int>{1, 2, 3, 4, 5, 6, 7, 8});
+  assert(findSmallestKNumbers({4, 5, 1, 6, 2, 7, 3, 8}, 1) ==
+         std::vector<int>{1});
+  assert(findSmallestKNumbers({4, 5, 1, 6, 2, 7, 2, 8}, 2) ==
+         std::vector<int>{1, 2});
 }
 
 int main() {
-  test1();
-  test2();
-  test3();
-  test4();
+  testFindSmallestKNumbers();
   return 0;
 }

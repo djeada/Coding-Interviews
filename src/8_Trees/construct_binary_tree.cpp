@@ -1,47 +1,37 @@
 #include "binary_tree.h"
+#include <algorithm>
 #include <cassert>
-#include <functional>
 #include <stdexcept>
 #include <vector>
 
 class TreeWithConstruct : public BinaryTree {
-
-  Node *construct(std::vector<int> &inorder, std::vector<int> &preorder,
-                  int start, int end, int &preInd) {
-
+private:
+  std::unique_ptr<Node> construct(std::vector<int> &inorder,
+                                  std::vector<int> &preorder, int start,
+                                  int end, int &preInd) {
     if (start > end)
       return nullptr;
 
-    std::function<int(std::vector<int> &, int, int, int)> index;
-    index = [&](std::vector<int> &inorder, int val, int start, int end) -> int {
-      for (auto i = start; i <= end; i++) {
-        if (inorder[i] == val)
-          return i;
-      }
-
-      return -1;
-    };
-
     auto val = preorder[preInd];
-    auto _root = new Node(val, nullptr, nullptr);
+    auto root = std::make_unique<Node>(val);
     preInd++;
 
     if (start == end)
-      return _root;
+      return root;
 
-    auto ind = index(inorder, _root->value, start, end);
+    auto ind = std::find(inorder.begin() + start, inorder.begin() + end, val) -
+               inorder.begin();
 
-    _root->left = construct(inorder, preorder, start, ind - 1, preInd);
-    _root->right = construct(inorder, preorder, ind + 1, end, preInd);
+    root->left = construct(inorder, preorder, start, ind - 1, preInd);
+    root->right = construct(inorder, preorder, ind + 1, end, preInd);
 
-    return _root;
+    return root;
   }
 
 public:
   TreeWithConstruct() : BinaryTree() {}
 
   TreeWithConstruct(std::vector<int> &inorder, std::vector<int> &preorder) {
-
     if (inorder.empty() || preorder.empty())
       throw std::runtime_error("Invalid input.");
 

@@ -1,65 +1,59 @@
 #include <cassert>
+#include <unordered_set>
 #include <vector>
 
-int howManyDuplicates(std::vector<int> &arr) {
-  int count = 0;
-  for (unsigned int i = 0; i < arr.size(); i++) {
-    for (unsigned int j = i + 1; j < arr.size(); j++) {
-      if (arr[i] == arr[j])
-        count++;
+/**
+ * This program finds and counts the duplicate elements in a given integer
+ * vector.
+ */
+
+int countDuplicates(const std::vector<int> &arr) {
+  int duplicatesCount = 0;
+  std::unordered_set<int> seenElements;
+
+  for (const auto &num : arr) {
+    if (seenElements.count(num)) {
+      duplicatesCount++;
+    } else {
+      seenElements.insert(num);
     }
   }
 
-  return count;
+  return duplicatesCount;
 }
 
-std::vector<int> getDuplicates(std::vector<int> &arr) {
-
+std::vector<int> findDuplicates(const std::vector<int> &arr) {
   std::vector<int> duplicates;
+  std::unordered_set<int> seenElements;
 
-  int count = 0;
-  for (unsigned int i = 0; i < arr.size(); i++) {
-    for (unsigned int j = i + 1; j < arr.size(); j++) {
-      if (arr[i] == arr[j]) {
-        duplicates.push_back(arr[i]);
-        count++;
-      }
+  for (const auto &num : arr) {
+    if (seenElements.count(num) &&
+        std::find(duplicates.begin(), duplicates.end(), num) ==
+            duplicates.end()) {
+      duplicates.push_back(num);
+    } else {
+      seenElements.insert(num);
     }
   }
 
   return duplicates;
 }
 
-void test1() {
-  std::vector<int> arr{1, 2, 3, 4, 5};
-  int result = 0;
-  assert(howManyDuplicates(arr) == result);
-}
+void testDuplicateFunctions() {
+  std::vector<int> arr1{1, 2, 3, 4, 5};
+  assert(countDuplicates(arr1) == 0);
+  assert(findDuplicates(arr1).empty());
 
-void test2() {
-  std::vector<int> arr{5, 10, 15, 5, 3, 3};
-  int result = 2;
-  assert(howManyDuplicates(arr) == result);
-}
+  std::vector<int> arr2{5, 10, 15, 5, 3, 3};
+  assert(countDuplicates(arr2) == 2);
+  assert(findDuplicates(arr2) == std::vector<int>{5, 3});
 
-void test3() {
-  std::vector<int> arr{1, 2, 3, 4, 5};
-  std::vector<int> result;
-  assert(getDuplicates(arr) == result);
-}
-
-void test4() {
-  std::vector<int> arr{3, 9, 9, 7, 3};
-  std::vector<int> result{3, 9};
-  assert(getDuplicates(arr) == result);
+  std::vector<int> arr3{3, 9, 9, 7, 3};
+  assert(countDuplicates(arr3) == 2);
+  assert(findDuplicates(arr3) == std::vector<int>{9, 3});
 }
 
 int main() {
-
-  test1();
-  test2();
-  test3();
-  test4();
-
+  testDuplicateFunctions();
   return 0;
 }

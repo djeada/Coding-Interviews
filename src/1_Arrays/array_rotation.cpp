@@ -1,72 +1,60 @@
+#include <algorithm>
 #include <cassert>
 #include <vector>
 
-int getMinSequentially(std::vector<int> &arr, int idx1, int idx2) {
-  int result = arr[idx1];
-  for (int i = idx1 + 1; i <= idx2; ++i) {
-    if (result > arr[i])
-      result = arr[i];
-  }
+/**
+ * This program aims to find the minimum element in a cyclically sorted array,
+ * assuming that the rotation is made around an ascending sorted array.
+ */
 
-  return result;
+int findMinInSubarray(const std::vector<int> &arr, int startIdx, int endIdx) {
+  int minElement = arr[startIdx];
+  for (int i = startIdx + 1; i <= endIdx; ++i) {
+    minElement = std::min(minElement, arr[i]);
+  }
+  return minElement;
 }
 
-int getMin(std::vector<int> &arr) {
-  int idx1 = 0;
-  int idx2 = arr.size() - 1;
-  int idxMid = idx1;
+int findMinInRotatedArray(const std::vector<int> &arr) {
+  int startIdx = 0;
+  int endIdx = arr.size() - 1;
+  int midIdx = startIdx;
 
-  while (arr[idx1] >= arr[idx2]) {
-    if (idx2 - idx1 == 1) {
-      idxMid = idx2;
+  while (arr[startIdx] >= arr[endIdx]) {
+    if (endIdx - startIdx == 1) {
+      midIdx = endIdx;
       break;
     }
 
-    idxMid = (idx1 + idx2) / 2;
+    midIdx = (startIdx + endIdx) / 2;
 
-    if (arr[idx1] == arr[idx2] && arr[idxMid] == arr[idx1])
-      return getMinSequentially(arr, idx1, idx2);
+    if (arr[startIdx] == arr[endIdx] && arr[midIdx] == arr[startIdx])
+      return findMinInSubarray(arr, startIdx, endIdx);
 
-    if (arr[idxMid] >= arr[idx1])
-      idx1 = idxMid;
-
-    else if (arr[idxMid] <= arr[idx2])
-      idx2 = idxMid;
+    if (arr[midIdx] >= arr[startIdx])
+      startIdx = midIdx;
+    else if (arr[midIdx] <= arr[endIdx])
+      endIdx = midIdx;
   }
 
-  return arr[idxMid];
+  return arr[midIdx];
 }
 
-void test1() {
-  std::vector<int> arr{3, 4, 5, 1, 2};
-  int result = 1;
-  assert(getMin(arr) == result);
-}
+void testFindMinInRotatedArray() {
+  std::vector<int> arr1{3, 4, 5, 1, 2};
+  assert(findMinInRotatedArray(arr1) == 1);
 
-void test2() {
-  std::vector<int> arr{10, 10, 2, 5, 5, 9, 9, 9};
-  int result = 2;
-  assert(getMin(arr) == result);
-}
+  std::vector<int> arr2{10, 10, 2, 5, 5, 9, 9, 9};
+  assert(findMinInRotatedArray(arr2) == 2);
 
-void test3() {
-  std::vector<int> arr{-1, -1, 5, -1, -1};
-  int result = -1;
-  assert(getMin(arr) == result);
-}
+  std::vector<int> arr3{-1, -1, 5, -1, -1};
+  assert(findMinInRotatedArray(arr3) == -1);
 
-void test4() {
-  std::vector<int> arr{0, 0, 0, 0, 0, 0};
-  int result = 0;
-  assert(getMin(arr) == result);
+  std::vector<int> arr4{0, 0, 0, 0, 0, 0};
+  assert(findMinInRotatedArray(arr4) == 0);
 }
 
 int main() {
-
-  test1();
-  test2();
-  test3();
-  test4();
-
+  testFindMinInRotatedArray();
   return 0;
 }
