@@ -1,9 +1,3 @@
-#include <algorithm>
-#include <cassert>
-#include <random>
-#include <stdexcept>
-#include <vector>
-
 /**
  * This program identifies the majority element in an array.
  * A majority element is an element that appears more than n/2 times,
@@ -11,6 +5,14 @@
  * Two algorithms are provided: one using a partition-based approach,
  * and another using a counting approach.
  */
+
+#include <algorithm>
+#include <cassert>
+#include <functional>
+#include <iostream>
+#include <random>
+#include <stdexcept>
+#include <vector>
 
 bool isMajorityElement(const std::vector<int> &arr, int candidate) {
   return std::count(arr.begin(), arr.end(), candidate) * 2 > arr.size();
@@ -79,9 +81,15 @@ int findMajorityCounting(const std::vector<int> &arr) {
 }
 
 void testMajorityFinders() {
-  // Test cases where no majority exists
-  for (const auto &findMajority :
-       {findMajorityPartition, findMajorityCounting}) {
+  // Wrap both majority finder functions in lambdas with the same signature.
+  using MajorityFinder = std::function<int(std::vector<int>&)>;
+  std::vector<MajorityFinder> majorityFinders = {
+    [](std::vector<int>& arr) { return findMajorityPartition(arr); },
+    [](std::vector<int>& arr) { return findMajorityCounting(arr); }
+  };
+
+  // Test cases where no majority exists.
+  for (const auto &findMajority : majorityFinders) {
     std::vector<int> arr{1, 2, 3, 4, 5};
     bool exceptionThrown = false;
 
@@ -90,14 +98,14 @@ void testMajorityFinders() {
     } catch (...) {
       exceptionThrown = true;
     }
-
     assert(exceptionThrown);
   }
 
-  // Test cases where a majority exists
+  // Test cases where a majority exists.
   std::vector<int> arr{2, 2, 2, 2, 2, 1, 3, 4, 5};
+  std::vector<int> arrCopy = arr;  // Copy for the second method (since partition modifies the array)
   assert(findMajorityPartition(arr) == 2);
-  assert(findMajorityCounting(arr) == 2);
+  assert(findMajorityCounting(arrCopy) == 2);
 }
 
 int main() {
