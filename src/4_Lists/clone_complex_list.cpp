@@ -17,117 +17,113 @@
 #include <cassert>
 #include <iostream>
 #include <memory>
+#include <unordered_map>
 
 class ComplexList {
 public:
+  // Make Node publicly accessible.
+  struct Node {
+    int value;
+    std::unique_ptr<Node> next;
+    Node* sibling = nullptr;
+    explicit Node(int val) : value(val) {}
+  };
+
   ComplexList() = default;
 
+  // Copy constructor: deep-copies the list, preserving sibling relationships.
   ComplexList(const ComplexList &other) {
-    cloneNodes(other.head.get());
-    connectSiblingNodes(other.head.get());
-    reconnectNodes(other.head.get());
+    if (!other.head)
+      return;
+
+    // Map from original nodes to their corresponding cloned nodes.
+    std::unordered_map<const Node*, Node*> nodeMap;
+    
+    // Create the new head.
+    head = std::make_unique<Node>(other.head->value);
+    nodeMap[other.head.get()] = head.get();
+    
+    Node* currentNew = head.get();
+    const Node* currentOld = other.head.get();
+    // Copy the "next" chain.
+    while (currentOld->next) {
+      currentNew->next = std::make_unique<Node>(currentOld->next->value);
+      currentNew = currentNew->next.get();
+      currentOld = currentOld->next.get();
+      nodeMap[currentOld] = currentNew;
+    }
+    
+    // Set sibling pointers.
+    currentOld = other.head.get();
+    currentNew = head.get();
+    while (currentOld) {
+      if (currentOld->sibling)
+        currentNew->sibling = nodeMap[currentOld->sibling];
+      currentOld = currentOld->next.get();
+      currentNew = currentNew->next.get();
+    }
   }
 
-  // No need for a custom destructor as we use smart pointers.
-
-  ComplexList &append(int value) {
+  // Append a new node with the given value and return its pointer.
+  Node* append(int value) {
     auto newNode = std::make_unique<Node>(value);
-
+    Node* newNodePtr = newNode.get();
     if (!head) {
       head = std::move(newNode);
     } else {
-      auto curr = head.get();
+      Node* curr = head.get();
       while (curr->next)
         curr = curr->next.get();
       curr->next = std::move(newNode);
     }
-
-    return *this;
+    return newNodePtr;
   }
 
-  void setSibling(Node *node, Node *sibling) {
+  // Set the sibling pointer for the given node.
+  void setSibling(Node* node, Node* sibling) {
     if (node)
       node->sibling = sibling;
   }
 
+  // Equality operator for testing purposes.
   friend bool operator==(const ComplexList &l1, const ComplexList &l2) {
-    auto node1 = l1.head.get();
-    auto node2 = l2.head.get();
-
+    const Node* node1 = l1.head.get();
+    const Node* node2 = l2.head.get();
+    
     while (node1 && node2) {
       if (node1->value != node2->value)
         return false;
-
+      
+      // Check presence/absence of sibling pointers.
       if ((node1->sibling == nullptr) != (node2->sibling == nullptr))
         return false;
-
+      
+      // If both nodes have siblings, compare their values.
       if (node1->sibling && node2->sibling) {
         if (node1->sibling->value != node2->sibling->value)
           return false;
       }
-
+      
       node1 = node1->next.get();
       node2 = node2->next.get();
     }
-
+    
     return node1 == node2;
   }
 
 private:
-  struct Node {
-    int value;
-    std::unique_ptr<Node> next;
-    Node *sibling = nullptr;
-
-    explicit Node(int val) : value(val) {}
-  };
-
   std::unique_ptr<Node> head;
-
-  void cloneNodes(const Node *otherHead) {
-    auto node = otherHead;
-    while (node) {
-      auto clonedNode = std::make_unique<Node>(node->value);
-      clonedNode->next = std::move(node->next);
-      node->next = std::move(clonedNode);
-      node = node->next->next.get();
-    }
-  }
-
-  void connectSiblingNodes(const Node *otherHead) {
-    auto node = otherHead;
-    while (node && node->next) {
-      node->next->sibling = node->sibling ? node->sibling->next.get() : nullptr;
-      node = node->next->next.get();
-    }
-  }
-
-  void reconnectNodes(const Node *otherHead) {
-    auto node = otherHead;
-    if (node) {
-      head = std::move(node->next);
-      node->next = std::move(head->next);
-      node = node->next.get();
-    }
-
-    auto clonedNode = head.get();
-    while (node && clonedNode) {
-      clonedNode->next = std::move(node->next);
-      node->next = std::move(clonedNode->next);
-
-      clonedNode = clonedNode->next.get();
-      node = node->next.get();
-    }
-  }
 };
+
+// ----- Test Cases -----
 
 void test1() {
   ComplexList list;
-  auto node1 = &list.append(1);
-  auto node2 = &list.append(2);
-  auto node3 = &list.append(3);
-  auto node4 = &list.append(4);
-  auto node5 = &list.append(5);
+  auto node1 = list.append(1);
+  auto node2 = list.append(2);
+  auto node3 = list.append(3);
+  auto node4 = list.append(4);
+  auto node5 = list.append(5);
 
   list.setSibling(node1, node3);
   list.setSibling(node2, node5);
@@ -139,11 +135,11 @@ void test1() {
 
 void test2() {
   ComplexList list;
-  auto node1 = &list.append(1);
-  auto node2 = &list.append(2);
-  auto node3 = &list.append(3);
-  auto node4 = &list.append(4);
-  auto node5 = &list.append(5);
+  auto node1 = list.append(1);
+  auto node2 = list.append(2);
+  auto node3 = list.append(3);
+  auto node4 = list.append(4);
+  auto node5 = list.append(5);
 
   list.setSibling(node1, node2);
   list.setSibling(node2, node3);
@@ -156,7 +152,7 @@ void test2() {
 
 void test3() {
   ComplexList list;
-  auto node1 = &list.append(1);
+  auto node1 = list.append(1);
   ComplexList copy(list);
   assert(list == copy);
 }
@@ -172,6 +168,6 @@ int main() {
   test2();
   test3();
   test4();
-
+  std::cout << "All tests passed!\n";
   return 0;
 }
