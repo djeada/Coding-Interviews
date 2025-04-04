@@ -4,17 +4,14 @@
 
 class BinaryTree {
 public:
-  // Default constructor/destructor
-  BinaryTree() = default;
-  virtual ~BinaryTree() = default;
+  BinaryTree();           // declare
+  virtual ~BinaryTree();  // declare
 
-  // Delete copy semantics
-  BinaryTree(const BinaryTree &) = delete;
-  BinaryTree &operator=(const BinaryTree &) = delete;
+  BinaryTree(const BinaryTree&) = delete;
+  BinaryTree& operator=(const BinaryTree&) = delete;
 
-  // Allow move semantics
-  BinaryTree(BinaryTree &&) = default;
-  BinaryTree &operator=(BinaryTree &&) = default;
+  BinaryTree(BinaryTree&&) = default;
+  BinaryTree& operator=(BinaryTree&&) = default;
 
   void add(int value);
   bool contains(int value) const;
