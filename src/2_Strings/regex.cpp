@@ -7,6 +7,7 @@
 
 #include <cassert>
 #include <string>
+#include <iostream>
 
 bool isMatch(const std::string &str, const std::string &pattern) {
   if (str.empty() && pattern.empty()) {
