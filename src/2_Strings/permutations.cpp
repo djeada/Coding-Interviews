@@ -10,6 +10,7 @@
 #include <cassert>
 #include <string>
 #include <vector>
+#include <iostream>
 
 // Helper function to generate permutations recursively
 void generatePermutations(const std::string &input, std::string &output,
