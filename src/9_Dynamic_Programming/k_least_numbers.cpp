@@ -33,13 +33,13 @@ std::vector<int> findSmallestKNumbers(const std::vector<int> &input, int k) {
 
 void testFindSmallestKNumbers() {
   assert(findSmallestKNumbers({4, 5, 1, 6, 2, 7, 3, 8}, 4) ==
-         std::vector<int>{1, 2, 3, 4});
+         (std::vector<int>{1, 2, 3, 4}));
   assert(findSmallestKNumbers({4, 5, 1, 6, 2, 7, 3, 8}, 8) ==
-         std::vector<int>{1, 2, 3, 4, 5, 6, 7, 8});
+         (std::vector<int>{1, 2, 3, 4, 5, 6, 7, 8}));
   assert(findSmallestKNumbers({4, 5, 1, 6, 2, 7, 3, 8}, 1) ==
-         std::vector<int>{1});
+         (std::vector<int>{1}));
   assert(findSmallestKNumbers({4, 5, 1, 6, 2, 7, 2, 8}, 2) ==
-         std::vector<int>{1, 2});
+         (std::vector<int>{1, 2}));
 }
 
 int main() {
