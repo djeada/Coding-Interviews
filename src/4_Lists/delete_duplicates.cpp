@@ -1,33 +1,107 @@
-#include "list.h"
 #include <cassert>
+#include <iostream>
+#include <memory>
 #include <unordered_set>
 
+// A minimal singly linked list class using unique_ptr for node management.
+class List {
+public:
+  // Node structure used by List.
+  struct Node {
+    int data;
+    std::unique_ptr<Node> next;
+    Node(int d) : data(d), next(nullptr) {}
+  };
+
+  std::unique_ptr<Node> head;
+
+  List() : head(nullptr) {}
+
+  // Returns true if the list is empty.
+  bool empty() const { return head == nullptr; }
+
+  // Append a new node with the given data to the end of the list.
+  void append(int data) {
+    auto newNode = std::make_unique<Node>(data);
+    if (!head) {
+      head = std::move(newNode);
+    } else {
+      Node* curr = head.get();
+      while (curr->next)
+        curr = curr->next.get();
+      curr->next = std::move(newNode);
+    }
+  }
+
+  // Remove the first occurrence of the given value.
+  void remove(int value) {
+    Node* curr = head.get();
+    Node* prev = nullptr;
+    while (curr) {
+      if (curr->data == value) {
+        if (!prev) {  // Remove head.
+          head = std::move(head->next);
+        } else {
+          prev->next = std::move(curr->next);
+        }
+        return;
+      }
+      prev = curr;
+      curr = curr->next.get();
+    }
+  }
+
+  // Equality operator compares lists node by node.
+  friend bool operator==(const List &l1, const List &l2) {
+    const Node* n1 = l1.head.get();
+    const Node* n2 = l2.head.get();
+    while (n1 && n2) {
+      if (n1->data != n2->data)
+        return false;
+      n1 = n1->next.get();
+      n2 = n2->next.get();
+    }
+    return n1 == n2;
+  }
+};
+
+// UniqueList is derived from List and provides deletion of duplicate nodes.
 class UniqueList : public List {
 public:
   UniqueList() : List() {}
 
+  // Delete duplicate nodes in the list.
   void deleteDuplication() {
     if (empty())
       return;
 
     std::unordered_set<int> visited;
-    Node *current = head.get();
-    Node *previous = nullptr;
+    Node* current = head.get();
+    Node* previous = nullptr;
 
     while (current) {
       if (visited.find(current->data) != visited.end()) {
-        // Since we don't have access to Node structure and
-        // next is a unique_ptr, we can't directly manipulate the pointers.
-        // Assuming List class provides a remove method.
-        remove(current->data);
+        // Duplicate found: remove the node.
+        if (!previous) {
+          // If current is at head (shouldn't happen after first unique value),
+          // update head.
+          head = std::move(current->next);
+          current = head.get();
+        } else {
+          previous->next = std::move(current->next);
+          current = previous->next.get();
+        }
       } else {
+        // First occurrence: mark as visited and move forward.
         visited.insert(current->data);
         previous = current;
+        current = current->next.get();
       }
-      current = previous->next.get();
     }
   }
 };
+
+// ------------------- Test Cases -------------------
 
 void test1() {
   UniqueList duplicateList;
@@ -104,6 +178,6 @@ int main() {
   test2();
   test3();
   test4();
-
+  std::cout << "All tests passed!\n";
   return 0;
 }
