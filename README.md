@@ -172,6 +172,14 @@ So, when I started hearing buzz about *Coding Interviews* by Harry He, I decided
 
 ---
 
+## Testing
+
+Our testing workflow runs automatically on every push and pull request, giving you peace of mind that your code is continuously checked. It starts by checking out your repository and then smartly separates your source files into two groups: one for library code (files without a main function) and one for tests (files with a main function). The library files get compiled into object files and are bundled into a static library, while your test files are compiled and linked against this library.
+
+Once the test executables are built, each one is run with a 90-second timeout to catch any potential issues early on. If a test fails or takes too long, the workflow stops and lets you know right away, making it easy to pinpoint and fix problems. This human-friendly process ensures that every update you make is both compiled correctly and behaves as expected, keeping your development smooth and reliable.
+
+---
+
 ## Contributing
 
 Feel free to open a pull request or an issue if you spot something that can be improved. Please remember:
