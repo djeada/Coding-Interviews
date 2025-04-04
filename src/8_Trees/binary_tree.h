@@ -4,8 +4,17 @@
 
 class BinaryTree {
 public:
-  BinaryTree();
-  ~BinaryTree();
+  // Default constructor/destructor
+  BinaryTree() = default;
+  virtual ~BinaryTree() = default;
+
+  // Delete copy semantics
+  BinaryTree(const BinaryTree &) = delete;
+  BinaryTree &operator=(const BinaryTree &) = delete;
+
+  // Allow move semantics
+  BinaryTree(BinaryTree &&) = default;
+  BinaryTree &operator=(BinaryTree &&) = default;
 
   void add(int value);
   bool contains(int value) const;
