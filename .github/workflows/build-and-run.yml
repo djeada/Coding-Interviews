@@ -1,45 +1,35 @@
-- name: Build and test
-  run: |
-    set -e
+name: Build and Run Tests
 
-    # Step 1: Make a list of "library" .cpp (no main) and "test" .cpp (with main).
-    LIB_SOURCES=""
-    TEST_SOURCES=""
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - '**'
 
-    for f in $(find src -name '*.cpp'); do
-      # grep the file for main (this is naive—better to parse with something else).
-      if grep -q 'int main' "$f"; then
-        TEST_SOURCES="$TEST_SOURCES $f"
-      else
-        LIB_SOURCES="$LIB_SOURCES $f"
-      fi
-    done
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
 
-    echo "Library sources: $LIB_SOURCES"
-    echo "Test sources: $TEST_SOURCES"
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
 
-    # Step 2: Compile library sources into objects
-    mkdir -p build
-    for libsrc in $LIB_SOURCES; do
-      obj="build/$(basename $libsrc .cpp).o"
-      echo "Compiling object for $libsrc -> $obj"
-      g++ -std=c++14 -c "$libsrc" -o "$obj"
-    done
-
-    # Combine into a single library archive (optional)
-    ar rcs build/libmylib.a build/*.o
-
-    # Step 3: For each test source, compile + link with the library
-    for testsrc in $TEST_SOURCES; do
-      exe="build/$(basename $testsrc .cpp).out"
-      echo "Building test executable $exe from $testsrc"
-      g++ -std=c++14 "$testsrc" build/libmylib.a -o "$exe" -lm -lpthread
-    done
-
-    # Step 4: Run each test with a 90s timeout
-    for exe in build/*.out; do
-      echo "Running test $exe..."
-      timeout 90s "$exe"
-    done
-
-    echo "All tests compiled and ran successfully!"
+      - name: Build and test
+        run: |
+          set -e
+          # Example: compile and run each .cpp
+          FILES=$(find src -name '*.cpp')
+          for f in $FILES; do
+            BIN=$(echo "$f" | sed 's|/|_|g' | sed 's|\.cpp$||').out
+            echo "Compiling $f -> $BIN"
+            g++ -std=c++14 "$f" -o "$BIN" -lpthread -lm
+            echo "Running $BIN..."
+            timeout 90s ./"$BIN"
+            if [ $? -ne 0 ]; then
+              echo "Failure in $f"
+              exit 1
+            fi
+          done
+          echo "All .cpp files compiled and ran successfully!"
