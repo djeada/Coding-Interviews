@@ -72,7 +72,7 @@ void runTests() {
   assert(isValidNumericString("1.484278348325E+308"));
   assert(!isValidNumericString("12e"));
   assert(!isValidNumericString("1a3.14"));
-  assert(isValidNumericString("+-5"));
+  assert(!isValidNumericString("+-5"));
   assert(!isValidNumericString("11.2.3"));
 
   std::cout << "All tests passed!\n";
