@@ -9,12 +9,7 @@
 #include <utility>
 #include <vector>
 
-/**
- * @brief Finds the position of the first bit that is set to 1.
- *
- * @param num The input number.
- * @return The position of the first set bit.
- */
+
 int findFirstSetBitPosition(int num) {
   int indexBit = 0;
   while (((num & 1) == 0) && (indexBit < 32)) {
@@ -24,24 +19,13 @@ int findFirstSetBitPosition(int num) {
   return indexBit;
 }
 
-/**
- * @brief Checks if the bit at a specified position is set to 1.
- *
- * @param num The input number.
- * @param indexBit The position to check.
- * @return true if the bit at the specified position is 1, otherwise false.
- */
+
 bool isBitSet(int num, int indexBit) {
   num >>= indexBit;
   return (num & 1) == 1;
 }
 
-/**
- * @brief Finds two numbers that appear only once in a given array.
- *
- * @param numbers Input array of integers.
- * @param once Pair to store the two numbers that appear only once.
- */
+
 void findSingleOccurrences(std::vector<int> &numbers,
                            std::pair<int, int> &once) {
   if (numbers.size() < 2)
@@ -66,21 +50,28 @@ std::pair<int, int> findMissingNumbersMethod1(const std::vector<int> &numbers) {
   std::pair<int, int> missing;
   int sum1 = 0, product1 = 1, sum2 = 0, product2 = 1;
 
+  // Calculate the sum and product of the given numbers.
   for (const auto &num : numbers) {
     sum1 += num;
     product1 *= num;
   }
 
+  // Calculate the sum and product for the full sequence [1, 2, ..., n].
   for (int i = 1; i <= numbers.size() + 2; ++i) {
     sum2 += i;
     product2 *= i;
   }
 
-  int s = sum2 - sum1;
-  int p = product2 / product1;
+  int s = sum2 - sum1;          // Sum of the two missing numbers.
+  int p = product2 / product1;  // Product of the two missing numbers.
 
+  // Solve the quadratic equation: x^2 - s*x + p = 0.
   missing.first = (s + static_cast<int>(sqrt(s * s - 4 * p))) / 2;
   missing.second = s - missing.first;
+
+  // Ensure the smaller number is first.
+  if (missing.first > missing.second)
+    std::swap(missing.first, missing.second);
 
   return missing;
 }
