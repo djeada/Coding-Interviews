@@ -52,7 +52,9 @@ std::set<std::string> findAllCombinationsBitset(const std::string &str) {
       if (bits[i])
         combination += str[i];
     }
-    allCombinations.insert(combination);
+    // Only add non-empty combinations.
+    if (!combination.empty())
+      allCombinations.insert(combination);
   } while (increment(bits, str.length()));
 
   return allCombinations;
