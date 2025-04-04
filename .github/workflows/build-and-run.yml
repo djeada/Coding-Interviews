@@ -2,11 +2,9 @@ name: Build and Run Tests
 
 on:
   push:
-    branches:
-      - '**'
+    branches: [ '**' ]
   pull_request:
-    branches:
-      - '**'
+    branches: [ '**' ]
 
 jobs:
   build-and-test:
@@ -16,20 +14,43 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3
 
-      - name: Build and test
+      - name: Compile and run each test
         run: |
           set -e
-          # Example: compile and run each .cpp
-          FILES=$(find src -name '*.cpp')
-          for f in $FILES; do
-            BIN=$(echo "$f" | sed 's|/|_|g' | sed 's|\.cpp$||').out
-            echo "Compiling $f -> $BIN"
-            g++ -std=c++14 "$f" -o "$BIN" -lpthread -lm
-            echo "Running $BIN..."
-            timeout 90s ./"$BIN"
+          
+          # 1) Find all .cpp files that do NOT contain 'main(' -> library sources
+          LIB_SOURCES=$(grep -L 'int main(' $(find src -name '*.cpp'))
+          # 2) Find all .cpp files that DO contain 'main(' -> test sources
+          TEST_SOURCES=$(grep -l 'int main(' $(find src -name '*.cpp'))
+
+          echo "Library sources:"
+          echo "$LIB_SOURCES"
+          echo "Test sources:"
+          echo "$TEST_SOURCES"
+
+          # 3) Compile library sources into object files
+          mkdir -p build
+          for lib in $LIB_SOURCES; do
+            obj="build/$(basename "$lib" .cpp).o"
+            echo "Compiling library file $lib -> $obj"
+            g++ -std=c++14 -c "$lib" -o "$obj"
+          done
+
+          # 4) Archive object files into a static library
+          ar rcs build/libmycode.a build/*.o
+
+          # 5) Compile each test source and link against the library
+          for test in $TEST_SOURCES; do
+            out="build/$(basename "$test" .cpp).out"
+            echo "Building test executable $out from $test"
+            g++ -std=c++14 "$test" build/libmycode.a -lpthread -lm -o "$out"
+
+            echo "Running $out with 90s timeout..."
+            timeout 90s "./$out"
             if [ $? -ne 0 ]; then
-              echo "Failure in $f"
+              echo "Test failed: $test"
               exit 1
             fi
           done
-          echo "All .cpp files compiled and ran successfully!"
+
+          echo "All tests compiled and ran successfully!"
