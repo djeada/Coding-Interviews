@@ -136,6 +136,42 @@ I aimed to modernize or expand on certain approaches while keeping these notes f
 
 ---
 
+## Book Review
+
+I’ve been a software engineer for a few years now, mostly working on full-stack projects—designing APIs, optimizing databases, and occasionally dabbling in front-end frameworks. While I’m comfortable solving day-to-day problems at work, I realized I needed a solid refresher on the classic algorithmic challenges often asked in big tech interviews. 
+
+So, when I started hearing buzz about *Coding Interviews* by Harry He, I decided to give it a shot. I’d heard it covers many of the typical interview questions you might face at larger tech companies: from common data structures to algorithmic puzzles that test not just coding ability but also problem-solving and critical thinking.
+
+---
+
+### Why I Picked Up the Book
+- Even though I code daily, I don’t always get to practice the kind of purely algorithmic exercises that come up in interviews. It seemed like a good way to brush up on fundamentals.
+- Several colleagues and friends mentioned it helped them feel confident going into their interviews. 
+- I’m a big fan of books that get to the point—especially for busy professionals who want quick coverage of diverse problems.
+
+---
+
+### What Surprised Me
+1. The book manages to pack a wide range of topics (arrays, strings, trees, etc.) in a relatively short space. As someone who’s short on time, I appreciated not having to wade through hundreds of pages to find the essential parts.
+2. Most examples feel grounded in real-world-ish scenarios (though simplified). This was good for me because purely abstract puzzles can sometimes feel disconnected from actual coding work. 
+3. It touches on a lot of the categories big tech recruiters typically ask about—like reversing linked lists, string manipulations, or finding the “maximum something” in subarrays. It was a well-rounded refresher.
+
+---
+
+### What I Didn’t Love
+1. As a visual learner, I’d have liked more diagrams—especially for tree or graph-related problems. A quick tree or flowchart can do wonders for understanding an algorithm’s logic.
+2. The coverage of topics like dynamic programming and graph algorithms felt a bit too brief. It included some references to DP but didn’t delve deeply into more complex variations. If you’re looking for advanced DP problems (like those involving multiple constraints or multi-dimensional optimization), you might be left wanting more.
+3. The explanations are often concise, which can be a double-edged sword. While it’s great that the book doesn’t ramble, I occasionally wished the theoretical background had been fleshed out just a little more. If you’re new to a certain data structure or algorithm, you might need to supplement your reading with online resources.
+
+---
+
+### How I Used the Book
+- I’d read a chapter, jot down my own notes, and attempt the problems. For tricky ones, I wrote mini solutions on my own first, then cross-checked with the book’s approach to see where I could improve.
+- Before a technical interview, I revisited certain chapters (like “Strings” or “Trees”) to make sure I remembered the classic pitfalls and corner cases. 
+- Whenever I felt something was underexplained, I’d look up articles or videos online to fill in the gaps. This was especially true for more advanced dynamic programming or graph algorithms not deeply covered.
+
+---
+
 ## Contributing
 
 Feel free to open a pull request or an issue if you spot something that can be improved. Please remember:
