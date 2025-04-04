@@ -1,9 +1,11 @@
+#include <algorithm>
 #include <bitset>
 #include <cassert>
 #include <iostream>
 #include <set>
 #include <stack>
 #include <string>
+#include <vector>
 
 // Forward declaration of the increment function template.
 template <size_t N>
@@ -13,12 +15,15 @@ void generateCombinations(const std::string &str, int index, int number,
                           std::stack<char> &currentCombination,
                           std::set<std::string> &allCombinations) {
   if (number == 0) {
-    std::string combination;
+    // First collect the characters into a vector and then reverse it.
+    std::vector<char> vec;
     auto tempStack = currentCombination;
     while (!tempStack.empty()) {
-      combination.push_back(tempStack.top());
+      vec.push_back(tempStack.top());
       tempStack.pop();
     }
+    std::reverse(vec.begin(), vec.end());
+    std::string combination(vec.begin(), vec.end());
     allCombinations.insert(combination);
     return;
   }
@@ -36,9 +41,11 @@ void generateCombinations(const std::string &str, int index, int number,
 std::set<std::string> findAllCombinationsRecursive(const std::string &str) {
   std::set<std::string> allCombinations;
   std::stack<char> currentCombination;
+
   for (int i = 1; i <= str.length(); ++i) {
     generateCombinations(str, 0, i, currentCombination, allCombinations);
   }
+
   return allCombinations;
 }
 
@@ -52,7 +59,7 @@ std::set<std::string> findAllCombinationsBitset(const std::string &str) {
       if (bits[i])
         combination += str[i];
     }
-    // Only add non-empty combinations.
+    // Exclude the empty string.
     if (!combination.empty())
       allCombinations.insert(combination);
   } while (increment(bits, str.length()));
