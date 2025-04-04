@@ -1,17 +1,7 @@
 #include <cassert>
 #include <vector>
+#include <utility>
 
-/**
- * @brief Searches for a value in a row and column sorted 2D matrix using
- * recursive binary search.
- * @param matrix The 2D matrix to search in.
- * @param value The value to search for.
- * @param row1 The start row index.
- * @param col1 The start column index.
- * @param row2 The end row index.
- * @param col2 The end column index.
- * @return True if the value is found, otherwise false.
- */
 bool findSolution1(std::vector<std::vector<int>> &matrix, int value,
                    int row1 = 0, int col1 = 0, int row2 = -1, int col2 = -1) {
   if (matrix.empty())
@@ -20,11 +10,17 @@ bool findSolution1(std::vector<std::vector<int>> &matrix, int value,
   int rows = matrix.size();
   int cols = matrix.front().size();
 
+  // Initialize bottom-right boundaries if not set.
   if (row2 == -1 && col2 == -1) {
     row2 = rows - 1;
     col2 = cols - 1;
   }
 
+  // If our search window is invalid, return false.
+  if (row1 > row2 || col1 > col2)
+    return false;
+
+  // Check if the value is out of the current window's range.
   if (value < matrix[row1][col1] || value > matrix[row2][col2])
     return false;
   if (value == matrix[row1][col1] || value == matrix[row2][col2])
@@ -33,36 +29,37 @@ bool findSolution1(std::vector<std::vector<int>> &matrix, int value,
   int midRow = (row1 + row2) / 2;
   int midCol = (col1 + col2) / 2;
 
+  // Narrow down the search window by moving boundaries.
   while ((midRow != row1 || midCol != col1) &&
          (midRow != row2 || midCol != col2)) {
     if (value == matrix[midRow][midCol])
       return true;
 
-    auto [newRow, newCol] = value < matrix[midRow][midCol]
-                                ? std::pair{midRow, midCol}
-                                : std::pair{row1, col1};
-    row2 = newRow;
-    col2 = newCol;
-
+    if (value < matrix[midRow][midCol]) {
+      // The target is in the upper-left part.
+      row2 = midRow;
+      col2 = midCol;
+    } else {
+      // The target is in the lower-right part.
+      row1 = midRow;
+      col1 = midCol;
+    }
     midRow = (row1 + row2) / 2;
     midCol = (col1 + col2) / 2;
   }
 
-  bool found = midRow < rows - 1 &&
-               findSolution1(matrix, value, midRow + 1, col1, row2, midCol);
-  if (!found && midCol < cols - 1)
+  // After narrowing the window, search the remaining two submatrices.
+  bool found = false;
+  if (midRow < rows - 1) {
+    found = findSolution1(matrix, value, midRow + 1, col1, row2, midCol);
+  }
+  if (!found && midCol < cols - 1) {
     found = findSolution1(matrix, value, row1, midCol + 1, midRow, col2);
+  }
 
   return found;
 }
 
-/**
- * @brief Searches for a value in a row and column sorted 2D matrix using a
- * stepwise linear search.
- * @param matrix The 2D matrix to search in.
- * @param value The value to search for.
- * @return True if the value is found, otherwise false.
- */
 bool findSolution2(const std::vector<std::vector<int>> &matrix, int value) {
   if (matrix.empty())
     return false;
@@ -76,7 +73,10 @@ bool findSolution2(const std::vector<std::vector<int>> &matrix, int value) {
     if (matrix[row][col] == value) {
       return true;
     }
-    matrix[row][col] > value ? --col : ++row;
+    if (matrix[row][col] > value)
+      --col;
+    else
+      ++row;
   }
 
   return false;
@@ -84,7 +84,10 @@ bool findSolution2(const std::vector<std::vector<int>> &matrix, int value) {
 
 void test1() {
   std::vector<std::vector<int>> matrix{
-      {1, 2, 8, 9}, {2, 4, 9, 12}, {4, 7, 10, 13}, {6, 8, 11, 15}};
+      {1, 2, 8, 9},
+      {2, 4, 9, 12},
+      {4, 7, 10, 13},
+      {6, 8, 11, 15}};
   int value = 7;
   assert(findSolution1(matrix, value));
   assert(findSolution2(matrix, value));
@@ -92,7 +95,10 @@ void test1() {
 
 void test2() {
   std::vector<std::vector<int>> matrix{
-      {1, 2, 8, 9}, {2, 4, 9, 12}, {4, 7, 10, 13}, {6, 8, 11, 15}};
+      {1, 2, 8, 9},
+      {2, 4, 9, 12},
+      {4, 7, 10, 13},
+      {6, 8, 11, 15}};
   int value = 5;
   assert(!findSolution1(matrix, value));
   assert(!findSolution2(matrix, value));
@@ -100,7 +106,10 @@ void test2() {
 
 void test3() {
   std::vector<std::vector<int>> matrix{
-      {1, 2, 8, 9}, {2, 4, 9, 12}, {4, 7, 10, 13}, {6, 8, 11, 15}};
+      {1, 2, 8, 9},
+      {2, 4, 9, 12},
+      {4, 7, 10, 13},
+      {6, 8, 11, 15}};
   int value = 1;
   assert(findSolution1(matrix, value));
   assert(findSolution2(matrix, value));
@@ -108,7 +117,10 @@ void test3() {
 
 void test4() {
   std::vector<std::vector<int>> matrix{
-      {1, 2, 8, 9}, {2, 4, 9, 12}, {4, 7, 10, 13}, {6, 8, 11, 15}};
+      {1, 2, 8, 9},
+      {2, 4, 9, 12},
+      {4, 7, 10, 13},
+      {6, 8, 11, 15}};
   int value = 15;
   assert(findSolution1(matrix, value));
   assert(findSolution2(matrix, value));
@@ -119,6 +131,5 @@ int main() {
   test2();
   test3();
   test4();
-
   return 0;
 }
