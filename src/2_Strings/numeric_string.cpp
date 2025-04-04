@@ -6,6 +6,7 @@
 
 #include <cassert>
 #include <string>
+#include <iostream>
 
 bool containsOnlyDigits(const std::string &str) {
   for (auto c : str) {
