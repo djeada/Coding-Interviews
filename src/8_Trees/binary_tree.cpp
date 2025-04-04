@@ -1,10 +1,13 @@
 #include "binary_tree.h"
 
-BinaryTree::BinaryTree() : root(nullptr) {}
+BinaryTree::BinaryTree() : root(nullptr) {
+}
 
 BinaryTree::~BinaryTree() = default;
 
-void BinaryTree::add(int value) { add(value, root); }
+void BinaryTree::add(int value) {
+  add(value, root);
+}
 
 void BinaryTree::add(int value, std::unique_ptr<Node> &node) {
   if (!node) {
@@ -14,11 +17,13 @@ void BinaryTree::add(int value, std::unique_ptr<Node> &node) {
   } else if (value > node->value) {
     add(value, node->right);
   } else {
-    // Value already exists
+    // Value already exists; do nothing or handle duplicates
   }
 }
 
-bool BinaryTree::contains(int value) const { return contains(value, root); }
+bool BinaryTree::contains(int value) const {
+  return contains(value, root);
+}
 
 bool BinaryTree::contains(int value, const std::unique_ptr<Node> &node) const {
   if (!node) {
