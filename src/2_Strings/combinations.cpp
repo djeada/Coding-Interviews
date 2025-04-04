@@ -10,6 +10,7 @@
 #include <set>
 #include <stack>
 #include <string>
+#include <cassert>
 
 /**
  * Recursive function to generate all combinations of a given string.
