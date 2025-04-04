@@ -1,0 +1,42 @@
+name: Build and Run Tests
+
+on:
+  push:
+    branches: [ "**" ]
+  pull_request:
+    branches: [ "**" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Build and test
+        run: |
+          set -e
+          # Find all .cpp files
+          FILES=$(find src -name '*.cpp')
+
+          for f in $FILES; do
+            # Create an output name that won't collide across directories.
+            # Example: src/1_Arrays/array_rotation.cpp -> src_1_Arrays_array_rotation.out
+            BIN_NAME=$(echo "$f" | sed 's|/|_|g' | sed 's|\.cpp$||').out
+
+            echo "Compiling $f to $BIN_NAME..."
+            g++ -std=c++14 "$f" -o "$BIN_NAME" -lm -lpthread
+
+            echo "Running $BIN_NAME with a 90s timeout..."
+            timeout 90s ./"$BIN_NAME"
+            RET=$?
+
+            if [ $RET -eq 0 ]; then
+              echo "Success: $f"
+            else
+              echo "Failure (exit code $RET): $f"
+              exit 1
+            fi
+          done
+          
+          echo "All .cpp files compiled and ran successfully!"
