@@ -14,66 +14,70 @@
  * duplicating sibling relationships.
  *
  */
+#include "list.h"
 #include <cassert>
 #include <iostream>
 #include <memory>
 #include <unordered_map>
 
-class ComplexList {
+// ComplexList inherits from List (defined in list.h)
+// and adds a sibling pointer to each node.
+class ComplexList : public List {
 public:
-  // Make Node publicly accessible.
-  struct Node {
-    int value;
-    std::unique_ptr<Node> next;
-    Node* sibling = nullptr;
-    explicit Node(int val) : value(val) {}
+  // Our node type extends the base List::Node.
+  struct Node : public List::Node {
+    Node() : List::Node(), sibling(nullptr) {}
+    explicit Node(int val) : List::Node(), sibling(nullptr) { this->data = val; }
+    // Pointer to any other node in the list.
+    Node* sibling;
   };
 
-  ComplexList() = default;
+  ComplexList() : List() {}
 
   // Copy constructor: deep-copies the list, preserving sibling relationships.
-  ComplexList(const ComplexList &other) {
+  ComplexList(const ComplexList &other) : List() {
     if (!other.head)
       return;
-
+    
     // Map from original nodes to their corresponding cloned nodes.
     std::unordered_map<const Node*, Node*> nodeMap;
     
     // Create the new head.
-    head = std::make_unique<Node>(other.head->value);
-    nodeMap[other.head.get()] = head.get();
+    head = std::unique_ptr<List::Node>(static_cast<List::Node*>(new Node(static_cast<const Node*>(other.head.get())->data)));
+    nodeMap[static_cast<const Node*>(other.head.get())] = static_cast<Node*>(head.get());
     
-    Node* currentNew = head.get();
-    const Node* currentOld = other.head.get();
+    Node* currentNew = static_cast<Node*>(head.get());
+    const Node* currentOld = static_cast<const Node*>(other.head.get());
     // Copy the "next" chain.
     while (currentOld->next) {
-      currentNew->next = std::make_unique<Node>(currentOld->next->value);
-      currentNew = currentNew->next.get();
-      currentOld = currentOld->next.get();
+      currentNew->next = std::unique_ptr<List::Node>(static_cast<List::Node*>(new Node(static_cast<const Node*>(currentOld->next.get())->data)));
+      currentNew = static_cast<Node*>(currentNew->next.get());
+      currentOld = static_cast<const Node*>(currentOld->next.get());
       nodeMap[currentOld] = currentNew;
     }
     
     // Set sibling pointers.
-    currentOld = other.head.get();
-    currentNew = head.get();
+    currentOld = static_cast<const Node*>(other.head.get());
+    currentNew = static_cast<Node*>(head.get());
     while (currentOld) {
       if (currentOld->sibling)
-        currentNew->sibling = nodeMap[currentOld->sibling];
-      currentOld = currentOld->next.get();
-      currentNew = currentNew->next.get();
+        currentNew->sibling = nodeMap[static_cast<const Node*>(currentOld->sibling)];
+      currentOld = static_cast<const Node*>(currentOld->next.get());
+      currentNew = static_cast<Node*>(currentNew->next.get());
     }
   }
 
-  // Append a new node with the given value and return its pointer.
+  // Append a new node with the given value.
+  // Returns a pointer to the new node (of our Node type).
   Node* append(int value) {
-    auto newNode = std::make_unique<Node>(value);
-    Node* newNodePtr = newNode.get();
+    auto newNode = std::unique_ptr<List::Node>(static_cast<List::Node*>(new Node(value)));
+    Node* newNodePtr = static_cast<Node*>(newNode.get());
     if (!head) {
       head = std::move(newNode);
     } else {
-      Node* curr = head.get();
+      Node* curr = static_cast<Node*>(head.get());
       while (curr->next)
-        curr = curr->next.get();
+        curr = static_cast<Node*>(curr->next.get());
       curr->next = std::move(newNode);
     }
     return newNodePtr;
@@ -87,11 +91,11 @@ public:
 
   // Equality operator for testing purposes.
   friend bool operator==(const ComplexList &l1, const ComplexList &l2) {
-    const Node* node1 = l1.head.get();
-    const Node* node2 = l2.head.get();
+    const Node* node1 = static_cast<const Node*>(l1.head.get());
+    const Node* node2 = static_cast<const Node*>(l2.head.get());
     
     while (node1 && node2) {
-      if (node1->value != node2->value)
+      if (node1->data != node2->data)
         return false;
       
       // Check presence/absence of sibling pointers.
@@ -100,19 +104,16 @@ public:
       
       // If both nodes have siblings, compare their values.
       if (node1->sibling && node2->sibling) {
-        if (node1->sibling->value != node2->sibling->value)
+        if (node1->sibling->data != node2->sibling->data)
           return false;
       }
       
-      node1 = node1->next.get();
-      node2 = node2->next.get();
+      node1 = static_cast<const Node*>(node1->next.get());
+      node2 = static_cast<const Node*>(node2->next.get());
     }
     
     return node1 == node2;
   }
-
-private:
-  std::unique_ptr<Node> head;
 };
 
 // ----- Test Cases -----
