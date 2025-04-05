@@ -1,60 +1,82 @@
+/*
+ * Task: Find the minimum element in a cyclically sorted (rotated) array.
+ * 
+ * The array was initially sorted in ascending order, then rotated at an unknown pivot.
+ * The goal is to efficiently identify the minimum element.
+ * 
+ * Visual Example:
+ * 
+ * Original sorted array:
+ * [1, 2, 3, 4, 5, 6, 7]
+ *
+ * Rotated array examples:
+ * [4, 5, 6, 7, 1, 2, 3] -> Minimum: 1
+ * [6, 7, 1, 2, 3, 4, 5] -> Minimum: 1
+ * [1, 2, 3, 4, 5, 6, 7] -> Minimum: 1 (no rotation)
+ *
+ * Example Input/Output:
+ * Input: [5, 6, 1, 2, 3, 4]
+ * Output: 1
+ *
+ * Input: [2, 3, 4, 5, 6, 1]
+ * Output: 1
+ *
+ * Input: [1, 2, 3, 4, 5]
+ * Output: 1
+ */
+
 #include <algorithm>
 #include <cassert>
 #include <vector>
+#include <iostream>
 
-/**
- * This program aims to find the minimum element in a cyclically sorted array,
- * assuming that the rotation is made around an ascending sorted array.
- */
-
-int findMinInSubarray(const std::vector<int> &arr, int startIdx, int endIdx) {
-  int minElement = arr[startIdx];
-  for (int i = startIdx + 1; i <= endIdx; ++i) {
-    minElement = std::min(minElement, arr[i]);
-  }
-  return minElement;
+// Simple Linear Search Implementation
+int findMinLinear(const std::vector<int>& nums) {
+    return *std::min_element(nums.begin(), nums.end());
 }
 
-int findMinInRotatedArray(const std::vector<int> &arr) {
-  int startIdx = 0;
-  int endIdx = arr.size() - 1;
-  int midIdx = startIdx;
+// Optimal Binary Search Implementation (O(log n))
+int findMinOptimal(const std::vector<int>& nums) {
+    int left = 0;
+    int right = nums.size() - 1;
 
-  while (arr[startIdx] >= arr[endIdx]) {
-    if (endIdx - startIdx == 1) {
-      midIdx = endIdx;
-      break;
+    while (left < right) {
+        int mid = left + (right - left) / 2;
+
+        if (nums[mid] > nums[right]) {
+            left = mid + 1;
+        } else if (nums[mid] < nums[right]) {
+            right = mid;
+        } else {
+            // When nums[mid] and nums[right] are equal, ambiguity arises,
+            // safely decrement right as nums[right] can't be minimum.
+            --right;
+        }
     }
 
-    midIdx = (startIdx + endIdx) / 2;
-
-    if (arr[startIdx] == arr[endIdx] && arr[midIdx] == arr[startIdx])
-      return findMinInSubarray(arr, startIdx, endIdx);
-
-    if (arr[midIdx] >= arr[startIdx])
-      startIdx = midIdx;
-    else if (arr[midIdx] <= arr[endIdx])
-      endIdx = midIdx;
-  }
-
-  return arr[midIdx];
+    return nums[left];
 }
 
-void testFindMinInRotatedArray() {
-  std::vector<int> arr1{3, 4, 5, 1, 2};
-  assert(findMinInRotatedArray(arr1) == 1);
+// Simple test cases to verify correctness
+void test() {
+    std::vector<std::vector<int>> testArrays = {
+        {3, 4, 5, 1, 2},
+        {10, 10, 2, 5, 5, 9, 9, 9},
+        {-1, -1, 5, -1, -1},
+        {0, 0, 0, 0, 0, 0},
+        {1, 2, 3, 4, 5}, // no rotation
+        {2, 3, 4, 5, 1},
+        {1} // single element
+    };
 
-  std::vector<int> arr2{10, 10, 2, 5, 5, 9, 9, 9};
-  assert(findMinInRotatedArray(arr2) == 2);
+    for (const auto& arr : testArrays) {
+        assert(findMinLinear(arr) == findMinOptimal(arr));
+    }
 
-  std::vector<int> arr3{-1, -1, 5, -1, -1};
-  assert(findMinInRotatedArray(arr3) == -1);
-
-  std::vector<int> arr4{0, 0, 0, 0, 0, 0};
-  assert(findMinInRotatedArray(arr4) == 0);
+    std::cout << "All tests passed!" << std::endl;
 }
 
 int main() {
-  testFindMinInRotatedArray();
-  return 0;
+    test();
+    return 0;
 }
