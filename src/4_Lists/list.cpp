@@ -77,25 +77,6 @@ int List::get(unsigned int index) const {
   return node->data;
 }
 
-void List::remove(int value) {
-  Node *prev = nullptr;
-  auto current = head.get();
-
-  while (current && current->data != value) {
-    prev = current;
-    current = current->next.get();
-  }
-
-  if (current && current->data == value) {
-    if (prev) {
-      prev->next = std::move(current->next);
-    } else {
-      head = std::move(current->next);
-    }
-    --count;
-  }
-}
-
 bool List::operator==(const List &other) const {
   auto node1 = head.get();
   auto node2 = other.head.get();
