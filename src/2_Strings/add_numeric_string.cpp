@@ -1,69 +1,60 @@
-/**
- * This program adds two large positive numbers represented as strings.
+/*
+ * ADDITION OF LARGE NUMBERS REPRESENTED AS STRINGS
+ *
+ * Given two large positive numbers represented as strings, add them together and
+ * return their sum, also as a string. Numbers are too large to fit into standard integer types.
+ *
+ * Constraints:
+ * - Each string represents a non-negative integer.
+ * - Each string length can be from 1 to 10^5.
+ * - Strings will contain digits only (0-9).
+ *
+ * Example Input/Output:
+ * Input: num1 = "999", num2 = "3"
+ * Output: "1002"
+ * Explanation: 999 + 3 = 1002.
  */
-#include <algorithm> // For std::reverse
+
+#include <algorithm>
 #include <cassert>
 #include <string>
+#include <iostream>
 
-// Checks if the input strings are valid numbers and if the sum string is empty.
-bool isValidInput(const std::string &num1, const std::string &num2,
-                  const std::string &sum) {
-  if (num1.empty() || num2.empty() || !sum.empty())
-    return false;
-
-  return all_of(num1.begin(), num1.end(), ::isdigit) &&
-         all_of(num2.begin(), num2.end(), ::isdigit);
+// Helper function to check if a string contains only digits
+bool isDigitString(const std::string& s) {
+    return std::all_of(s.begin(), s.end(), ::isdigit);
 }
 
-// Adds two numbers represented as strings.
-bool addStrings(const std::string &num1, const std::string &num2,
-                std::string &sum) {
-  if (!isValidInput(num1, num2, sum))
-    return false;
+// Optimal Solution
+// Adds two numbers represented as strings, O(n) complexity
+std::string optimalSolution(const std::string& num1, const std::string& num2) {
+    std::string result;
+    int carry = 0, i = num1.size() - 1, j = num2.size() - 1;
 
-  int carry = 0, i = num1.size() - 1, j = num2.size() - 1;
-  while (i >= 0 || j >= 0 || carry) {
-    int digit1 = i >= 0 ? num1[i--] - '0' : 0;
-    int digit2 = j >= 0 ? num2[j--] - '0' : 0;
+    while (i >= 0 || j >= 0 || carry) {
+        int digit1 = (i >= 0) ? num1[i--] - '0' : 0;
+        int digit2 = (j >= 0) ? num2[j--] - '0' : 0;
 
-    int sumDigit = digit1 + digit2 + carry;
-    carry = sumDigit / 10;
-    sumDigit %= 10;
+        int sum = digit1 + digit2 + carry;
+        carry = sum / 10;
+        result.push_back((sum % 10) + '0');
+    }
 
-    sum.push_back(sumDigit + '0');
-  }
-
-  std::reverse(sum.begin(), sum.end());
-  return true;
+    std::reverse(result.begin(), result.end());
+    return result;
 }
 
-void testAddStrings() {
-  // Test Case 1
-  {
-    std::string num1 = "999", num2 = "3", sum, result = "1002";
-    assert(addStrings(num1, num2, sum) && sum == result);
-  }
+// Test cases for correctness
+void test() {
+    assert(optimalSolution("999", "3") == "1002");
+    assert(optimalSolution("33", "9999") == "10032");
+    assert(optimalSolution("3333333", "222") == "3333555");
+    assert(optimalSolution("0", "0") == "0");
 
-  // Test Case 2
-  {
-    std::string num1 = "33", num2 = "9999", sum, result = "10032";
-    assert(addStrings(num1, num2, sum) && sum == result);
-  }
-
-  // Test Case 3
-  {
-    std::string num1 = "3333333", num2 = "222", sum, result = "3333555";
-    assert(addStrings(num1, num2, sum) && sum == result);
-  }
-
-  // Test Case 4 (Invalid Input)
-  {
-    std::string num1 = "33abc33", num2 = "222", sum, result = "";
-    assert(!addStrings(num1, num2, sum) && sum == result);
-  }
+    std::cout << "All tests passed!\n";
 }
 
 int main() {
-  testAddStrings();
-  return 0;
+    test();
+    return 0;
 }
