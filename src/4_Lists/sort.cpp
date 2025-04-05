@@ -1,46 +1,7 @@
+#include "list.h"
 #include <cassert>
 #include <memory>
 #include <iostream>
-
-// Minimal list implementation that uses unique_ptr for automatic memory management.
-class List {
-public:
-  struct Node {
-    int data;
-    std::unique_ptr<Node> next;
-    Node(int d) : data(d), next(nullptr) {}
-  };
-
-  std::unique_ptr<Node> head;
-
-  List() : head(nullptr) {}
-
-  // Append a new node with the given data.
-  void append(int data) {
-    auto newNode = std::make_unique<Node>(data);
-    if (!head) {
-      head = std::move(newNode);
-    } else {
-      Node* curr = head.get();
-      while (curr->next)
-        curr = curr->next.get();
-      curr->next = std::move(newNode);
-    }
-  }
-
-  // Equality operator to compare two lists based on node values.
-  friend bool operator==(const List &l1, const List &l2) {
-    const Node* n1 = l1.head.get();
-    const Node* n2 = l2.head.get();
-    while (n1 && n2) {
-      if (n1->data != n2->data)
-        return false;
-      n1 = n1->next.get();
-      n2 = n2->next.get();
-    }
-    return n1 == n2;
-  }
-};
 
 class ListWithSorting : public List {
 public:
