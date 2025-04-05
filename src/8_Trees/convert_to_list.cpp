@@ -29,7 +29,7 @@
  * Preorder traversal visits the root first, then the left subtree followed by the right subtree.
  */
 
-#include "binary_tree.h"  // Assumed to exist and be implemented.
+#include "binary_tree.h"
 #include <cassert>
 #include <stack>
 #include <vector>
