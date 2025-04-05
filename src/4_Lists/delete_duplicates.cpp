@@ -1,69 +1,9 @@
+#include "list.h"
 #include <cassert>
 #include <iostream>
 #include <memory>
 #include <unordered_set>
 
-// A minimal singly linked list class using unique_ptr for node management.
-class List {
-public:
-  // Node structure used by List.
-  struct Node {
-    int data;
-    std::unique_ptr<Node> next;
-    Node(int d) : data(d), next(nullptr) {}
-  };
-
-  std::unique_ptr<Node> head;
-
-  List() : head(nullptr) {}
-
-  // Returns true if the list is empty.
-  bool empty() const { return head == nullptr; }
-
-  // Append a new node with the given data to the end of the list.
-  void append(int data) {
-    auto newNode = std::make_unique<Node>(data);
-    if (!head) {
-      head = std::move(newNode);
-    } else {
-      Node* curr = head.get();
-      while (curr->next)
-        curr = curr->next.get();
-      curr->next = std::move(newNode);
-    }
-  }
-
-  // Remove the first occurrence of the given value.
-  void remove(int value) {
-    Node* curr = head.get();
-    Node* prev = nullptr;
-    while (curr) {
-      if (curr->data == value) {
-        if (!prev) {  // Remove head.
-          head = std::move(head->next);
-        } else {
-          prev->next = std::move(curr->next);
-        }
-        return;
-      }
-      prev = curr;
-      curr = curr->next.get();
-    }
-  }
-
-  // Equality operator compares lists node by node.
-  friend bool operator==(const List &l1, const List &l2) {
-    const Node* n1 = l1.head.get();
-    const Node* n2 = l2.head.get();
-    while (n1 && n2) {
-      if (n1->data != n2->data)
-        return false;
-      n1 = n1->next.get();
-      n2 = n2->next.get();
-    }
-    return n1 == n2;
-  }
-};
 
 // UniqueList is derived from List and provides deletion of duplicate nodes.
 class UniqueList : public List {
