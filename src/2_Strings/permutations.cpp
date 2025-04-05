@@ -45,6 +45,7 @@ void permuteSimple(std::string s, int l, int r, std::set<std::string>& results) 
 }
 
 std::vector<std::string> simpleSolution(const std::string& input) {
+    if (input.empty()) return {""};
     std::set<std::string> resultSet;
     permuteSimple(input, 0, input.size() - 1, resultSet);
     return {resultSet.begin(), resultSet.end()};
@@ -68,7 +69,7 @@ std::vector<std::string> optimalSolution(const std::string& input) {
 // Iterative permutation generation.
 // Complexity: O(n * n!), educational to understand iterative vs recursive.
 std::vector<std::string> alternativeSolution(const std::string& input) {
-    if (input.empty()) return {};
+    if (input.empty()) return {""};
     
     std::vector<std::string> results = {std::string(1, input[0])};
 
