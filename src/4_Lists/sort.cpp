@@ -12,12 +12,14 @@ public:
     if (!head || !head->next)
       return;
     
-    // Dummy node simplifies insertion at the beginning.
-    auto dummy = std::make_unique<Node>(0);
+    // Create a dummy node using the default constructor and manually set its data.
+    auto dummy = std::make_unique<Node>();
+    dummy->data = 0;
     dummy->next = std::move(head);
 
     // lastSorted points to the last node in the sorted portion.
     Node* lastSorted = dummy->next.get();
+    
     // While there is an unsorted node available.
     while (lastSorted && lastSorted->next) {
       // If the next node should be inserted at the beginning.
