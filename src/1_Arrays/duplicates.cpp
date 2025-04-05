@@ -1,60 +1,91 @@
-/**
- * This program finds and counts the duplicate elements in a given integer
- * vector.
+/*
+ * TASK: Find and Count Duplicate Elements
+ *
+ * Given an integer vector, count how many duplicates exist and list the elements
+ * that are duplicated.
+ *
+ * Example:
+ * Input: [5, 10, 15, 5, 3, 3]
+ * Output:
+ *   - Count: 2 (elements 5 and 3)
+ *   - Elements: [5, 3]
  */
 
 #include <cassert>
-#include <algorithm>  
+#include <algorithm>
 #include <unordered_set>
+#include <unordered_map>
 #include <vector>
+#include <iostream>
 
-int countDuplicates(const std::vector<int> &arr) {
-  int duplicatesCount = 0;
-  std::unordered_set<int> seenElements;
+// Simple Solution (O(n^2) complexity due to linear search)
+int countDuplicatesSimple(const std::vector<int>& arr) {
+    int count = 0;
+    std::vector<int> duplicates;
 
-  for (const auto &num : arr) {
-    if (seenElements.count(num)) {
-      duplicatesCount++;
-    } else {
-      seenElements.insert(num);
+    for (size_t i = 0; i < arr.size(); ++i) {
+        if (std::count(arr.begin(), arr.end(), arr[i]) > 1 &&
+            std::find(duplicates.begin(), duplicates.end(), arr[i]) == duplicates.end()) {
+            duplicates.push_back(arr[i]);
+            count++;
+        }
     }
-  }
 
-  return duplicatesCount;
+    return count;
 }
 
-std::vector<int> findDuplicates(const std::vector<int> &arr) {
-  std::vector<int> duplicates;
-  std::unordered_set<int> seenElements;
+// Optimal Solution (O(n) complexity using hashing)
+int countDuplicatesOptimal(const std::vector<int>& arr) {
+    std::unordered_map<int, int> frequency;
+    int duplicates = 0;
 
-  for (const auto &num : arr) {
-    if (seenElements.count(num) &&
-        std::find(duplicates.begin(), duplicates.end(), num) == duplicates.end()) {
-      duplicates.push_back(num);
-    } else {
-      seenElements.insert(num);
-    }
-  }
+    for (int num : arr)
+        frequency[num]++;
 
-  return duplicates;
+    for (const auto& [key, value] : frequency)
+        if (value > 1)
+            duplicates++;
+
+    return duplicates;
 }
 
-void testDuplicateFunctions() {
-  std::vector<int> arr1{1, 2, 3, 4, 5};
-  assert(countDuplicates(arr1) == 0);
-  assert(findDuplicates(arr1).empty());
+// Optimal solution to return duplicate elements (O(n))
+std::vector<int> findDuplicatesOptimal(const std::vector<int>& arr) {
+    std::unordered_map<int, int> frequency;
+    std::vector<int> duplicates;
 
-  std::vector<int> arr2{5, 10, 15, 5, 3, 3};
-  assert(countDuplicates(arr2) == 2);
-  // Extra parentheses around initializer list to avoid macro issues
-  assert(findDuplicates(arr2) == (std::vector<int>{5, 3}));
+    for (int num : arr)
+        frequency[num]++;
 
-  std::vector<int> arr3{3, 9, 9, 7, 3};
-  assert(countDuplicates(arr3) == 2);
-  assert(findDuplicates(arr3) == (std::vector<int>{9, 3}));
+    for (const auto& [key, value] : frequency)
+        if (value > 1)
+            duplicates.push_back(key);
+
+    return duplicates;
+}
+
+// Testing
+void test() {
+    std::vector<int> arr1{1, 2, 3, 4, 5};
+    assert(countDuplicatesOptimal(arr1) == 0);
+    assert(findDuplicatesOptimal(arr1).empty());
+
+    std::vector<int> arr2{5, 10, 15, 5, 3, 3};
+    assert(countDuplicatesOptimal(arr2) == 2);
+    auto duplicates2 = findDuplicatesOptimal(arr2);
+    std::sort(duplicates2.begin(), duplicates2.end());
+    assert(duplicates2 == std::vector<int>({3, 5}));
+
+    std::vector<int> arr3{3, 9, 9, 7, 3};
+    assert(countDuplicatesOptimal(arr3) == 2);
+    auto duplicates3 = findDuplicatesOptimal(arr3);
+    std::sort(duplicates3.begin(), duplicates3.end());
+    assert(duplicates3 == std::vector<int>({3, 9}));
+
+    std::cout << "All tests passed!\n";
 }
 
 int main() {
-  testDuplicateFunctions();
-  return 0;
+    test();
+    return 0;
 }
