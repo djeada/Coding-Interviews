@@ -1,3 +1,34 @@
+/*
+ * DETECT LOOP IN A LINKED LIST (WITH LOOPS)
+ *
+ * This program defines a linked list class (ListWithLoops) that supports creating loops
+ * in the list by connecting nodes arbitrarily. Memory management is handled by storing all
+ * allocated nodes in a vector so that they can be safely deleted even if a loop exists.
+ *
+ * The class provides:
+ *  - append: Add a new node with a given value.
+ *  - connectNodes: Connect one node to another (forming a loop if desired).
+ *  - hasLoop: Detects a loop in the list using Floyd's cycle-finding algorithm.
+ *
+ * ASCII Illustration:
+ *
+ *      Without Loop:
+ *        1 -> nullptr
+ *
+ *      With Loop:
+ *        1 -> 2 -> 3 -> 4 -> 5
+ *                 ^         |
+ *                 |_________|
+ *
+ * Example:
+ * Input:  List = [1, 2, 3, 4, 5] with connection from node 5 to node 3.
+ * Output: hasLoop() returns true.
+ *
+ * Edge Cases:
+ *  - A single node with no loop.
+ *  - A node connected to itself.
+ */
+
 #include <iostream>
 #include <vector>
 #include <stdexcept>
@@ -87,7 +118,8 @@ private:
     }
 };
 
-// Test cases.
+// ------------------- Test Cases -------------------
+
 void test1() {
   ListWithLoops list;
   list.append(1);
