@@ -23,7 +23,6 @@ void List::remove(int value) {
     --count;
   }
 }
-}
 };
 
 void test1() {
