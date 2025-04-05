@@ -26,6 +26,7 @@
 #include <cassert>
 #include <vector>
 #include <iostream>
+#include <functional>
 
 // Simple (Permutation-based) Recursive Solution
 // Complexity: O(N! * N^2), generates all permutations and checks diagonals
