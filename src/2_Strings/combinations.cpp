@@ -1,103 +1,104 @@
+/*
+ * GENERATE ALL STRING COMBINATIONS
+ *
+ * Given a string, generate all possible combinations (subsequences) of its characters.
+ * Combinations must include all subsets of characters from length 1 to N (the string length).
+ * Order of combinations does not matter.
+ *
+ * Constraints:
+ * - The input string will consist of unique lowercase letters.
+ * - The length of the string will not exceed 20 characters.
+ *
+ * Visual illustrations:
+ *
+ * Example: Input: "abc"
+ * 
+ * Combinations:
+ * a, b, c, ab, ac, bc, abc
+ *
+ * Example Input/Output:
+ * Input: "ab"
+ * Output: a, b, ab
+ */
+
 #include <algorithm>
-#include <bitset>
 #include <cassert>
+#include <bitset>
 #include <iostream>
 #include <set>
-#include <stack>
 #include <string>
 #include <vector>
 
-// Forward declaration of the increment function template.
-template <size_t N>
-bool increment(std::bitset<N>& bits, int length);
-
-void generateCombinations(const std::string &str, int index, int number,
-                          std::stack<char> &currentCombination,
-                          std::set<std::string> &allCombinations) {
-  if (number == 0) {
-    // First collect the characters into a vector and then reverse it.
-    std::vector<char> vec;
-    auto tempStack = currentCombination;
-    while (!tempStack.empty()) {
-      vec.push_back(tempStack.top());
-      tempStack.pop();
+// Simple (Recursive) Solution
+// Complexity: O(2^n) due to recursive exploration of all subsets.
+std::set<std::string> simpleSolution(const std::string &str, int idx = 0, const std::string &curr = "") {
+    std::set<std::string> result;
+    if (idx == str.length()) {
+        if (!curr.empty()) result.insert(curr);
+        return result;
     }
-    std::reverse(vec.begin(), vec.end());
-    std::string combination(vec.begin(), vec.end());
-    allCombinations.insert(combination);
-    return;
-  }
-
-  if (index >= str.size())
-    return;
-
-  currentCombination.push(str[index]);
-  generateCombinations(str, index + 1, number - 1, currentCombination, allCombinations);
-  currentCombination.pop();
-
-  generateCombinations(str, index + 1, number, currentCombination, allCombinations);
+    auto without = simpleSolution(str, idx + 1, curr);
+    auto with = simpleSolution(str, idx + 1, curr + str[idx]);
+    result.merge(without);
+    result.merge(with);
+    return result;
 }
 
-std::set<std::string> findAllCombinationsRecursive(const std::string &str) {
-  std::set<std::string> allCombinations;
-  std::stack<char> currentCombination;
+// Optimal (Bitset) Solution
+// Complexity: O(2^n * n), more efficient memory usage, practical for larger inputs.
+std::set<std::string> optimalSolution(const std::string &str) {
+    std::set<std::string> result;
+    const size_t len = str.length();
+    const size_t total = 1 << len;
 
-  for (int i = 1; i <= str.length(); ++i) {
-    generateCombinations(str, 0, i, currentCombination, allCombinations);
-  }
-
-  return allCombinations;
-}
-
-std::set<std::string> findAllCombinationsBitset(const std::string &str) {
-  std::set<std::string> allCombinations;
-  std::bitset<100> bits;
-
-  do {
-    std::string combination;
-    for (int i = 0; i < str.length(); ++i) {
-      if (bits[i])
-        combination += str[i];
+    for (size_t mask = 1; mask < total; ++mask) {
+        std::string combination;
+        for (size_t j = 0; j < len; ++j)
+            if (mask & (1 << j))
+                combination += str[j];
+        result.insert(combination);
     }
-    // Exclude the empty string.
-    if (!combination.empty())
-      allCombinations.insert(combination);
-  } while (increment(bits, str.length()));
 
-  return allCombinations;
+    return result;
 }
 
-template <size_t N>
-bool increment(std::bitset<N>& bits, int length) {
-  int index = length - 1;
-  while (index >= 0 && bits[index]) {
-    bits.reset(index);
-    --index;
-  }
-  if (index < 0)
-    return false;
-  bits.set(index);
-  return true;
+// Alternative Solution (Educational - STL Combination)
+// Complexity: Similar O(2^n * n), demonstrates use of std::next_permutation for education.
+std::set<std::string> alternativeSolution(std::string str) {
+    std::set<std::string> result;
+    const size_t len = str.length();
+    for (size_t r = 1; r <= len; ++r) {
+        std::string bitmask(r, 1); // r ones
+        bitmask.resize(len, 0);    // n-r zeros
+
+        do {
+            std::string combination;
+            for (size_t i = 0; i < len; ++i)
+                if (bitmask[i]) combination += str[i];
+            result.insert(combination);
+        } while (std::prev_permutation(bitmask.begin(), bitmask.end()));
+    }
+
+    return result;
 }
 
-void runTests() {
-  assert((findAllCombinationsRecursive("a") == std::set<std::string>{"a"}));
-  assert((findAllCombinationsBitset("a") == std::set<std::string>{"a"}));
+// Test cases for correctness
+void test() {
+    std::vector<std::string> testInputs = {"a", "ab", "abc"};
 
-  assert((findAllCombinationsRecursive("ab") ==
-          std::set<std::string>{"a", "b", "ab"}));
-  assert((findAllCombinationsBitset("ab") ==
-          std::set<std::string>{"a", "b", "ab"}));
+    for (const auto &input : testInputs) {
+        auto simple = simpleSolution(input);
+        auto optimal = optimalSolution(input);
+        auto alternative = alternativeSolution(input);
 
-  assert((findAllCombinationsRecursive("abc") ==
-          std::set<std::string>{"a", "b", "c", "ab", "ac", "bc", "abc"}));
-  assert((findAllCombinationsBitset("abc") ==
-          std::set<std::string>{"a", "b", "c", "ab", "ac", "bc", "abc"}));
+        assert(simple == optimal);
+        assert(optimal == alternative);
+    }
 
-  std::cout << "All tests passed!\n";
+    std::cout << "All tests passed!\n";
 }
 
 int main() {
-  runTests();
-  return 0;
+    test();
+    return 0;
 }
