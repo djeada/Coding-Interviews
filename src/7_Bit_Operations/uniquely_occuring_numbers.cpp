@@ -1,22 +1,66 @@
+/*
+ * FIND NUMBERS OCCURRING ONCE
+ *
+ * This program finds the two unique numbers in an array where every other number appears exactly twice.
+ * Two solutions are provided:
+ *
+ * 1. Simple (Brute-force) Solution using an unordered_map:
+ *    Counts the frequency of each number and returns the ones that appear once.
+ *    Complexity: O(n) time and O(n) space.
+ *
+ * 2. Optimal (Efficient) Solution using Bitwise XOR:
+ *    Utilizes XOR properties to first get the XOR of the two unique numbers, then finds a bit where they differ
+ *    and separates the numbers accordingly.
+ *    Complexity: O(n) time and O(1) space.
+ *
+ * ASCII Illustration:
+ *
+ *   Input array: [2, 4, 3, 6, 3, 2, 5, 5]
+ *
+ *   - All numbers appearing twice cancel each other via XOR.
+ *   - The result XOR gives us (4 XOR 6), meaning there is at least one bit set in the XOR of 4 and 6.
+ *   - Using that bit, the array is partitioned into two groups that isolate 4 and 6.
+ *
+ * Example Input/Output:
+ * Input:  [2, 4, 3, 6, 3, 2, 5, 5]
+ * Output: [4, 6]  (order does not matter)
+ */
+
 #include <cassert>
 #include <iostream>
 #include <vector>
+#include <unordered_map>
+#include <string>
 
-/**
- * @struct NumbersOccurringOnce
- * @brief A structure to store two numbers that occur only once in an array.
- */
+// Structure to store two numbers that occur only once in an array.
 struct NumbersOccurringOnce {
   int num1;
   int num2;
 };
 
-/**
- * @brief Finds the position of the first bit set to 1 in a number.
- *
- * @param num The input number.
- * @return The position of the first set bit.
- */
+// Simple (Brute-force) Solution using unordered_map
+NumbersOccurringOnce simpleSolution(const std::vector<int>& numbers) {
+  std::unordered_map<int, int> freq;
+  for (const auto &num : numbers)
+    ++freq[num];
+
+  NumbersOccurringOnce result{0, 0};
+  bool firstFound = false;
+  for (const auto &entry : freq) {
+    if (entry.second == 1) {
+      if (!firstFound) {
+        result.num1 = entry.first;
+        firstFound = true;
+      } else {
+        result.num2 = entry.first;
+        break;
+      }
+    }
+  }
+  return result;
+}
+
+// Optimal (Efficient) Solution using Bitwise XOR
 int findFirstSetBit(int num) {
   int indexBit = 0;
   while (((num & 1) == 0) && (indexBit < 32)) {
@@ -26,29 +70,16 @@ int findFirstSetBit(int num) {
   return indexBit;
 }
 
-/**
- * @brief Checks if the bit at a specified position is set to 1.
- *
- * @param num The input number.
- * @param indexBit The position to check.
- * @return true if the bit at the specified position is 1, otherwise false.
- */
+
 bool isBitSet(int num, int indexBit) {
   num >>= indexBit;
   return (num & 1) == 1;
 }
 
-/**
- * @brief Finds two numbers that appear only once in a given array.
- *
- * @param numbers The input array of integers.
- * @param once A reference to the struct storing the two numbers.
- */
-void findSingleOccurrences(const std::vector<int> &numbers,
-                           NumbersOccurringOnce &once) {
-  once.num1 = once.num2 = 0;
+NumbersOccurringOnce optimalSolution(const std::vector<int>& numbers) {
+  NumbersOccurringOnce result{0, 0};
   if (numbers.size() < 2)
-    return;
+    return result;
 
   int resultXOR = 0;
   for (const auto &num : numbers)
@@ -58,19 +89,25 @@ void findSingleOccurrences(const std::vector<int> &numbers,
 
   for (const auto &num : numbers) {
     if (isBitSet(num, indexOf1))
-      once.num1 ^= num;
+      result.num1 ^= num;
     else
-      once.num2 ^= num;
+      result.num2 ^= num;
   }
+  return result;
 }
 
+// Test cases for correctness
 void test(const std::string &testName, const std::vector<int> &numbers,
           const NumbersOccurringOnce &expected) {
-  NumbersOccurringOnce once;
-  findSingleOccurrences(numbers, once);
+  NumbersOccurringOnce simpleRes = simpleSolution(numbers);
+  NumbersOccurringOnce optimalRes = optimalSolution(numbers);
 
-  bool condition = (once.num1 == expected.num1 && once.num2 == expected.num2) ||
-                   (once.num1 == expected.num2 && once.num2 == expected.num1);
+  bool condition = 
+      ((simpleRes.num1 == expected.num1 && simpleRes.num2 == expected.num2) ||
+       (simpleRes.num1 == expected.num2 && simpleRes.num2 == expected.num1)) &&
+      ((optimalRes.num1 == expected.num1 && optimalRes.num2 == expected.num2) ||
+       (optimalRes.num1 == expected.num2 && optimalRes.num2 == expected.num1));
+
   assert(condition);
 }
 
@@ -79,5 +116,6 @@ int main() {
   test("Test2", {4, 6}, {4, 6});
   test("Test3", {4, 6, 1, 1, 1, 1}, {4, 6});
 
+  std::cout << "All tests passed!\n";
   return 0;
 }
