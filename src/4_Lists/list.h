@@ -14,7 +14,6 @@ public:
   void print() const;
   void append(int value);
   int get(unsigned int index) const;
-  void remove(int value);
   bool operator==(const List &other) const;
 
 protected:
