@@ -33,7 +33,7 @@ jobs:
           for lib in $LIB_SOURCES; do
             obj="build/$(basename "$lib" .cpp).o"
             echo "Compiling library file $lib -> $obj"
-            g++ -std=c++17 -c "$lib" -o "$obj"
+            g++ -std=c++20 -c "$lib" -o "$obj"
           done
 
           # 4) Archive object files into a static library
@@ -43,7 +43,7 @@ jobs:
           for test in $TEST_SOURCES; do
             out="build/$(basename "$test" .cpp).out"
             echo "Building test executable $out from $test"
-            g++ -std=c++17 "$test" build/libmycode.a -lpthread -lm -o "$out"
+            g++ -std=c++20 "$test" build/libmycode.a -lpthread -lm -o "$out"
 
             echo "Running $out with 90s timeout..."
             timeout 90s "./$out"
