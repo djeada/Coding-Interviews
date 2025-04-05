@@ -48,6 +48,7 @@
 #include <stack>
 #include <string>
 #include <vector>
+#include <functional>
 
 // ---------------- Simple Solution ----------------
 // Recursive DFS helper function.
