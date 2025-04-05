@@ -1,67 +1,137 @@
-#include "list.h"
-#include <cassert>
 #include <iostream>
+#include <vector>
 #include <stdexcept>
-#include <algorithm> // for std::max
+#include <cassert>
+#include <algorithm>
 
-class ListWithLoops : public List {
+// A simple node that holds an int and a pointer to the next node.
+struct Node {
+    int data;
+    Node* next;
+    Node(int val) : data(val), next(nullptr) {}
+};
+
+// A list class that supports loops.
+// Memory management is done by storing all allocated nodes in a vector.
+class ListWithLoops {
 public:
-  ListWithLoops() : List() {}
+    ListWithLoops() : head(nullptr) {}
 
-  // Expose the append method.
-  void append(int value) { List::append(value); }
+    ~ListWithLoops() {
+        // Delete each node exactly once regardless of loop structure.
+        for (Node* node : nodes) {
+            delete node;
+        }
+    }
 
-  // Connect the node at index 'from' to the node at index 'to'
-  // (0-indexed). Throws std::out_of_range if indices are invalid.
-  void connectNodes(int from, int to) {
-    // Use size() (which returns count) instead of a non-existent size_
-    if (from < 0 || static_cast<unsigned>(from) >= size() ||
-        to   < 0 || static_cast<unsigned>(to) >= size()) {
-      throw std::out_of_range("Index out of range!");
+    // Append a new node with the given value.
+    void append(int value) {
+        Node* newNode = new Node(value);
+        if (!head) {
+            head = newNode;
+        } else {
+            Node* current = head;
+            // Traverse until the end of the list.
+            while (current->next != nullptr) {
+                current = current->next;
+            }
+            current->next = newNode;
+        }
+        nodes.push_back(newNode);
     }
-    Node* fromNode = getNode(from);
-    Node* toNode   = getNode(to);
-    if (!fromNode || !toNode) {
-      throw std::runtime_error("Unexpected null node encountered.");
-    }
-    // WARNING:
-    // This hack “connects” the nodes by releasing the unique_ptr in fromNode->next
-    // and then resetting it with a raw pointer that is already owned elsewhere.
-    // This deliberately creates a loop for testing hasLoop(), but it will
-    // confuse unique_ptr ownership and can cause double deletion.
-    fromNode->next.release();
-    fromNode->next.reset(toNode);
-  }
 
-  // Check for a loop using Floyd's algorithm.
-  bool hasLoop() {
-    if (empty())
-      return false;
-    
-    // Initialize with raw pointers from the unique_ptrs.
-    Node* slow = head.get();
-    Node* fast = head.get();
-    
-    while (fast && fast->next) {
-      slow = slow->next.get();
-      fast = (fast->next->next ? fast->next->next.get() : nullptr);
-      if (slow == fast)
-        return true;
+    // Connect the node at index 'from' to the node at index 'to'.
+    // Indices are 0-based.
+    // Throws std::out_of_range if indices are invalid.
+    void connectNodes(int from, int to) {
+        if (from < 0 || from >= size() || to < 0 || to >= size()) {
+            throw std::out_of_range("Index out of range!");
+        }
+        Node* fromNode = getNode(from);
+        Node* toNode   = getNode(to);
+        if (!fromNode || !toNode) {
+            throw std::runtime_error("Unexpected null node encountered.");
+        }
+        fromNode->next = toNode;
     }
-    
-    return false;
-  }
+
+    // Detects a loop using Floyd's cycle-finding algorithm.
+    bool hasLoop() {
+        Node* slow = head;
+        Node* fast = head;
+        while (fast && fast->next) {
+            slow = slow->next;
+            fast = fast->next->next;
+            if (slow == fast)
+                return true;
+        }
+        return false;
+    }
+
+    // Return the number of nodes in the list.
+    int size() const { 
+      return static_cast<int>(nodes.size()); 
+    }
 
 private:
-  // Helper method to traverse the list and return the node at the given index.
-  Node* getNode(int index) {
-    if (index < 0 || static_cast<unsigned>(index) >= size()) {
-      return nullptr;
+    Node* head;
+    // Store pointers to all nodes allocated. This list owns the nodes.
+    std::vector<Node*> nodes;
+
+    // Helper method to retrieve the node at a given index.
+    Node* getNode(int index) {
+        if (index < 0 || index >= size()) {
+            return nullptr;
+        }
+        return nodes[index];
     }
-    Node* current = head.get();
-    for (int i = 0; i < index; ++i) {
-      current = current->next.get();
-    }
-    return current;
-  }
 };
+
+// Test cases.
+void test1() {
+  ListWithLoops list;
+  list.append(1);
+  // Single node should not have a loop.
+  assert(!list.hasLoop());
+}
+
+void test2() {
+  ListWithLoops list;
+  list.append(1);
+  // Connect the only node to itself to form a loop.
+  list.connectNodes(0, 0);
+  assert(list.hasLoop());
+}
+
+void test3() {
+  ListWithLoops list;
+  list.append(1);
+  list.append(2);
+  list.append(3);
+  list.append(4);
+  list.append(5);
+  // Connect the last node (index 4) to the node at index 2.
+  list.connectNodes(4, 2);
+  assert(list.hasLoop());
+}
+
+void test4() {
+  ListWithLoops list;
+  list.append(1);
+  list.append(2);
+  list.append(3);
+  list.append(4);
+  list.append(5);
+  // Connect the last node (index 4) to the first node (index 0).
+  list.connectNodes(4, 0);
+  assert(list.hasLoop());
+}
+
+int main() {
+  test1();
+  test2();
+  test3();
+  test4();
+  std::cout << "All tests passed!\n";
+  return 0;
+}
