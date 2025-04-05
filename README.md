@@ -48,7 +48,7 @@ I aimed to modernize or expand on certain approaches while keeping these notes f
 | # | Title                       | Notes/Solution                                                                                                                       |
 | - | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
 | 1 | Add numeric string          | [C++](https://github.com/djeada/CodingInterviews/blob/master/src/2_Strings/add_numeric_string.cpp)                                      |
-| 2 | Allocate string             | [C](https://github.com/djeada/CodingInterviews/blob/master/src/2_Strings/allocate_str.c)                                               |
+| 2 | Allocate string             | [C](https://github.com/djeada/CodingInterviews/blob/master/src/2_Strings/allocate_str.cpp)                                               |
 | 3 | Anagram                     | [C++](https://github.com/djeada/CodingInterviews/blob/master/src/2_Strings/anagram.cpp)                                                  |
 | 4 | Combinations                | [C++](https://github.com/djeada/CodingInterviews/blob/master/src/2_Strings/combinations.cpp)                                             |
 | 5 | Delete char                 | [C++](https://github.com/djeada/CodingInterviews/blob/master/src/2_Strings/delete_char.cpp)                                              |
