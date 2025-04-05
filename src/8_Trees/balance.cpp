@@ -29,7 +29,7 @@
  * Explanation: Each node's left and right subtree depths differ by no more than 1.
  */
 
-#include "binary_tree.h"  // Assumed to exist and be implemented.
+#include "binary_tree.h"
 #include <cassert>
 #include <iostream>
 #include <algorithm>
