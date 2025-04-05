@@ -1,27 +1,43 @@
-/**
- * This program defines a class named ComplexList that represents a singly
- * linked list, with an additional "sibling" pointer in each node that can point
- * to any other node in the list. The class supports basic operations such as
- * appending nodes, setting sibling pointers, and copying a ComplexList while
- * preserving the sibling relationships.
+/*
+ * DEEP COPY OF A COMPLEX LINKED LIST WITH SIBLING POINTERS
  *
- * The ComplexList class is designed as follows:
- * - Each node in the list has an integer value, a 'next' pointer to the next
- * node, and a 'sibling' pointer.
- * - The class uses smart pointers (std::unique_ptr) for automatic memory
- * management of nodes.
- * - The copy constructor creates a deep copy of the list while correctly
- * duplicating sibling relationships.
+ * This program defines a class named ComplexList that represents a singly linked
+ * list where each node has an integer value, a pointer to the next node, and an
+ * additional "sibling" pointer that can reference any other node in the list.
+ * The class supports operations for appending nodes, setting sibling pointers, and
+ * performing a deep copy of the entire list while preserving the sibling relationships.
  *
+ * The deep copy is implemented in the copy constructor, which:
+ * - Traverses the original list to create new nodes and maps each original node to its copy.
+ * - Iterates again to correctly set the sibling pointers in the copied list.
+ *
+ * ASCII Illustration:
+ *
+ *    Original List:      Copied List:
+ *
+ *      1  -->  2  -->  3       1  -->  2  -->  3
+ *       \       \             \       \
+ *        v       v             v       v
+ *        3       5             3       5
+ *
+ * Example:
+ * Input List:
+ *    Node values: 1 -> 2 -> 3 -> 4 -> 5
+ *    Sibling relationships: 
+ *      - 1's sibling -> 3
+ *      - 2's sibling -> 5
+ *      - 5's sibling -> 2
+ *
+ * When copied, both lists will have the same structure and sibling connections.
  */
+
 #include "list.h"
 #include <cassert>
 #include <iostream>
 #include <memory>
 #include <unordered_map>
 
-// ComplexList inherits from List (defined in list.h)
-// and adds a sibling pointer to each node.
+// ComplexList inherits from List (defined in list.h) and adds a sibling pointer to each node.
 class ComplexList : public List {
 public:
   // Our node type extends the base List::Node.
