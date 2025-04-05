@@ -1,106 +1,135 @@
-#include "binary_tree.h"
+/*
+ * BINARY TREE BALANCE CHECK
+ *
+ * This program demonstrates two modern C++ solutions to check whether a binary search tree is balanced.
+ * A binary tree is considered balanced if, for every node, the difference in height between its left
+ * and right subtrees is no more than one.
+ *
+ * Two approaches are implemented:
+ * 1. Simple (Brute-force) Approach:
+ *    - For each node, recursively compute the depths of its left and right subtrees and check the difference.
+ *    - This solution is easy to implement but can be inefficient (O(n^2) in the worst case) because depth
+ *      is computed repeatedly for the same nodes.
+ *
+ * 2. Optimal (Efficient) Approach:
+ *    - Combine the depth calculation and balance checking in a single recursive function.
+ *    - This approach improves performance to O(n) by avoiding redundant computations.
+ *
+ * ASCII Illustration:
+ *           4
+ *          / \
+ *         2   6
+ *        / \ / \
+ *       1  3 5  7
+ *
+ * Example Input/Output:
+ * Input: Insert values [4, 6, 2, 3, 1, 5, 7] into the tree.
+ * Output: The tree is balanced.
+ *
+ * Explanation: Each node's left and right subtree depths differ by no more than 1.
+ */
+
+#include "binary_tree.h"  // Assumed to exist and be implemented.
 #include <cassert>
+#include <iostream>
+#include <algorithm>
 #include <cmath>
 
+// TreeWithBalanceCheck extends the assumed BinaryTree from "binary_tree.h" with balance-checking methods.
 class TreeWithBalanceCheck : public BinaryTree {
 public:
-  TreeWithBalanceCheck() : BinaryTree() {}
-  int depth() const { return depth(root); }
-  bool isBalanced1() const { return isBalanced1(root); }
-  bool isBalanced2() const {
-    int depth = 0;
-    return isBalanced2(root, depth);
-  }
-
+    // Simple (Brute-force) Solution: O(n^2) worst-case.
+    bool isBalancedSimple() const {
+        return isBalancedSimple(root);
+    }
+    
+    // Optimal (Efficient) Solution: O(n) time complexity.
+    bool isBalancedOptimal() const {
+        int depth = 0;
+        return isBalancedOptimal(root, depth);
+    }
+    
 private:
-  int depth(const std::unique_ptr<Node> &node) const {
-    if (!node)
-      return 0;
-    int left = depth(node->left);
-    int right = depth(node->right);
-    return std::max(left, right) + 1;
-  }
-
-  bool isBalanced1(const std::unique_ptr<Node> &node) const {
-    if (!node)
-      return true;
-    int left = depth(node->left);
-    int right = depth(node->right);
-    int diff = left - right;
-    return std::abs(diff) <= 1 && isBalanced1(node->left) &&
-           isBalanced1(node->right);
-  }
-
-  bool isBalanced2(const std::unique_ptr<Node> &node, int &depth) const {
-    if (!node) {
-      depth = 0;
-      return true;
+    // Computes the depth of a subtree.
+    int depth(const std::unique_ptr<Node>& node) const {
+        if (!node)
+            return 0;
+        return std::max(depth(node->left), depth(node->right)) + 1;
     }
-    int left, right;
-    if (isBalanced2(node->left, left) && isBalanced2(node->right, right)) {
-      int diff = left - right;
-      if (std::abs(diff) <= 1) {
-        depth = std::max(left, right) + 1;
+    
+    // Recursive function for the simple balance check.
+    bool isBalancedSimple(const std::unique_ptr<Node>& node) const {
+        if (!node)
+            return true;
+        int leftDepth = depth(node->left);
+        int rightDepth = depth(node->right);
+        if (std::abs(leftDepth - rightDepth) > 1)
+            return false;
+        return isBalancedSimple(node->left) && isBalancedSimple(node->right);
+    }
+    
+    // Recursive function for the optimal balance check that calculates depth on the fly.
+    bool isBalancedOptimal(const std::unique_ptr<Node>& node, int &currentDepth) const {
+        if (!node) {
+            currentDepth = 0;
+            return true;
+        }
+        int leftDepth = 0, rightDepth = 0;
+        if (!isBalancedOptimal(node->left, leftDepth) || !isBalancedOptimal(node->right, rightDepth))
+            return false;
+        if (std::abs(leftDepth - rightDepth) > 1)
+            return false;
+        currentDepth = std::max(leftDepth, rightDepth) + 1;
         return true;
-      }
     }
-    return false;
-  }
 };
 
-void test1() {
-  TreeWithBalanceCheck tree;
-  tree.add(4);
-  tree.add(6);
-  tree.add(2);
-  tree.add(3);
-  tree.add(1);
-  tree.add(5);
-  tree.add(7);
-
-  assert(tree.isBalanced1());
-  assert(tree.isBalanced2());
-}
-
-void test2() {
-  TreeWithBalanceCheck tree;
-  tree.add(2);
-  tree.add(1);
-  tree.add(3);
-
-  assert(tree.isBalanced1());
-  assert(tree.isBalanced2());
-}
-
-void test3() {
-  TreeWithBalanceCheck tree;
-  tree.add(1);
-  tree.add(2);
-  tree.add(3);
-  tree.add(4);
-  tree.add(5);
-
-  assert(!tree.isBalanced1());
-  assert(!tree.isBalanced2());
-}
-
-void test4() {
-  TreeWithBalanceCheck tree;
-  tree.add(5);
-  tree.add(4);
-  tree.add(3);
-  tree.add(2);
-  tree.add(1);
-
-  assert(!tree.isBalanced1());
-  assert(!tree.isBalanced2());
+// Test cases to ensure both implementations produce the same results.
+void test() {
+    // Test Case 1: Balanced tree with nodes [4, 6, 2, 3, 1, 5, 7]
+    {
+        TreeWithBalanceCheck tree;
+        int values[] = {4, 6, 2, 3, 1, 5, 7};
+        for (int v : values)
+            tree.add(v);
+        assert(tree.isBalancedSimple());
+        assert(tree.isBalancedOptimal());
+    }
+    
+    // Test Case 2: Minimal balanced tree [2, 1, 3]
+    {
+        TreeWithBalanceCheck tree;
+        int values[] = {2, 1, 3};
+        for (int v : values)
+            tree.add(v);
+        assert(tree.isBalancedSimple());
+        assert(tree.isBalancedOptimal());
+    }
+    
+    // Test Case 3: Unbalanced tree (ascending order) [1, 2, 3, 4, 5]
+    {
+        TreeWithBalanceCheck tree;
+        int values[] = {1, 2, 3, 4, 5};
+        for (int v : values)
+            tree.add(v);
+        assert(!tree.isBalancedSimple());
+        assert(!tree.isBalancedOptimal());
+    }
+    
+    // Test Case 4: Unbalanced tree (descending order) [5, 4, 3, 2, 1]
+    {
+        TreeWithBalanceCheck tree;
+        int values[] = {5, 4, 3, 2, 1};
+        for (int v : values)
+            tree.add(v);
+        assert(!tree.isBalancedSimple());
+        assert(!tree.isBalancedOptimal());
+    }
+    
+    std::cout << "All tests passed!\n";
 }
 
 int main() {
-  test1();
-  test2();
-  test3();
-  test4();
-
-  return 0;
+    test();
+    return 0;
 }
