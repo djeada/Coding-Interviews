@@ -1,3 +1,32 @@
+/*
+ * REVERSE A LINKED LIST USING UNIQUE_PTR
+ *
+ * This program defines a class ListWithReversion that extends a basic singly linked list
+ * (from list.h) by providing a function to reverse the list. The reversal is done by 
+ * re-linking the nodes, which are managed by std::unique_ptr, without creating new nodes.
+ *
+ * The reversal algorithm works as follows:
+ * - It iteratively detaches the head node from the original list.
+ * - The detached node is then inserted at the front of a new list.
+ * - Once all nodes are processed, the new list becomes the reversed list.
+ *
+ * ASCII Illustration:
+ *
+ *   Original List: 1 -> 2 -> 3 -> 4 -> 5
+ *         |
+ *       Reverse
+ *         V
+ *   Reversed List: 5 -> 4 -> 3 -> 2 -> 1
+ *
+ * Example:
+ * Input:  List = [1, 2, 3, 4, 5]
+ * Output: List = [5, 4, 3, 2, 1]
+ *
+ * Edge Cases:
+ * - An empty list remains empty.
+ * - A list with a single element remains unchanged.
+ */
+
 #include "list.h"
 #include <cassert>
 #include <iostream>
@@ -10,19 +39,22 @@ public:
   // Reverse the list by re-linking the unique_ptr nodes.
   void reverse() {
     std::unique_ptr<Node> new_head = nullptr;
-    // While there are nodes in the original list:
+    // Process nodes until the original list is empty.
     while (head) {
-      // Detach the first node from the list.
+      // Detach the current head.
       auto temp = std::move(head->next);
-      // Insert it at the front of the new list.
+      // Insert the detached node at the front of the new list.
       head->next = std::move(new_head);
       new_head = std::move(head);
-      // Continue with the rest of the original list.
+      // Continue with the remainder of the list.
       head = std::move(temp);
     }
+    // Update head to the new reversed list.
     head = std::move(new_head);
   }
 };
+
+// ------------------- Test Cases -------------------
 
 void test1() {
   ListWithReversion list;
@@ -46,6 +78,7 @@ void test1() {
 void test2() {
   ListWithReversion list;
   list.append(1);
+
   List expected;
   expected.append(1);
 
@@ -56,6 +89,7 @@ void test2() {
 void test3() {
   ListWithReversion list;
   List expected;
+  
   list.reverse();
   assert(list == expected);
 }
