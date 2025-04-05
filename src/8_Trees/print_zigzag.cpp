@@ -28,7 +28,7 @@
  * right-to-left, and the process alternates for subsequent levels.
  */
 
-#include "binary_tree.h"  // Assumed to exist and be implemented.
+#include "binary_tree.h" 
 #include <iostream>
 #include <stack>
 #include <vector>
