@@ -1,32 +1,65 @@
+/*
+ * REMOVE ELEMENT FROM A LINKED LIST
+ *
+ * This program extends a basic singly linked list (as defined in list.h) by providing
+ * a function to remove the first occurrence of a given value from the list.
+ *
+ * The remove operation works as follows:
+ * - It traverses the list looking for the node containing the target value.
+ * - If found, it adjusts the pointers to exclude the node from the list.
+ * - Special handling is provided for removing the head node.
+ *
+ * ASCII Illustration:
+ *
+ *     Before removal: 1 -> 2 -> 3 -> 4 -> 5
+ *                     remove(3)
+ *     After removal:  1 -> 2 -> 4 -> 5
+ *
+ * Example:
+ * Input:  List = [1, 2, 3, 4, 5], remove(3)
+ * Output: List = [1, 2, 4, 5]
+ *
+ * Edge Cases:
+ * - Removing the head element.
+ * - Removing the tail element.
+ * - Removing from a list with a single element.
+ */
+
 #include "list.h"
 #include <cassert>
+#include <iostream>
 
-class ListWithReversion : public List {
+class ListWithDeletion : public List {
 public:
+  // Remove the first occurrence of the node containing the specified value.
+  void remove(int value) {
+    Node* prev = nullptr;
+    auto current = head.get();
 
-  
-void remove(int value) {
-  Node *prev = nullptr;
-  auto current = head.get();
-
-  while (current && current->data != value) {
-    prev = current;
-    current = current->next.get();
-  }
-
-  if (current && current->data == value) {
-    if (prev) {
-      prev->next = std::move(current->next);
-    } else {
-      head = std::move(current->next);
+    // Traverse the list until the target value is found.
+    while (current && current->data != value) {
+      prev = current;
+      current = current->next.get();
     }
-    --count;
+
+    // If the node with the target value is found, remove it.
+    if (current && current->data == value) {
+      if (prev) {
+        // Node is not the head: update previous node's next pointer.
+        prev->next = std::move(current->next);
+      } else {
+        // Node is the head: update the head pointer.
+        head = std::move(current->next);
+      }
+      --count;
+    }
   }
-}
 };
 
+// ------------------- Test Cases -------------------
+
 void test1() {
-  ListWithReversion list;
+  ListWithDeletion list;
   list.append(1);
   list.append(2);
   list.append(3);
@@ -45,7 +78,7 @@ void test1() {
 }
 
 void test2() {
-  ListWithReversion list;
+  ListWithDeletion list;
   list.append(1);
   list.append(2);
   list.append(3);
@@ -64,7 +97,7 @@ void test2() {
 }
 
 void test3() {
-  ListWithReversion list;
+  ListWithDeletion list;
   list.append(1);
   list.append(2);
   list.append(3);
@@ -83,7 +116,7 @@ void test3() {
 }
 
 void test4() {
-  ListWithReversion list;
+  ListWithDeletion list;
   list.append(1);
 
   list.remove(1);
@@ -98,6 +131,6 @@ int main() {
   test2();
   test3();
   test4();
-
+  
   return 0;
 }
