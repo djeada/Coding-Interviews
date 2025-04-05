@@ -1,6 +1,31 @@
 #include "list.h"
 #include <cassert>
 
+class ListWithReversion : public List {
+public:
+
+  
+void List::remove(int value) {
+  Node *prev = nullptr;
+  auto current = head.get();
+
+  while (current && current->data != value) {
+    prev = current;
+    current = current->next.get();
+  }
+
+  if (current && current->data == value) {
+    if (prev) {
+      prev->next = std::move(current->next);
+    } else {
+      head = std::move(current->next);
+    }
+    --count;
+  }
+}
+}
+};
+
 void test1() {
   List list;
   list.append(1);
