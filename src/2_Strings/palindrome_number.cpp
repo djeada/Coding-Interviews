@@ -1,48 +1,72 @@
-/**
- * This program checks if a given integer is a palindrome.
- * It provides two approaches to solve the problem:
- * 1. By converting the integer to a string.
- * 2. By reversing the integer without converting it to a string.
+/*
+ * PALINDROME INTEGER CHECK
+ *
+ * Given an integer, determine whether it is a palindrome. An integer is a palindrome if it reads
+ * the same backward as forward.
+ *
+ * This task provides two approaches:
+ * 1. Convert the integer to a string and compare characters.
+ * 2. Reverse the integer mathematically and compare with the original.
+ *
+ * Constraints:
+ * - The integer can be positive, zero, or negative.
+ * - Negative integers are not considered palindromes.
+ *
+ * Example Input/Output:
+ * Input: 121
+ * Output: true
+ *
+ * Input: -121
+ * Output: false
+ * Explanation: Negative numbers are not palindromes.
  */
 
 #include <cassert>
 #include <iostream>
 #include <string>
 
-bool isPalindromeUsingString(int x) {
-  auto str = std::to_string(x);
-  auto strSize = str.size();
-  for (unsigned int i = 0; i < strSize / 2; i++) {
-    if (str[i] != str[strSize - i - 1])
-      return false;
-  }
-  return true;
+// Simple Solution (Convert integer to string)
+// Complexity: O(N), where N is the number of digits.
+bool simpleSolution(int x) {
+    if (x < 0) return false;
+
+    std::string s = std::to_string(x);
+    int n = s.size();
+    for (int i = 0; i < n / 2; ++i)
+        if (s[i] != s[n - i - 1])
+            return false;
+
+    return true;
 }
 
-bool isPalindromeUsingMath(int x) {
-  if (x < 0)
-    return false;
+// Optimal Solution (Reverse integer mathematically)
+// Complexity: O(N), avoids extra space for string conversion.
+bool optimalSolution(int x) {
+    if (x < 0 || (x % 10 == 0 && x != 0)) return false;
 
-  int reversed = 0;
-  int original = x;
-  while (x != 0) {
-    reversed = reversed * 10 + x % 10;
-    x /= 10;
-  }
+    int reversed = 0;
+    int original = x;
 
-  return reversed == original;
+    while (x > 0) {
+        reversed = reversed * 10 + x % 10;
+        x /= 10;
+    }
+
+    return reversed == original;
 }
 
-void runTests() {
-  assert(isPalindromeUsingString(121) && isPalindromeUsingMath(121));
-  assert(!isPalindromeUsingString(3356) && !isPalindromeUsingMath(3356));
-  assert(isPalindromeUsingString(55855) && isPalindromeUsingMath(55855));
-  assert(!isPalindromeUsingString(12811) && !isPalindromeUsingMath(12811));
+// Test cases for correctness
+void test() {
+    assert(simpleSolution(121) && optimalSolution(121));
+    assert(!simpleSolution(-121) && !optimalSolution(-121));
+    assert(!simpleSolution(1234) && !optimalSolution(1234));
+    assert(simpleSolution(1331) && optimalSolution(1331));
+    assert(simpleSolution(0) && optimalSolution(0));
 
-  std::cout << "All tests passed!\n";
+    std::cout << "All tests passed!\n";
 }
 
 int main() {
-  runTests();
-  return 0;
+    test();
+    return 0;
 }
