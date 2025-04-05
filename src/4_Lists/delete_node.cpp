@@ -5,7 +5,7 @@ class ListWithReversion : public List {
 public:
 
   
-void List::remove(int value) {
+void remove(int value) {
   Node *prev = nullptr;
   auto current = head.get();
 
@@ -26,7 +26,7 @@ void List::remove(int value) {
 };
 
 void test1() {
-  List list;
+  ListWithReversion list;
   list.append(1);
   list.append(2);
   list.append(3);
@@ -45,7 +45,7 @@ void test1() {
 }
 
 void test2() {
-  List list;
+  ListWithReversion list;
   list.append(1);
   list.append(2);
   list.append(3);
@@ -64,7 +64,7 @@ void test2() {
 }
 
 void test3() {
-  List list;
+  ListWithReversion list;
   list.append(1);
   list.append(2);
   list.append(3);
@@ -83,7 +83,7 @@ void test3() {
 }
 
 void test4() {
-  List list;
+  ListWithReversion list;
   list.append(1);
 
   list.remove(1);
