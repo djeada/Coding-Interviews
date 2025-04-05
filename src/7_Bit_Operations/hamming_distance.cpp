@@ -85,12 +85,13 @@ void test() {
         {1, 2, 3, 4},
         {7, 7, 7}
     };
-    std::vector<int> expectedOutputs = {
-        5,  // explained above
-        0,  // all elements are 0, so distance is 0
-        6,  // computed manually
-        0   // all elements are identical, so distance is 0
-    };
+std::vector<int> expectedOutputs = {
+    6,  // For [4, 14, 2], total Hamming distance is 6.
+    0,  // For [0, 0], all elements are 0, so distance is 0.
+    11, //  For [1, 2, 3, 4], total Hamming distance is 11.
+    0   // For [7, 7, 7], all elements are identical, so distance is 0.
+};
+
 
     for (size_t i = 0; i < testInputs.size(); ++i) {
         int resSimple = simpleSolution(testInputs[i]);
