@@ -1,114 +1,115 @@
-/**
- * This program identifies the majority element in an array.
- * A majority element is an element that appears more than n/2 times,
- * where n is the size of the array.
- * Two algorithms are provided: one using a partition-based approach,
- * and another using a counting approach.
+/*
+ * TASK: Identify the Majority Element
+ *
+ * A majority element is an element that appears more than n/2 times in an array
+ * of size n. If such an element exists, return it; otherwise, indicate no majority.
+ *
+ * Example:
+ * Input: [2, 2, 2, 1, 1]
+ * Output: 2
+ *
+ * Input: [1, 2, 3, 4, 5]
+ * Output: No majority
  */
 
 #include <algorithm>
 #include <cassert>
-#include <functional>
-#include <iostream>
-#include <random>
-#include <stdexcept>
 #include <vector>
+#include <stdexcept>
+#include <random>
+#include <iostream>
 
-bool isMajorityElement(const std::vector<int> &arr, int candidate) {
-  return std::count(arr.begin(), arr.end(), candidate) * 2 > arr.size();
+bool isMajority(const std::vector<int>& arr, int candidate) {
+    return std::count(arr.begin(), arr.end(), candidate) * 2 > arr.size();
 }
 
+// Simple counting approach (Boyer-Moore Majority Vote Algorithm, O(n))
+int majorityCounting(const std::vector<int>& arr) {
+    int candidate = arr[0], count = 1;
+    for (size_t i = 1; i < arr.size(); ++i) {
+        if (count == 0) {
+            candidate = arr[i];
+            count = 1;
+        } else {
+            count += (arr[i] == candidate) ? 1 : -1;
+        }
+    }
+
+    if (!isMajority(arr, candidate))
+        throw std::invalid_argument("No majority exists.");
+
+    return candidate;
+}
+
+// Partition-based Quickselect approach (average O(n), modifies input array)
 int randomIndex(int start, int end) {
-  std::random_device rd;
-  std::mt19937 eng(rd());
-  std::uniform_int_distribution<> distr(start, end);
-  return distr(eng);
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dist(start, end);
+    return dist(gen);
 }
 
-int partition(std::vector<int> &arr, int start, int end) {
-  int pivotIdx = randomIndex(start, end);
-  std::swap(arr[pivotIdx], arr[end]);
+int partition(std::vector<int>& arr, int start, int end) {
+    int pivotIdx = randomIndex(start, end);
+    std::swap(arr[pivotIdx], arr[end]);
 
-  int small = start - 1;
-  for (int idx = start; idx < end; ++idx) {
-    if (arr[idx] < arr[end]) {
-      ++small;
-      if (small != idx)
-        std::swap(arr[idx], arr[small]);
+    int smaller = start;
+    for (int i = start; i < end; ++i) {
+        if (arr[i] < arr[end])
+            std::swap(arr[i], arr[smaller++]);
     }
-  }
-  ++small;
-  std::swap(arr[small], arr[end]);
 
-  return small;
+    std::swap(arr[smaller], arr[end]);
+    return smaller;
 }
 
-int findMajorityPartition(std::vector<int> &arr) {
-  int length = arr.size(), middle = length >> 1, start = 0, end = length - 1;
+int majorityPartition(std::vector<int>& arr) {
+    int mid = arr.size() / 2, start = 0, end = arr.size() - 1;
 
-  int idx = partition(arr, start, end);
-  while (idx != middle) {
-    if (idx > middle) {
-      end = idx - 1;
-      idx = partition(arr, start, end);
-    } else {
-      start = idx + 1;
-      idx = partition(arr, start, end);
+    while (true) {
+        int idx = partition(arr, start, end);
+        if (idx == mid)
+            break;
+        else if (idx < mid)
+            start = idx + 1;
+        else
+            end = idx - 1;
     }
-  }
-  int candidate = arr[middle];
-  if (!isMajorityElement(arr, candidate))
-    throw std::invalid_argument("No majority exists.");
 
-  return candidate;
+    int candidate = arr[mid];
+    if (!isMajority(arr, candidate))
+        throw std::invalid_argument("No majority exists.");
+
+    return candidate;
 }
 
-int findMajorityCounting(const std::vector<int> &arr) {
-  int candidate = arr[0], count = 1;
-  for (size_t i = 1; i < arr.size(); ++i) {
-    if (count == 0) {
-      candidate = arr[i];
-      count = 1;
-    } else if (arr[i] == candidate)
-      count++;
-    else
-      count--;
-  }
-  if (!isMajorityElement(arr, candidate))
-    throw std::invalid_argument("No majority exists.");
+// Testing correctness
+void test() {
+    std::vector<int> arrNoMajority{1, 2, 3, 4, 5};
+    std::vector<int> arrMajority{2, 2, 2, 1, 3};
 
-  return candidate;
-}
-
-void testMajorityFinders() {
-  // Wrap both majority finder functions in lambdas with the same signature.
-  using MajorityFinder = std::function<int(std::vector<int>&)>;
-  std::vector<MajorityFinder> majorityFinders = {
-    [](std::vector<int>& arr) { return findMajorityPartition(arr); },
-    [](std::vector<int>& arr) { return findMajorityCounting(arr); }
-  };
-
-  // Test cases where no majority exists.
-  for (const auto &findMajority : majorityFinders) {
-    std::vector<int> arr{1, 2, 3, 4, 5};
-    bool exceptionThrown = false;
-
+    // Test counting approach
     try {
-      findMajority(arr);
-    } catch (...) {
-      exceptionThrown = true;
-    }
-    assert(exceptionThrown);
-  }
+        majorityCounting(arrNoMajority);
+        assert(false); // should not reach here
+    } catch (const std::invalid_argument&) {}
 
-  // Test cases where a majority exists.
-  std::vector<int> arr{2, 2, 2, 2, 2, 1, 3, 4, 5};
-  std::vector<int> arrCopy = arr;  // Copy for the second method (since partition modifies the array)
-  assert(findMajorityPartition(arr) == 2);
-  assert(findMajorityCounting(arrCopy) == 2);
+    assert(majorityCounting(arrMajority) == 2);
+
+    // Test partition approach (note: modifies array)
+    try {
+        auto arrCopy = arrNoMajority;
+        majorityPartition(arrCopy);
+        assert(false); // should not reach here
+    } catch (const std::invalid_argument&) {}
+
+    auto arrCopy = arrMajority;
+    assert(majorityPartition(arrCopy) == 2);
+
+    std::cout << "All tests passed!\n";
 }
 
 int main() {
-  testMajorityFinders();
-  return 0;
+    test();
+    return 0;
 }
