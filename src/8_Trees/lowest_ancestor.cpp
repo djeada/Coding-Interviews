@@ -33,7 +33,7 @@
  * For values 10 and 14, the LCA is 12 because 12 is the lowest node that is an ancestor to both.
  */
 
-#include "binary_tree.h"  // Assumed to exist and be implemented.
+#include "binary_tree.h"
 #include <cassert>
 #include <stdexcept>
 
