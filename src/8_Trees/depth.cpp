@@ -28,7 +28,7 @@
  * The longest path in the tree is from the root (9) to the leaf (15) with a total of 4 nodes.
  */
 
-#include "binary_tree.h"  // Assumed to exist and be implemented.
+#include "binary_tree.h"
 #include <algorithm>
 #include <cassert>
 
