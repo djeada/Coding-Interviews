@@ -178,7 +178,7 @@ So, when I started hearing buzz about *Coding Interviews* by Harry He, I decided
 ---
 
 ### How I Used the Book
-- I’d read a chapter, jot down my own notes, and attempt the problems. For tricky ones, I wrote mini solutions on my own first, then cross-checked with the book’s approach to see where I could improve.
+- I’d read a chapter, write down my own notes, and attempt the problems. For tricky ones, I wrote mini solutions on my own first, then cross-checked with the book’s approach to see where I could improve.
 - Before a technical interview, I revisited certain chapters (like “Strings” or “Trees”) to make sure I remembered the classic pitfalls and corner cases. 
 - Whenever I felt something was underexplained, I’d look up articles or videos online to fill in the gaps. This was especially true for more advanced dynamic programming or graph algorithms not deeply covered.
 
