@@ -12,16 +12,16 @@ If you’re interested in the book itself, you can find it on Amazon [here](http
 
 I aimed to modernize or expand on certain approaches while keeping these notes for my personal review:
 
-- The error handling approach was updated by replacing traditional error codes with *exceptions* to improve clarity.  
-- The input/output system was modernized by using *iostream* rather than the legacy `stdlib.h` for better consistency.  
-- The testing methodology was enhanced by substituting traditional console tests with *assertions* to simplify validation.  
-- The data management strategy was refined by adopting *vectors* instead of raw arrays for increased flexibility.  
-- The looping mechanism was optimized by favoring *iterators* over integer indexing for smoother code traversal.  
-- The organization of code was improved by employing *classes* to encapsulate related data effectively.  
-- The practice of accessing variables was updated by using *references* in place of pointers where applicable.  
-- The programming style was made more concise by integrating *lambdas* for compact and focused functionality.  
-- The process of grouping data was simplified by leveraging *STL pairs* for combining two values efficiently.  
-- The readability of the code was enhanced by implementing the *auto* keyword to facilitate cleaner type deduction.
+- Errors are handled with exceptions. Traditional error codes were replaced.  
+- Input/output is streamlined using `iostream`. The legacy `stdlib.h` was dropped.  
+- Testing relies on assertions. Traditional console tests were removed.  
+- Vectors are preffered for data management. Raw arrays were abandoned.  
+- Looping mechanisms are implemented with iterators instead of integer indexing.  
+- Code organization is improved with classes.
+- Refrences are preffered for variable access. Raw pointers were removed where applicable. When necessary we use smart pointers, mostly `std::unique_ptr`.  
+- Verbose function implementations were trimmed in favor of slim lambdas.
+- Data pairing is simplified with STL pairs. Manual grouping methods were discarded.  
+- Where possible type deduction is clarified with the auto keyword. Explicit type declarations were minimized.
 
 ## Scope and Limitations
 
