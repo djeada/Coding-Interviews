@@ -1,4 +1,4 @@
-# My Personal Notes on "Coding Interviews"
+# My Notes on "Coding Interviews"
 
 This repository contains **my personal notes, remarks, and attempts** at solving challenges inspired by (and sometimes directly taken from) Harry He's book, *Coding Interviews*. **These are not official or authoritative solutions**. Instead, they represent what I tried on my own while learning, and I encourage everyone to also attempt these or similar problems independently.
 
@@ -12,16 +12,16 @@ If you’re interested in the book itself, you can find it on Amazon [here](http
 
 I aimed to modernize or expand on certain approaches while keeping these notes for my personal review:
 
-1. **Error Handling:** Switched from error codes to exceptions for clarity.
-2. **Input/Output:** Used `iostream` in C++ instead of `stdlib.h`.
-3. **Testing:** Replaced traditional console testing with assertions.
-4. **Data Structures:** Utilized vectors (instead of raw arrays) for more flexibility.
-5. **Looping:** Preferred iterators over integer indexing where it made sense.
-6. **Class Implementation:** Employed classes to encapsulate data, improving code organization.
-7. **References:** Used references in place of pointers when possible.
-8. **Functional Programming:** Incorporated lambdas for small, focused functionalities.
-9. **Simplifying Data:** Leveraged STL pairs for quick two-value grouping.
-10. **Type Deduction:** Used `auto` for cleaner, more modern C++ code.
+- The error handling approach was updated by replacing traditional error codes with *exceptions* to improve clarity.  
+- The input/output system was modernized by using *iostream* rather than the legacy `stdlib.h` for better consistency.  
+- The testing methodology was enhanced by substituting traditional console tests with *assertions* to simplify validation.  
+- The data management strategy was refined by adopting *vectors* instead of raw arrays for increased flexibility.  
+- The looping mechanism was optimized by favoring *iterators* over integer indexing for smoother code traversal.  
+- The organization of code was improved by employing *classes* to encapsulate related data effectively.  
+- The practice of accessing variables was updated by using *references* in place of pointers where applicable.  
+- The programming style was made more concise by integrating *lambdas* for compact and focused functionality.  
+- The process of grouping data was simplified by leveraging *STL pairs* for combining two values efficiently.  
+- The readability of the code was enhanced by implementing the *auto* keyword to facilitate cleaner type deduction.
 
 ## Scope and Limitations
 
