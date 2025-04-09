@@ -1,6 +1,6 @@
 # My Notes on "Coding Interviews"
 
-This repository contains **my personal notes, remarks, and attempts** at solving challenges inspired by (and sometimes directly taken from) Harry He's book, *Coding Interviews*. **These are not official or authoritative solutions**. Instead, they represent what I tried on my own while learning, and I encourage everyone to also attempt these or similar problems independently.
+**My personal notes, remarks, and attempts** at solving challenges inspired by (and sometimes directly taken from) Harry He's book, *Coding Interviews*. **These are not official or authoritative solutions**. Instead, they represent what I tried on my own while learning, and I encourage everyone to also attempt these or similar problems independently.
 
 > **Important**: Some of the problems here do not appear in the book but felt related in scope, so I included them in my study process.
 
