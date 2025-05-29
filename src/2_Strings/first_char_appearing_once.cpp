@@ -22,106 +22,129 @@
  * Explanation: Characters 'a' and 'b' repeat, so the first non-repeating character is 'c'.
  */
 
+#include <algorithm>
+#include <array>
 #include <cassert>
 #include <iostream>
+#include <limits>
 #include <string>
 #include <unordered_map>
-#include <array>
-#include <limits>
+#include <vector>
 
-// Simple (Brute-force) Solution
-// Time Complexity: O(n²)
+// --- Implementations ---
+
+// Simple (Brute-force) Solution O(n²)
 char simpleSolution(const std::string& input) {
     for (size_t i = 0; i < input.size(); ++i) {
-        bool isRepeating = false;
+        bool repeating = false;
         for (size_t j = 0; j < input.size(); ++j) {
             if (i != j && input[i] == input[j]) {
-                isRepeating = true;
+                repeating = true;
                 break;
             }
         }
-        if (!isRepeating) {
+        if (!repeating) {
             return input[i];
-        }
-    }
-    return '\0';  // Return null character if no non-repeating character exists
-}
-
-// Optimal (Efficient) Solution using unordered_map
-// Time Complexity: O(n)
-char optimalSolution(const std::string& input) {
-    std::unordered_map<char, int> freq;
-    for (char c : input) {
-        ++freq[c];
-    }
-    for (char c : input) {
-        if (freq[c] == 1) {
-            return c;
         }
     }
     return '\0';
 }
 
-// Alternative Solution using a fixed-size array for counting and first occurrence tracking
-// Time Complexity: O(n) with O(1) space since the array size is fixed (256 characters)
+// Optimal (Hash map) Solution O(n)
+char optimalSolution(const std::string& input) {
+    std::unordered_map<char, int> freq;
+    for (char c : input) ++freq[c];
+    for (char c : input) {
+        if (freq[c] == 1) return c;
+    }
+    return '\0';
+}
+
+// Alternative (Fixed-size array) Solution O(n), O(1) space
 char alternativeSolution(const std::string& input) {
-    constexpr int ASCII_SIZE = 256;
-    std::array<int, ASCII_SIZE> firstIndex;
-    firstIndex.fill(-1);
-    std::array<int, ASCII_SIZE> count{};
-    
-    for (size_t i = 0; i < input.size(); ++i) {
+    constexpr int ASCII = 256;
+    std::array<int, ASCII> firstIdx;
+    firstIdx.fill(-1);
+    std::array<int, ASCII> count{};
+    for (int i = 0; i < (int)input.size(); ++i) {
         unsigned char c = static_cast<unsigned char>(input[i]);
-        if (firstIndex[c] == -1)
-            firstIndex[c] = i;
+        if (firstIdx[c] == -1) firstIdx[c] = i;
         ++count[c];
     }
-    
-    int minIndex = std::numeric_limits<int>::max();
+    int minPos = std::numeric_limits<int>::max();
     char result = '\0';
-    for (int i = 0; i < ASCII_SIZE; ++i) {
-        if (count[i] == 1 && firstIndex[i] < minIndex) {
-            minIndex = firstIndex[i];
-            result = static_cast<char>(i);
+    for (int c = 0; c < ASCII; ++c) {
+        if (count[c] == 1 && firstIdx[c] < minPos) {
+            minPos = firstIdx[c];
+            result = static_cast<char>(c);
         }
     }
     return result;
 }
 
-// Test cases for correctness
-void test() {
-    {
-        std::string input = "abc";
-        char expected = 'a';
-        assert(simpleSolution(input) == expected);
-        assert(optimalSolution(input) == expected);
-        assert(alternativeSolution(input) == expected);
+// --- Testing Infrastructure ---
+
+struct TestCase {
+    std::string name;
+    std::string input;
+    char expected;
+};
+
+void testSimple(const std::vector<TestCase>& cases) {
+    std::cout << "=== Testing simpleSolution ===\n";
+    for (auto& tc : cases) {
+        char got = simpleSolution(tc.input);
+        bool pass = (got == tc.expected);
+        std::cout << tc.name
+                  << ": expected='" << tc.expected
+                  << "', got='"   << got
+                  << "' -> "      << (pass ? "PASS" : "FAIL") << "\n";
+        assert(pass);
     }
-    {
-        std::string input = "ababac";
-        char expected = 'c';
-        assert(simpleSolution(input) == expected);
-        assert(optimalSolution(input) == expected);
-        assert(alternativeSolution(input) == expected);
+    std::cout << "\n";
+}
+
+void testOptimal(const std::vector<TestCase>& cases) {
+    std::cout << "=== Testing optimalSolution ===\n";
+    for (auto& tc : cases) {
+        char got = optimalSolution(tc.input);
+        bool pass = (got == tc.expected);
+        std::cout << tc.name
+                  << ": expected='" << tc.expected
+                  << "', got='"   << got
+                  << "' -> "      << (pass ? "PASS" : "FAIL") << "\n";
+        assert(pass);
     }
-    {
-        std::string input = "xyza";
-        char expected = 'x';
-        assert(simpleSolution(input) == expected);
-        assert(optimalSolution(input) == expected);
-        assert(alternativeSolution(input) == expected);
+    std::cout << "\n";
+}
+
+void testAlternative(const std::vector<TestCase>& cases) {
+    std::cout << "=== Testing alternativeSolution ===\n";
+    for (auto& tc : cases) {
+        char got = alternativeSolution(tc.input);
+        bool pass = (got == tc.expected);
+        std::cout << tc.name
+                  << ": expected='" << tc.expected
+                  << "', got='"   << got
+                  << "' -> "      << (pass ? "PASS" : "FAIL") << "\n";
+        assert(pass);
     }
-    {
-        std::string input = "lol";
-        char expected = 'o';
-        assert(simpleSolution(input) == expected);
-        assert(optimalSolution(input) == expected);
-        assert(alternativeSolution(input) == expected);
-    }
-    std::cout << "All tests passed!\n";
+    std::cout << "\n";
 }
 
 int main() {
-    test();
+    std::vector<TestCase> cases = {
+        { "All unique",    "abc",      'a' },
+        { "Repeat at end", "ababac",   'c' },
+        { "Unique first",  "xyza",     'x' },
+        { "Middle unique", "lol",      'o' },
+        { "No unique",     "aabbcc",   '\0' }
+    };
+
+    testSimple(cases);
+    testOptimal(cases);
+    testAlternative(cases);
+
+    std::cout << "All tests passed successfully!\n";
     return 0;
 }
