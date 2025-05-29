@@ -24,74 +24,109 @@
  * Matches: '.' matches 'a', '*' allows '.' to match 'b' also.
  */
 
+#include <algorithm>
 #include <cassert>
-#include <vector>
-#include <string>
 #include <iostream>
+#include <string>
+#include <vector>
 
-// Simple Recursive Solution
-// Complexity: Exponential O(2^n) due to recursion, suitable only for short strings.
-bool simpleMatch(const std::string &s, const std::string &p, int i = 0, int j = 0) {
-    if (j == p.size()) return i == s.size();
+// --- Implementations ---
 
-    bool first_match = (i < s.size() && (p[j] == s[i] || p[j] == '.'));
-
-    if (j + 1 < p.size() && p[j + 1] == '*') {
-        return (simpleMatch(s, p, i, j + 2) ||
-                (first_match && simpleMatch(s, p, i + 1, j)));
+// Simple Recursive Solution (O(2^n))
+bool simpleMatchHelper(const std::string &s, const std::string &p, int i, int j) {
+    if (j == (int)p.size()) return i == (int)s.size();
+    bool first_match = (i < (int)s.size() && (p[j] == s[i] || p[j] == '.'));
+    if (j + 1 < (int)p.size() && p[j + 1] == '*') {
+        // Skip '*' or consume one char and stay on '*'
+        return simpleMatchHelper(s, p, i, j + 2) ||
+               (first_match && simpleMatchHelper(s, p, i + 1, j));
     } else {
-        return first_match && simpleMatch(s, p, i + 1, j + 1);
+        return first_match && simpleMatchHelper(s, p, i + 1, j + 1);
     }
 }
 
-// Optimal Dynamic Programming Solution
-// Complexity: O(m*n), optimal for practical use.
+bool simpleMatch(const std::string &s, const std::string &p) {
+    return simpleMatchHelper(s, p, 0, 0);
+}
+
+// Optimal Dynamic Programming Solution (O(m*n))
 bool optimalMatch(const std::string &s, const std::string &p) {
     int m = s.size(), n = p.size();
     std::vector<std::vector<bool>> dp(m + 1, std::vector<bool>(n + 1, false));
-
     dp[0][0] = true;
-    for (int j = 2; j <= n; j += 2)
+    // Patterns like a*, a*b*, a*b*c* can match empty string
+    for (int j = 2; j <= n; j += 2) {
         dp[0][j] = dp[0][j - 2] && p[j - 1] == '*';
-
+    }
     for (int i = 1; i <= m; ++i) {
         for (int j = 1; j <= n; ++j) {
             if (p[j - 1] == '*') {
+                // zero occurrences or at least one
                 dp[i][j] = dp[i][j - 2] ||
-                           (dp[i - 1][j] && (s[i - 1] == p[j - 2] || p[j - 2] == '.'));
+                           (dp[i - 1][j] && (p[j - 2] == s[i - 1] || p[j - 2] == '.'));
             } else {
-                dp[i][j] = dp[i - 1][j - 1] && (s[i - 1] == p[j - 1] || p[j - 1] == '.');
+                dp[i][j] = dp[i - 1][j - 1] &&
+                           (p[j - 1] == s[i - 1] || p[j - 1] == '.');
             }
         }
     }
-
     return dp[m][n];
 }
 
-// Testing correctness
-void runTests() {
-    std::vector<std::pair<std::string, std::string>> testCases{
-        {"aab", "c*a*b"},
-        {"mississippi", "mis*is*p*."},
-        {"", "a*"},
-        {"abc", "abc"},
-        {"ab", ".*"},
-        {"aaa", "ab*a*c*a"}
-    };
+// --- Test infrastructure ---
 
-    std::vector<bool> expected{true, false, true, true, true, true};
+struct TestCase {
+    std::string name;
+    std::string s;
+    std::string p;
+    bool expected;
+};
 
-    for (size_t i = 0; i < testCases.size(); ++i) {
-        bool simple_res = simpleMatch(testCases[i].first, testCases[i].second);
-        bool optimal_res = optimalMatch(testCases[i].first, testCases[i].second);
-        assert(simple_res == expected[i]);
-        assert(optimal_res == expected[i]);
+void testSimpleMatch(const std::vector<TestCase>& cases) {
+    std::cout << "=== Testing simpleMatch ===\n";
+    for (const auto& tc : cases) {
+        bool got = simpleMatch(tc.s, tc.p);
+        bool pass = (got == tc.expected);
+        std::cout << tc.name
+                  << ": simpleMatch(\"" << tc.s << "\", \"" << tc.p << "\")"
+                  << " expected=" << (tc.expected ? "true" : "false")
+                  << ", got="    << (got       ? "true" : "false")
+                  << " -> "      << (pass      ? "PASS" : "FAIL")
+                  << "\n";
+        assert(pass);
     }
+    std::cout << "\n";
+}
 
-    std::cout << "All tests passed!\n";
+void testOptimalMatch(const std::vector<TestCase>& cases) {
+    std::cout << "=== Testing optimalMatch ===\n";
+    for (const auto& tc : cases) {
+        bool got = optimalMatch(tc.s, tc.p);
+        bool pass = (got == tc.expected);
+        std::cout << tc.name
+                  << ": optimalMatch(\"" << tc.s << "\", \"" << tc.p << "\")"
+                  << " expected=" << (tc.expected ? "true" : "false")
+                  << ", got="    << (got       ? "true" : "false")
+                  << " -> "      << (pass      ? "PASS" : "FAIL")
+                  << "\n";
+        assert(pass);
+    }
+    std::cout << "\n";
 }
 
 int main() {
-    runTests();
+    std::vector<TestCase> cases = {
+        { "Match c*a*b",       "aab",         "c*a*b",      true  },
+        { "Mismatch mis*p*.", "mississippi", "mis*is*p*.", false },
+        { "Empty against a*",  "",            "a*",         true  },
+        { "Exact match",      "abc",         "abc",        true  },
+        { "Wildcard .*",      "ab",          ".*",         true  },
+        { "Complex mix",      "aaa",         "ab*a*c*a",   true  }
+    };
+
+    testSimpleMatch(cases);
+    testOptimalMatch(cases);
+
+    std::cout << "All tests passed successfully!\n";
     return 0;
 }
