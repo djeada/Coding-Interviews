@@ -100,4 +100,8 @@ int main() {
     };
 
     testSimpleSolution(cases);
-    testOptimalSolution(case
+    testOptimalSolution(cases);
+
+    std::cout << "All tests passed successfully!\n";
+    return 0;
+}
