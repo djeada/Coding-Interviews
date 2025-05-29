@@ -73,8 +73,25 @@ void reverseSubstring(std::string &str, int left, int right) {
     }
 }
 
+std::string trimSpaces(const std::string &input) {
+    std::string s = input;
+    int n = s.size();
+    int i = 0, j = 0;
+    // Skip leading spaces
+    while (i < n && s[i] == ' ') i++;
+    // Copy characters, collapsing spaces
+    for (; i < n; ++i) {
+        if (s[i] == ' ' && (j == 0 || s[j-1] == ' ')) continue;
+        s[j++] = s[i];
+    }
+    // Remove trailing space if any
+    if (j > 0 && s[j-1] == ' ') j--;
+    return s.substr(0, j);
+}
+
 std::string optimalSolution(const std::string &input) {
-    std::string str = input;
+    // First, normalize spaces
+    std::string str = trimSpaces(input);
     int n = (int)str.size();
     int start = 0;
 
