@@ -23,82 +23,126 @@
 
 #include <algorithm>
 #include <cassert>
-#include <bitset>
 #include <iostream>
 #include <set>
 #include <string>
 #include <vector>
 
 // Simple (Recursive) Solution
-// Complexity: O(2^n) due to recursive exploration of all subsets.
-std::set<std::string> simpleSolution(const std::string &str, int idx = 0, const std::string &curr = "") {
+std::set<std::string> simpleSolutionHelper(const std::string &str, int idx, const std::string &curr) {
     std::set<std::string> result;
-    if (idx == str.length()) {
+    if (idx == (int)str.size()) {
         if (!curr.empty()) result.insert(curr);
         return result;
     }
-    auto without = simpleSolution(str, idx + 1, curr);
-    auto with = simpleSolution(str, idx + 1, curr + str[idx]);
+    // Exclude current character
+    auto without = simpleSolutionHelper(str, idx + 1, curr);
+    // Include current character
+    auto with = simpleSolutionHelper(str, idx + 1, curr + str[idx]);
     result.merge(without);
     result.merge(with);
     return result;
 }
 
-// Optimal (Bitset) Solution
-// Complexity: O(2^n * n), more efficient memory usage, practical for larger inputs.
+std::set<std::string> simpleSolution(const std::string &str) {
+    return simpleSolutionHelper(str, 0, "");
+}
+
+// Optimal (Bitmask) Solution
 std::set<std::string> optimalSolution(const std::string &str) {
     std::set<std::string> result;
-    const size_t len = str.length();
-    const size_t total = 1 << len;
-
-    for (size_t mask = 1; mask < total; ++mask) {
-        std::string combination;
-        for (size_t j = 0; j < len; ++j)
-            if (mask & (1 << j))
-                combination += str[j];
-        result.insert(combination);
+    int n = (int)str.size();
+    int total = 1 << n;
+    for (int mask = 1; mask < total; ++mask) {
+        std::string comb;
+        for (int j = 0; j < n; ++j) {
+            if (mask & (1 << j)) comb += str[j];
+        }
+        result.insert(comb);
     }
-
     return result;
 }
 
-// Alternative Solution (Educational - STL Combination)
-// Complexity: Similar O(2^n * n), demonstrates use of std::next_permutation for education.
+// Alternative (STL Combinations) Solution
 std::set<std::string> alternativeSolution(std::string str) {
     std::set<std::string> result;
-    const size_t len = str.length();
-    for (size_t r = 1; r <= len; ++r) {
-        std::string bitmask(r, 1); // r ones
-        bitmask.resize(len, 0);    // n-r zeros
-
+    int n = (int)str.size();
+    for (int r = 1; r <= n; ++r) {
+        std::string bitmask(r, '1');
+        bitmask.resize(n, '0');
         do {
-            std::string combination;
-            for (size_t i = 0; i < len; ++i)
-                if (bitmask[i]) combination += str[i];
-            result.insert(combination);
+            std::string comb;
+            for (int i = 0; i < n; ++i) {
+                if (bitmask[i] == '1') comb += str[i];
+            }
+            result.insert(comb);
         } while (std::prev_permutation(bitmask.begin(), bitmask.end()));
     }
-
     return result;
 }
 
-// Test cases for correctness
-void test() {
-    std::vector<std::string> testInputs = {"a", "ab", "abc"};
+struct TestCase {
+    std::string name;
+    std::string input;
+    std::set<std::string> expected;
+};
 
-    for (const auto &input : testInputs) {
-        auto simple = simpleSolution(input);
-        auto optimal = optimalSolution(input);
-        auto alternative = alternativeSolution(input);
-
-        assert(simple == optimal);
-        assert(optimal == alternative);
+void testSimple(const std::vector<TestCase>& cases) {
+    std::cout << "=== Testing simpleSolution ===\n";
+    for (auto& tc : cases) {
+        auto got = simpleSolution(tc.input);
+        bool pass = (got == tc.expected);
+        std::cout << tc.name << " -> " << (pass ? "PASS" : "FAIL") << "\n";
+        assert(pass);
     }
+    std::cout << "\n";
+}
 
-    std::cout << "All tests passed!\n";
+void testOptimal(const std::vector<TestCase>& cases) {
+    std::cout << "=== Testing optimalSolution ===\n";
+    for (auto& tc : cases) {
+        auto got = optimalSolution(tc.input);
+        bool pass = (got == tc.expected);
+        std::cout << tc.name << " -> " << (pass ? "PASS" : "FAIL") << "\n";
+        assert(pass);
+    }
+    std::cout << "\n";
+}
+
+void testAlternative(const std::vector<TestCase>& cases) {
+    std::cout << "=== Testing alternativeSolution ===\n";
+    for (auto& tc : cases) {
+        auto got = alternativeSolution(tc.input);
+        bool pass = (got == tc.expected);
+        std::cout << tc.name << " -> " << (pass ? "PASS" : "FAIL") << "\n";
+        assert(pass);
+    }
+    std::cout << "\n";
 }
 
 int main() {
-    test();
+    std::vector<TestCase> cases = {
+        {
+            "Single char",
+            "a",
+            {"a"}
+        },
+        {
+            "Two chars",
+            "ab",
+            {"a","b","ab"}
+        },
+        {
+            "Three chars",
+            "abc",
+            {"a","b","c","ab","ac","bc","abc"}
+        }
+    };
+
+    testSimple(cases);
+    testOptimal(cases);
+    testAlternative(cases);
+
+    std::cout << "All tests passed successfully!\n";
     return 0;
 }
