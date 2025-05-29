@@ -24,14 +24,14 @@
 
 #include <algorithm>
 #include <cassert>
-#include <vector>
-#include <string>
-#include <set>
 #include <iostream>
+#include <set>
+#include <string>
+#include <vector>
+
+// --- Implementations ---
 
 // Simple (Brute-force) Solution
-// Uses recursion, does not handle duplicates efficiently.
-// Complexity: O(n * n!), due to recursion and copying.
 void permuteSimple(std::string s, int l, int r, std::set<std::string>& results) {
     if (l == r) {
         results.insert(s);
@@ -47,32 +47,26 @@ void permuteSimple(std::string s, int l, int r, std::set<std::string>& results) 
 std::vector<std::string> simpleSolution(const std::string& input) {
     if (input.empty()) return {""};
     std::set<std::string> resultSet;
-    permuteSimple(input, 0, input.size() - 1, resultSet);
-    return {resultSet.begin(), resultSet.end()};
+    permuteSimple(input, 0, (int)input.size() - 1, resultSet);
+    return { resultSet.begin(), resultSet.end() };
 }
 
-// Optimal (Efficient) Solution
-// Uses built-in next_permutation algorithm after sorting.
-// Complexity: O(n * n!), optimal for generating permutations.
+// Optimal Solution (using next_permutation)
 std::vector<std::string> optimalSolution(const std::string& input) {
+    if (input.empty()) return {""};
     std::vector<std::string> results;
-    std::string sortedInput = input;
-    std::sort(sortedInput.begin(), sortedInput.end());
+    std::string s = input;
+    std::sort(s.begin(), s.end());
     do {
-        results.push_back(sortedInput);
-    } while (std::next_permutation(sortedInput.begin(), sortedInput.end()));
-
+        results.push_back(s);
+    } while (std::next_permutation(s.begin(), s.end()));
     return results;
 }
 
-// Alternative Solution (Educational)
-// Iterative permutation generation.
-// Complexity: O(n * n!), educational to understand iterative vs recursive.
+// Alternative (Iterative) Solution
 std::vector<std::string> alternativeSolution(const std::string& input) {
     if (input.empty()) return {""};
-    
-    std::vector<std::string> results = {std::string(1, input[0])};
-
+    std::vector<std::string> results = { std::string(1, input[0]) };
     for (size_t i = 1; i < input.size(); ++i) {
         std::vector<std::string> newPerms;
         for (const auto& str : results) {
@@ -82,32 +76,67 @@ std::vector<std::string> alternativeSolution(const std::string& input) {
         }
         results = std::move(newPerms);
     }
-
-    // Remove duplicates (if any)
-    std::set<std::string> unique(results.begin(), results.end());
-    return {unique.begin(), unique.end()};
+    std::set<std::string> uniqueSet(results.begin(), results.end());
+    return { uniqueSet.begin(), uniqueSet.end() };
 }
 
-// Test cases for correctness
-void test() {
-    std::vector<std::string> testInputs = {"abc", "aab", ""};
+// --- Testing Infrastructure ---
 
-    for (const auto& input : testInputs) {
-        auto simpleRes = simpleSolution(input);
-        auto optimalRes = optimalSolution(input);
-        auto altRes = alternativeSolution(input);
+struct TestCase {
+    std::string name;
+    std::string input;
+    std::vector<std::string> expected;  // must be sorted
+};
 
-        std::sort(simpleRes.begin(), simpleRes.end());
-        std::sort(optimalRes.begin(), optimalRes.end());
-        std::sort(altRes.begin(), altRes.end());
-
-        assert(simpleRes == optimalRes && optimalRes == altRes);
+void runTest(const std::string& label,
+             const std::vector<TestCase>& cases,
+             std::vector<std::string> (*func)(const std::string&))
+{
+    std::cout << "=== Testing " << label << " ===\n";
+    for (const auto& tc : cases) {
+        auto got = func(tc.input);
+        std::sort(got.begin(), got.end());
+        bool pass = (got == tc.expected);
+        std::cout << tc.name
+                  << ": expected={";
+        for (size_t i = 0; i < tc.expected.size(); ++i) {
+            std::cout << tc.expected[i]
+                      << (i + 1 < tc.expected.size() ? "," : "");
+        }
+        std::cout << "}, got={";
+        for (size_t i = 0; i < got.size(); ++i) {
+            std::cout << got[i]
+                      << (i + 1 < got.size() ? "," : "");
+        }
+        std::cout << "} -> " << (pass ? "PASS" : "FAIL") << "\n";
+        assert(pass);
     }
-
-    std::cout << "All tests passed!\n";
+    std::cout << "\n";
 }
 
 int main() {
-    test();
+    std::vector<TestCase> cases = {
+        {
+            "Three distinct chars",
+            "abc",
+            {"abc","acb","bac","bca","cab","cba"}
+        },
+        {
+            "With duplicate char",
+            "aab",
+            {"aab","aba","baa"}
+        },
+        {
+            "Empty string",
+            "",
+            {""}
+        }
+    };
+
+    runTest("simpleSolution",      cases, simpleSolution);
+    runTest("optimalSolution",     cases, optimalSolution);
+    runTest("alternativeSolution", cases, alternativeSolution);
+
+    std::cout << "All tests passed successfully!\n";
     return 0;
 }
