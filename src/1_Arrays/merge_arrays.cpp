@@ -116,8 +116,3 @@ int main() {
     std::cout << "All tests passed successfully!\n";
     return 0;
 }
-
-int main() {
-    test();
-    return 0;
-}
