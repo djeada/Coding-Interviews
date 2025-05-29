@@ -21,52 +21,86 @@
  * Explanation: Negative numbers are not palindromes.
  */
 
+#include <algorithm>
 #include <cassert>
 #include <iostream>
 #include <string>
+#include <vector>
 
-// Simple Solution (Convert integer to string)
-// Complexity: O(N), where N is the number of digits.
+// Simple Solution (string conversion) O(N)
 bool simpleSolution(int x) {
     if (x < 0) return false;
-
     std::string s = std::to_string(x);
     int n = s.size();
-    for (int i = 0; i < n / 2; ++i)
-        if (s[i] != s[n - i - 1])
-            return false;
-
+    for (int i = 0; i < n / 2; ++i) {
+        if (s[i] != s[n - i - 1]) return false;
+    }
     return true;
 }
 
-// Optimal Solution (Reverse integer mathematically)
-// Complexity: O(N), avoids extra space for string conversion.
+// Optimal Solution (numeric reversal) O(N)
 bool optimalSolution(int x) {
     if (x < 0 || (x % 10 == 0 && x != 0)) return false;
-
-    int reversed = 0;
-    int original = x;
-
+    int original = x, reversed = 0;
     while (x > 0) {
-        reversed = reversed * 10 + x % 10;
+        reversed = reversed * 10 + (x % 10);
         x /= 10;
     }
-
     return reversed == original;
 }
 
-// Test cases for correctness
-void test() {
-    assert(simpleSolution(121) && optimalSolution(121));
-    assert(!simpleSolution(-121) && !optimalSolution(-121));
-    assert(!simpleSolution(1234) && !optimalSolution(1234));
-    assert(simpleSolution(1331) && optimalSolution(1331));
-    assert(simpleSolution(0) && optimalSolution(0));
+struct TestCase {
+    std::string name;
+    int input;
+    bool expected;
+};
 
-    std::cout << "All tests passed!\n";
+void testSimple(const std::vector<TestCase>& cases) {
+    std::cout << "=== Testing simpleSolution ===\n";
+    for (const auto& tc : cases) {
+        bool got = simpleSolution(tc.input);
+        bool pass = (got == tc.expected);
+        std::cout << tc.name
+                  << ": input=" << tc.input
+                  << ", expected=" << (tc.expected ? "true" : "false")
+                  << ", got="      << (got       ? "true" : "false")
+                  << " -> "        << (pass      ? "PASS" : "FAIL")
+                  << "\n";
+        assert(pass);
+    }
+    std::cout << "\n";
+}
+
+void testOptimal(const std::vector<TestCase>& cases) {
+    std::cout << "=== Testing optimalSolution ===\n";
+    for (const auto& tc : cases) {
+        bool got = optimalSolution(tc.input);
+        bool pass = (got == tc.expected);
+        std::cout << tc.name
+                  << ": input=" << tc.input
+                  << ", expected=" << (tc.expected ? "true" : "false")
+                  << ", got="      << (got       ? "true" : "false")
+                  << " -> "        << (pass      ? "PASS" : "FAIL")
+                  << "\n";
+        assert(pass);
+    }
+    std::cout << "\n";
 }
 
 int main() {
-    test();
+    std::vector<TestCase> cases = {
+        { "Palindrome positive",   121,  true  },
+        { "Negative number",       -121, false },
+        { "Non-palindrome",        1234, false },
+        { "Even-length palindrome",1331, true  },
+        { "Zero",                  0,    true  },
+        { "Trailing zero",         10,   false },
+        { "Single digit",          7,    true  }
+    };
+
+    testSimple(cases);
+    testOptimal(cases);
+
+    std::cout << "All tests passed successfully!\n";
     return 0;
 }
