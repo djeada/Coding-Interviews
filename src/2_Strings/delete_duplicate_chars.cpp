@@ -19,14 +19,15 @@
  * Explanation: The duplicate 'o' and 'g' characters are removed, preserving only their first appearance.
  */
 
+#include <algorithm>
 #include <cassert>
 #include <iostream>
 #include <string>
 #include <unordered_set>
-#include <algorithm>
+#include <vector>
 
 // Simple (Brute-force) Solution
-// Time Complexity: O(n²), where n is the length of the input string.
+// Time Complexity: O(n²)
 std::string simpleSolution(const std::string& input) {
     std::string result;
     for (char c : input) {
@@ -38,65 +39,96 @@ std::string simpleSolution(const std::string& input) {
 }
 
 // Optimal (Efficient) Solution
-// Time Complexity: Average O(n) using a hash table.
+// Time Complexity: Average O(n)
 std::string optimalSolution(const std::string& input) {
     std::string result;
-    result.reserve(input.size());  // Reserve space to avoid reallocations.
+    result.reserve(input.size());
     std::unordered_set<char> seen;
     for (char c : input) {
-        if (seen.find(c) == seen.end()) {
-            seen.insert(c);
+        if (seen.insert(c).second) {
             result.push_back(c);
         }
     }
     return result;
 }
 
-// (Optional) Additional Solution using std::remove_if and a lambda expression.
-// This approach demonstrates an alternative modern technique even if it's not optimal for clarity.
+// (Optional) Alternative Solution using std::remove_if
 std::string alternativeSolution(const std::string& input) {
     std::string result = input;
     std::unordered_set<char> seen;
-    auto new_end = std::remove_if(result.begin(), result.end(), [&seen](char c) {
-        if (seen.find(c) != seen.end())
-            return true;
-        seen.insert(c);
-        return false;
-    });
+    auto new_end = std::remove_if(result.begin(), result.end(),
+        [&seen](char c) {
+            if (seen.count(c)) return true;
+            seen.insert(c);
+            return false;
+        });
     result.erase(new_end, result.end());
     return result;
 }
 
-// Test cases for correctness
-void test() {
-    const std::string testInput1 = "google";
-    const std::string expected1 = "gole";
-    assert(simpleSolution(testInput1) == expected1);
-    assert(optimalSolution(testInput1) == expected1);
-    assert(alternativeSolution(testInput1) == expected1);
+struct TestCase {
+    std::string name;
+    std::string input;
+    std::string expected;
+};
 
-    const std::string testInput2 = "aaaaaaaaaaaaaaaaaaaaa";
-    const std::string expected2 = "a";
-    assert(simpleSolution(testInput2) == expected2);
-    assert(optimalSolution(testInput2) == expected2);
-    assert(alternativeSolution(testInput2) == expected2);
+void testSimple(const std::vector<TestCase>& cases) {
+    std::cout << "=== Testing simpleSolution ===\n";
+    for (const auto& tc : cases) {
+        std::string got = simpleSolution(tc.input);
+        bool pass = (got == tc.expected);
+        std::cout
+            << tc.name
+            << ": expected=\"" << tc.expected
+            << "\", got=\"" << got
+            << "\" -> " << (pass ? "PASS" : "FAIL") << "\n";
+        assert(pass);
+    }
+    std::cout << "\n";
+}
 
-    const std::string testInput3 = "";
-    const std::string expected3 = "";
-    assert(simpleSolution(testInput3) == expected3);
-    assert(optimalSolution(testInput3) == expected3);
-    assert(alternativeSolution(testInput3) == expected3);
+void testOptimal(const std::vector<TestCase>& cases) {
+    std::cout << "=== Testing optimalSolution ===\n";
+    for (const auto& tc : cases) {
+        std::string got = optimalSolution(tc.input);
+        bool pass = (got == tc.expected);
+        std::cout
+            << tc.name
+            << ": expected=\"" << tc.expected
+            << "\", got=\"" << got
+            << "\" -> " << (pass ? "PASS" : "FAIL") << "\n";
+        assert(pass);
+    }
+    std::cout << "\n";
+}
 
-    const std::string testInput4 = "abcacbbacbcacabcba";
-    const std::string expected4 = "abc";
-    assert(simpleSolution(testInput4) == expected4);
-    assert(optimalSolution(testInput4) == expected4);
-    assert(alternativeSolution(testInput4) == expected4);
-
-    std::cout << "All tests passed!\n";
+void testAlternative(const std::vector<TestCase>& cases) {
+    std::cout << "=== Testing alternativeSolution ===\n";
+    for (const auto& tc : cases) {
+        std::string got = alternativeSolution(tc.input);
+        bool pass = (got == tc.expected);
+        std::cout
+            << tc.name
+            << ": expected=\"" << tc.expected
+            << "\", got=\"" << got
+            << "\" -> " << (pass ? "PASS" : "FAIL") << "\n";
+        assert(pass);
+    }
+    std::cout << "\n";
 }
 
 int main() {
-    test();
+    std::vector<TestCase> cases = {
+        { "Basic repeat",        "google",                     "gole" },
+        { "All same",            "aaaaaaaaaaaaaaaaaaaaa",      "a"    },
+        { "Empty string",        "",                            ""    },
+        { "Mixed repeats",       "abcacbbacbcacabcba",         "abc" }
+    };
+
+    testSimple(cases);
+    testOptimal(cases);
+    testAlternative(cases);
+
+    std::cout << "All tests passed successfully!\n";
     return 0;
 }
