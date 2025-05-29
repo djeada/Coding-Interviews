@@ -26,9 +26,16 @@
  */
 
 #include <algorithm>
-#include <cassert>
-#include <vector>
 #include <iostream>
+#include <string>
+#include <vector>
+#include <cassert>
+
+struct TestCase {
+    std::string name;
+    std::vector<int> arr;
+    int expected;
+};
 
 // Simple Linear Search Implementation
 int findMinLinear(const std::vector<int>& nums) {
@@ -38,45 +45,69 @@ int findMinLinear(const std::vector<int>& nums) {
 // Optimal Binary Search Implementation (O(log n))
 int findMinOptimal(const std::vector<int>& nums) {
     int left = 0;
-    int right = nums.size() - 1;
+    int right = (int)nums.size() - 1;
 
     while (left < right) {
         int mid = left + (right - left) / 2;
-
         if (nums[mid] > nums[right]) {
             left = mid + 1;
         } else if (nums[mid] < nums[right]) {
             right = mid;
         } else {
-            // When nums[mid] and nums[right] are equal, ambiguity arises,
-            // safely decrement right as nums[right] can't be minimum.
+            // nums[mid] == nums[right], safely shrink
             --right;
         }
     }
-
     return nums[left];
 }
 
-// Simple test cases to verify correctness
-void test() {
-    std::vector<std::vector<int>> testArrays = {
-        {3, 4, 5, 1, 2},
-        {10, 10, 2, 5, 5, 9, 9, 9},
-        {-1, -1, 5, -1, -1},
-        {0, 0, 0, 0, 0, 0},
-        {1, 2, 3, 4, 5}, // no rotation
-        {2, 3, 4, 5, 1},
-        {1} // single element
-    };
-
-    for (const auto& arr : testArrays) {
-        assert(findMinLinear(arr) == findMinOptimal(arr));
+void testLinear(const std::vector<TestCase>& cases) {
+    std::cout << "=== Testing Linear Search Implementation ===\n";
+    for (const auto& tc : cases) {
+        int result = findMinLinear(tc.arr);
+        bool pass = (result == tc.expected);
+        std::cout 
+            << tc.name 
+            << ": expected=" << tc.expected 
+            << ", got=" << result 
+            << " -> " << (pass ? "PASS" : "FAIL") 
+            << "\n";
+        assert(pass);
     }
+    std::cout << "\n";
+}
 
-    std::cout << "All tests passed!" << std::endl;
+void testOptimal(const std::vector<TestCase>& cases) {
+    std::cout << "=== Testing Optimal Binary Search Implementation ===\n";
+    for (const auto& tc : cases) {
+        int result = findMinOptimal(tc.arr);
+        bool pass = (result == tc.expected);
+        std::cout 
+            << tc.name 
+            << ": expected=" << tc.expected 
+            << ", got=" << result 
+            << " -> " << (pass ? "PASS" : "FAIL") 
+            << "\n";
+        assert(pass);
+    }
+    std::cout << "\n";
 }
 
 int main() {
-    test();
+    std::vector<TestCase> cases = {
+        { "Rotated middle",       {3, 4, 5, 1, 2},            1 },
+        { "With duplicates",      {10, 10, 2, 5, 5, 9, 9},    2 },
+        { "All identical",        {0, 0, 0, 0},               0 },
+        { "Negative values",      {-1, -1, 5, -1, -1},       -1 },
+        { "No rotation",          {1, 2, 3, 4, 5},            1 },
+        { "Pivot at end",         {2, 3, 4, 5, 1},            1 },
+        { "Single element",       {42},                       42 }
+    };
+
+    testLinear(cases);
+    testOptimal(cases);
+
+    std::cout << "All tests passed successfully!\n";
     return 0;
 }
+
