@@ -137,9 +137,12 @@ int main() {
         { "All same",          {7,7,7,7},            false, 7 },
         { "Single element",    {42},                 false, 42 },
         { "Large random no",   []{
-                                    std::vector<int> v(101);
-                                    for(int i=0;i<101;++i) v[i] = i%2; 
-                                    return v;
+               std::vector<int> v(100);
+                                for(int i = 0; i < 100; ++i)
+                                    v[i] = i % 2;    // 50 zeros, 50 ones
+                                return v;
+                           }(),                     true, 0 },
+            
                                }(),                     true, 0 },
         { "Large random yes",  []{
                                     std::vector<int> v(101, 1);
