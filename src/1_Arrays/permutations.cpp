@@ -27,17 +27,16 @@
 #include <cassert>
 #include <iostream>
 #include <set>
+#include <string>
 #include <vector>
 
 // Simple Recursive Solution
-// Easy to understand but can be slower for large inputs.
 void simpleSolutionHelper(const std::vector<std::vector<int>>& input, size_t idx,
                           std::set<int>& current, std::vector<std::set<int>>& results) {
     if (idx == input.size()) {
         results.push_back(current);
         return;
     }
-
     for (int num : input[idx]) {
         current.insert(num);
         simpleSolutionHelper(input, idx + 1, current, results);
@@ -53,10 +52,8 @@ std::vector<std::set<int>> simpleSolution(const std::vector<std::vector<int>>& i
 }
 
 // Optimal Iterative Solution
-// Avoids recursion overhead, more efficient for larger inputs.
 std::vector<std::set<int>> optimalSolution(const std::vector<std::vector<int>>& input) {
-    std::vector<std::set<int>> results = { { } };
-
+    std::vector<std::set<int>> results = { {} };
     for (const auto& vec : input) {
         std::vector<std::set<int>> newResults;
         for (const auto& existingSet : results) {
@@ -68,39 +65,74 @@ std::vector<std::set<int>> optimalSolution(const std::vector<std::vector<int>>& 
         }
         results = std::move(newResults);
     }
-
     return results;
 }
 
-// Test cases for correctness
-void test() {
-    std::vector<std::vector<int>> input1 = {{1, 2}, {3, 4}, {5, 6}};
-    std::vector<std::set<int>> expected1 = {
-        {1, 3, 5}, {1, 3, 6}, {1, 4, 5}, {1, 4, 6},
-        {2, 3, 5}, {2, 3, 6}, {2, 4, 5}, {2, 4, 6}
-    };
-    auto res1_simple = simpleSolution(input1);
-    auto res1_optimal = optimalSolution(input1);
-    std::sort(res1_simple.begin(), res1_simple.end());
-    std::sort(res1_optimal.begin(), res1_optimal.end());
-    std::sort(expected1.begin(), expected1.end());
-    assert(res1_simple == expected1);
-    assert(res1_optimal == expected1);
+// --- Test case struct ---
+struct TestCase {
+    std::string name;
+    std::vector<std::vector<int>> input;
+    std::vector<std::set<int>> expected;
+};
 
-    std::vector<std::vector<int>> input2 = {{1, 2, 3}};
-    std::vector<std::set<int>> expected2 = {{1}, {2}, {3}};
-    assert(simpleSolution(input2) == expected2);
-    assert(optimalSolution(input2) == expected2);
+// --- Test runners ---
+void testSimple(const std::vector<TestCase>& cases) {
+    std::cout << "=== Testing simpleSolution ===\n";
+    for (auto& tc : cases) {
+        auto got = simpleSolution(tc.input);
+        std::sort(got.begin(), got.end());
+        auto expected = tc.expected;
+        std::sort(expected.begin(), expected.end());
+        bool pass = (got == expected);
+        std::cout << tc.name << " -> " << (pass ? "PASS" : "FAIL") << "\n";
+        assert(pass);
+    }
+    std::cout << "\n";
+}
 
-    std::vector<std::vector<int>> input3 = {{6}, {7}, {8}, {9}};
-    std::vector<std::set<int>> expected3 = {{6, 7, 8, 9}};
-    assert(simpleSolution(input3) == expected3);
-    assert(optimalSolution(input3) == expected3);
-
-    std::cout << "All tests passed!\n";
+void testOptimal(const std::vector<TestCase>& cases) {
+    std::cout << "=== Testing optimalSolution ===\n";
+    for (auto& tc : cases) {
+        auto got = optimalSolution(tc.input);
+        std::sort(got.begin(), got.end());
+        auto expected = tc.expected;
+        std::sort(expected.begin(), expected.end());
+        bool pass = (got == expected);
+        std::cout << tc.name << " -> " << (pass ? "PASS" : "FAIL") << "\n";
+        assert(pass);
+    }
+    std::cout << "\n";
 }
 
 int main() {
-    test();
+    std::vector<TestCase> cases = {
+        {
+            "3×2×2 grid",
+            {{1,2}, {3,4}, {5,6}},
+            {{1,3,5}, {1,3,6}, {1,4,5}, {1,4,6},
+             {2,3,5}, {2,3,6}, {2,4,5}, {2,4,6}}
+        },
+        {
+            "Single list",
+            {{1,2,3}},
+            {{1}, {2}, {3}}
+        },
+        {
+            "All singletons",
+            {{6}, {7}, {8}, {9}},
+            {{6,7,8,9}}
+        },
+        {
+            "Empty input",
+            {},
+            {{}}
+        }
+    };
+
+    testSimple(cases);
+    testOptimal(cases);
+
+    std::cout << "All tests passed successfully!\n";
     return 0;
 }
+
