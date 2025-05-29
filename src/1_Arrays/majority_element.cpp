@@ -129,6 +129,7 @@ void testMajorityPartition(const std::vector<TestCase>& cases) {
     std::cout << "\n";
 }
 
+
 int main() {
     std::vector<TestCase> cases = {
         { "No majority",       {1,2,3,4,5},           true,  0 },
@@ -138,17 +139,16 @@ int main() {
         { "Single element",    {42},                 false, 42 },
         { "Large random no",   []{
                std::vector<int> v(100);
-                                for(int i = 0; i < 100; ++i)
-                                    v[i] = i % 2;    // 50 zeros, 50 ones
-                                return v;
-                           }(),                     true, 0 },
-            
-                               }(),                     true, 0 },
+               for(int i = 0; i < 100; ++i)
+                   v[i] = i % 2;    // 50 zeros, 50 ones
+               return v;
+           }(),                  true, 0 },
         { "Large random yes",  []{
-                                    std::vector<int> v(101, 1);
-                                    for(int i=0;i<50;++i) v[i] = 0;
-                                    return v;
-                               }(),                     false, 1 }
+               std::vector<int> v(101, 1);
+               for(int i = 0; i < 50; ++i)
+                   v[i] = 0;
+               return v;
+           }(),                  false, 1 }
     };
 
     testMajorityCounting(cases);
