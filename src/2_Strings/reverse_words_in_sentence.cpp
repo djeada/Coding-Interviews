@@ -44,10 +44,10 @@
 #include <algorithm>
 #include <cassert>
 #include <iostream>
+#include <iterator>
 #include <sstream>
 #include <string>
 #include <vector>
-#include <iterator>
 
 // Simple (Brute-force) Solution using string splitting.
 std::string simpleSolution(const std::string &input) {
@@ -59,83 +59,120 @@ std::string simpleSolution(const std::string &input) {
     }
     std::reverse(words.begin(), words.end());
     std::ostringstream oss;
-    for (size_t i = 0; i < words.size(); i++) {
-        if (i > 0) {
-            oss << " ";
-        }
+    for (size_t i = 0; i < words.size(); ++i) {
+        if (i > 0) oss << ' ';
         oss << words[i];
     }
     return oss.str();
 }
 
-// Optimal (Efficient) Solution: In-place reversal using two-step reverse.
-// First, reverse each individual word, then reverse the entire string.
+// Optimal (Efficient) Solution: In-place reversal via two-step reverse.
 void reverseSubstring(std::string &str, int left, int right) {
     while (left < right) {
-        std::swap(str[left], str[right]);
-        left++;
-        right--;
+        std::swap(str[left++], str[right--]);
     }
 }
 
 std::string optimalSolution(const std::string &input) {
     std::string str = input;
-    int n = str.size();
+    int n = (int)str.size();
     int start = 0;
-    // Reverse each word in-place.
-    for (int i = 0; i <= n; i++) {
+
+    // Reverse each word in-place
+    for (int i = 0; i <= n; ++i) {
         if (i == n || str[i] == ' ') {
             reverseSubstring(str, start, i - 1);
             start = i + 1;
         }
     }
-    // Reverse the entire string.
+    // Reverse the whole string
     reverseSubstring(str, 0, n - 1);
     return str;
 }
 
-// Alternative Solution using modern C++ iterators.
-// Splits the string using std::istream_iterator and then builds the result using reverse iterators.
+// Alternative using C++ iterators to split and then reverse iterate.
 std::string alternativeSolution(const std::string &input) {
     std::istringstream iss(input);
     std::vector<std::string> words{
         std::istream_iterator<std::string>(iss),
         std::istream_iterator<std::string>()
     };
-    std::string result;
+    std::ostringstream oss;
     for (auto it = words.rbegin(); it != words.rend(); ++it) {
-        if (!result.empty()) {
-            result += " ";
-        }
-        result += *it;
+        if (it != words.rbegin()) oss << ' ';
+        oss << *it;
     }
-    return result;
+    return oss.str();
 }
 
-// Test cases for correctness.
-void test() {
-    std::vector<std::string> testInputs = {
-        "hello world",
-        "adam",
-        "the quick brown fox",
-        "C++ is modern",
-        "leading spaces",
-        "trailing spaces",
-        "multiple spaces between words"
-    };
+// --- Test case struct ---
+struct TestCase {
+    std::string name;
+    std::string input;
+    std::string expected;
+};
 
-    for (const auto &input : testInputs) {
-        std::string simpleRes = simpleSolution(input);
-        std::string optimalRes = optimalSolution(input);
-        std::string alternativeRes = alternativeSolution(input);
-        // For these test cases, we assume words are separated by a single space.
-        assert(simpleRes == optimalRes);
-        assert(simpleRes == alternativeRes);
+// --- Test runners ---
+void testSimple(const std::vector<TestCase>& cases) {
+    std::cout << "=== Testing simpleSolution ===\n";
+    for (auto& tc : cases) {
+        std::string got = simpleSolution(tc.input);
+        bool pass = (got == tc.expected);
+        std::cout
+            << tc.name
+            << ": expected=\"" << tc.expected
+            << "\", got=\"" << got
+            << "\" -> " << (pass ? "PASS" : "FAIL") << "\n";
+        assert(pass);
     }
-    std::cout << "All tests passed!\n";
+    std::cout << "\n";
+}
+
+void testOptimal(const std::vector<TestCase>& cases) {
+    std::cout << "=== Testing optimalSolution ===\n";
+    for (auto& tc : cases) {
+        std::string got = optimalSolution(tc.input);
+        bool pass = (got == tc.expected);
+        std::cout
+            << tc.name
+            << ": expected=\"" << tc.expected
+            << "\", got=\"" << got
+            << "\" -> " << (pass ? "PASS" : "FAIL") << "\n";
+        assert(pass);
+    }
+    std::cout << "\n";
+}
+
+void testAlternative(const std::vector<TestCase>& cases) {
+    std::cout << "=== Testing alternativeSolution ===\n";
+    for (auto& tc : cases) {
+        std::string got = alternativeSolution(tc.input);
+        bool pass = (got == tc.expected);
+        std::cout
+            << tc.name
+            << ": expected=\"" << tc.expected
+            << "\", got=\"" << got
+            << "\" -> " << (pass ? "PASS" : "FAIL") << "\n";
+        assert(pass);
+    }
+    std::cout << "\n";
 }
 
 int main() {
-    test();
+    std::vector<TestCase> cases = {
+        { "Two words",                "hello world",                "world hello" },
+        { "Single word",              "adam",                       "adam" },
+        { "Multiple words",           "the quick brown fox",        "fox brown quick the" },
+        { "C++ phrase",               "C++ is modern",              "modern is C++" },
+        { "Leading/trailing spaces",  "  trim this  ",              "this trim" },
+        { "Repeated spaces",          "a  lot   of    spaces",      "spaces of lot a" }
+    };
+
+    testSimple(cases);
+    testOptimal(cases);
+    testAlternative(cases);
+
+    std::cout << "All tests passed successfully!\n";
     return 0;
 }
+
