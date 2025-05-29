@@ -9,13 +9,12 @@
  *      - Time Complexity: Average O(n + m), which is more efficient for larger inputs.
  *   3. alternativeSolution: Leverages std::remove_if with a lambda to remove characters in place.
  *
- * ASCII Illustration:
- *
- *   Input String:       W  e     a  r  e     s  t  u  d  e  n  t  s
- *   Characters to Delete: a, e, i, o, u
- *                        ↓  ↓     ↓  ↓  ↓     ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓
- *   Resulting String:   W     r       s  t  d  n  t  s
- *
+* ASCII Illustration:
+*
+*   Input String:           W  e     a  r  e     s  t  u  d  e  n  t  s
+*   Characters to Delete:      a     e     i     o     u
+*                              ↓     ↓     ↓     ↓     ↓
+*   Resulting String:        W     r     s  t  d  n  t  s
  * Example Input/Output:
  * Input:  str = "8613761352066", charsToDelete = "1234567890"
  * Output: ""
