@@ -11,55 +11,110 @@
 
 #include <algorithm>
 #include <cassert>
-#include <vector>
 #include <iostream>
+#include <string>
+#include <tuple>
+#include <vector>
 
-// Simple Implementation (O((n+m)log(n+m)), straightforward)
+// Simple Implementation (O((n+m) log(n+m)))
 void mergeSortedSimple(std::vector<int>& arr1, const std::vector<int>& arr2) {
     arr1.insert(arr1.end(), arr2.begin(), arr2.end());
     std::sort(arr1.begin(), arr1.end());
 }
 
-// Optimal Merge Implementation (O(n+m), efficient merging)
+// Optimal Merge Implementation (O(n+m))
 void mergeSortedOptimal(std::vector<int>& arr1, const std::vector<int>& arr2) {
-    int idx1 = arr1.size() - 1;
-    int idx2 = arr2.size() - 1;
-    int idxMerged = arr1.size() + arr2.size() - 1;
+    int i = (int)arr1.size() - 1;
+    int j = (int)arr2.size() - 1;
+    int k = (int)arr1.size() + (int)arr2.size() - 1;
 
-    arr1.resize(idxMerged + 1);
+    arr1.resize(k + 1);
 
-    while (idx1 >= 0 && idx2 >= 0) {
-        arr1[idxMerged--] =
-            (arr1[idx1] >= arr2[idx2]) ? arr1[idx1--] : arr2[idx2--];
+    while (i >= 0 && j >= 0) {
+        if (arr1[i] >= arr2[j]) {
+            arr1[k--] = arr1[i--];
+        } else {
+            arr1[k--] = arr2[j--];
+        }
     }
-
-    // Copy remaining elements from arr2, if any
-    while (idx2 >= 0) {
-        arr1[idxMerged--] = arr2[idx2--];
+    while (j >= 0) {
+        arr1[k--] = arr2[j--];
     }
 }
 
-// Testing correctness
-void test() {
-    std::vector<std::tuple<std::vector<int>, std::vector<int>, std::vector<int>>> testCases = {
-        {{1, 3, 5}, {2, 4, 6}, {1, 2, 3, 4, 5, 6}},
-        {{1, 2, 3}, {4, 5, 6}, {1, 2, 3, 4, 5, 6}},
-        {{2, 4, 6}, {1, 3, 5}, {1, 2, 3, 4, 5, 6}},
-        {{1, 1, 1}, {1, 1, 1}, {1, 1, 1, 1, 1, 1}},
-        {{}, {1, 2, 3}, {1, 2, 3}},
+// --- Test case struct ---
+struct TestCaseMerge {
+    std::string name;
+    std::vector<int> a;
+    std::vector<int> b;
+    std::vector<int> expected;
+};
+
+// --- Test runners ---
+void testMergeSimple(const std::vector<TestCaseMerge>& cases) {
+    std::cout << "=== Testing mergeSortedSimple ===\n";
+    for (auto& tc : cases) {
+        auto got = tc.a;
+        mergeSortedSimple(got, tc.b);
+        bool pass = (got == tc.expected);
+        std::cout
+            << tc.name
+            << ": expected={";
+        for (size_t i = 0; i < tc.expected.size(); ++i) {
+            std::cout << tc.expected[i] 
+                      << (i+1 < tc.expected.size() ? "," : "");
+        }
+        std::cout << "}, got={";
+        for (size_t i = 0; i < got.size(); ++i) {
+            std::cout << got[i] 
+                      << (i+1 < got.size() ? "," : "");
+        }
+        std::cout << "} -> " << (pass ? "PASS" : "FAIL") << "\n";
+        assert(pass);
+    }
+    std::cout << "\n";
+}
+
+void testMergeOptimal(const std::vector<TestCaseMerge>& cases) {
+    std::cout << "=== Testing mergeSortedOptimal ===\n";
+    for (auto& tc : cases) {
+        auto got = tc.a;
+        mergeSortedOptimal(got, tc.b);
+        bool pass = (got == tc.expected);
+        std::cout
+            << tc.name
+            << ": expected={";
+        for (size_t i = 0; i < tc.expected.size(); ++i) {
+            std::cout << tc.expected[i] 
+                      << (i+1 < tc.expected.size() ? "," : "");
+        }
+        std::cout << "}, got={";
+        for (size_t i = 0; i < got.size(); ++i) {
+            std::cout << got[i] 
+                      << (i+1 < got.size() ? "," : "");
+        }
+        std::cout << "} -> " << (pass ? "PASS" : "FAIL") << "\n";
+        assert(pass);
+    }
+    std::cout << "\n";
+}
+
+int main() {
+    std::vector<TestCaseMerge> cases = {
+        { "Interleaved",    {1,3,5},      {2,4,6},      {1,2,3,4,5,6} },
+        { "All before",     {1,2,3},      {4,5,6},      {1,2,3,4,5,6} },
+        { "All after",      {4,5,6},      {1,2,3},      {1,2,3,4,5,6} },
+        { "All equal",      {1,1,1},      {1,1,1},      {1,1,1,1,1,1} },
+        { "Empty first",    {},           {1,2,3},      {1,2,3} },
+        { "Empty second",   {4,5,6},      {},           {4,5,6} },
+        { "Single elements",{2},          {1},          {1,2} }
     };
 
-    for (const auto& [arr1, arr2, expected] : testCases) {
-        auto arrSimple = arr1;
-        mergeSortedSimple(arrSimple, arr2);
-        assert(arrSimple == expected);
+    testMergeSimple(cases);
+    testMergeOptimal(cases);
 
-        auto arrOptimal = arr1;
-        mergeSortedOptimal(arrOptimal, arr2);
-        assert(arrOptimal == expected);
-    }
-
-    std::cout << "All tests passed!\n";
+    std::cout << "All tests passed successfully!\n";
+    return 0;
 }
 
 int main() {
