@@ -17,44 +17,75 @@
 
 #include <algorithm>
 #include <cassert>
-#include <string>
 #include <iostream>
+#include <stdexcept>
+#include <string>
+#include <vector>
 
 // Helper function to check if a string contains only digits
 bool isDigitString(const std::string& s) {
     return std::all_of(s.begin(), s.end(), ::isdigit);
 }
 
-// Optimal Solution
-// Adds two numbers represented as strings, O(n) complexity
+// Optimal Solution: Adds two numbers represented as strings, O(n)
 std::string optimalSolution(const std::string& num1, const std::string& num2) {
+    if (!isDigitString(num1) || !isDigitString(num2)) {
+        throw std::invalid_argument("Inputs must be digit strings.");
+    }
+
     std::string result;
-    int carry = 0, i = num1.size() - 1, j = num2.size() - 1;
+    int carry = 0, i = (int)num1.size() - 1, j = (int)num2.size() - 1;
 
     while (i >= 0 || j >= 0 || carry) {
-        int digit1 = (i >= 0) ? num1[i--] - '0' : 0;
-        int digit2 = (j >= 0) ? num2[j--] - '0' : 0;
-
-        int sum = digit1 + digit2 + carry;
+        int d1 = (i >= 0 ? num1[i--] - '0' : 0);
+        int d2 = (j >= 0 ? num2[j--] - '0' : 0);
+        int sum = d1 + d2 + carry;
         carry = sum / 10;
-        result.push_back((sum % 10) + '0');
+        result.push_back(char('0' + (sum % 10)));
     }
 
     std::reverse(result.begin(), result.end());
     return result;
 }
 
-// Test cases for correctness
-void test() {
-    assert(optimalSolution("999", "3") == "1002");
-    assert(optimalSolution("33", "9999") == "10032");
-    assert(optimalSolution("3333333", "222") == "3333555");
-    assert(optimalSolution("0", "0") == "0");
+struct TestCase {
+    std::string name;
+    std::string num1, num2;
+    bool expectException;
+    std::string expected;
+};
 
-    std::cout << "All tests passed!\n";
+void testOptimalSolution(const std::vector<TestCase>& cases) {
+    std::cout << "=== Testing optimalSolution ===\n";
+    for (const auto& tc : cases) {
+        bool passed = false;
+        try {
+            std::string got = optimalSolution(tc.num1, tc.num2);
+            if (!tc.expectException && got == tc.expected) {
+                passed = true;
+            }
+        } catch (const std::invalid_argument&) {
+            if (tc.expectException) passed = true;
+        }
+        std::cout << tc.name
+                  << " -> " << (passed ? "PASS" : "FAIL") << "\n";
+        assert(passed);
+    }
+    std::cout << "\n";
 }
 
 int main() {
-    test();
+    std::vector<TestCase> cases = {
+        { "Simple carry",      "999",   "3",     false, "1002"   },
+        { "Different lengths", "33",    "9999",  false, "10032"  },
+        { "No carry",          "123",   "456",   false, "579"    },
+        { "Zero + Zero",       "0",     "0",     false, "0"      },
+        { "Leading zeros",     "001",   "099",   false, "100"    },
+        { "Invalid char num1", "12a3",  "456",   true,  ""       },
+        { "Invalid char num2", "123",   "4b6",   true,  ""       }
+    };
+
+    testOptimalSolution(cases);
+    std::cout << "All tests passed successfully!\n";
     return 0;
 }
