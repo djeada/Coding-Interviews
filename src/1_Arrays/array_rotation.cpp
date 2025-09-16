@@ -40,12 +40,17 @@ struct TestCase {
 // 1) Linear by hand
 int findMinLinearManual(const std::vector<int>& nums) {
     assert(!nums.empty());
-    int m = nums.front();
-    for (const auto& n : nums) {
-        if (n < m) m = n;
+    auto prev = nums.front();
+    for (size_t i = 1; i < nums.size(); ++i) {
+        auto cur = nums[i];
+        if (cur < prev) {
+            return cur; 
+        }
+        prev = cur;
     }
-    return m;
+    return nums.front();
 }
+
 
 // 2) Linear via library
 int findMinLinearLib(const std::vector<int>& nums) {
