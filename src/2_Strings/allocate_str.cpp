@@ -69,8 +69,8 @@ int main() {
     std::cout << "\n " << str << " \n";
 
     // Incorrect usage demonstration
-    char* wrongPointer = allocateMemoryWrong();
-    std::cout << "\n " << wrongPointer << " \n"; // ❗ May crash or print garbage
+    // char* wrongPointer = allocateMemoryWrong();
+    // std::cout << "\n " << wrongPointer << " \n"; // ❗ May crash or print garbage
 
     return 0;
 }
