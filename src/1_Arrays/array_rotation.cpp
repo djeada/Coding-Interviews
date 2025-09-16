@@ -72,24 +72,6 @@ int findMinBinaryManual(const std::vector<int>& nums) {
     return nums[left];
 }
 
-// 4) "Binary from library": partition_point (with correctness fallback)
-// Works in O(log n) when the range is partitioned by predicate (common case).
-// If not partitioned (e.g., last value also appears before pivot), we fall back to the manual binary.
-int findMinBinaryLib(const std::vector<int>& nums) {
-    assert(!nums.empty());
-    const int last = nums.back();
-    auto pred = [last](int x){ return x > last; };
-
-    // Fast path: only use partition_point if the range is actually partitioned by pred.
-    if (std::is_partitioned(nums.begin(), nums.end(), pred)) {
-        auto it = std::partition_point(nums.begin(), nums.end(), pred);
-        return *it; // first x <= last -> the minimum
-    }
-
-    // Fallback for tricky duplicate layouts
-    return findMinBinaryManual(nums);
-}
-
 template <typename F>
 void runTests(const std::string& title, F algo, const std::vector<TestCase>& cases) {
     std::cout << "=== " << title << " ===\n";
@@ -123,7 +105,6 @@ int main() {
     runTests("Linear (by hand)",              findMinLinearManual, cases);
     runTests("Linear (library: min_element)", findMinLinearLib,    cases);
     runTests("Binary (by hand)",              findMinBinaryManual, cases);
-    runTests("Binary (library: partition_point + fallback)", findMinBinaryLib, cases);
 
     std::cout << "All tests passed successfully!\n";
     return 0;
