@@ -40,9 +40,9 @@ struct TestCase {
 // 1) Linear by hand
 int findMinLinearManual(const std::vector<int>& nums) {
     assert(!nums.empty());
-    int m = nums[0];
-    for (size_t i = 1; i < nums.size(); ++i) {
-        if (nums[i] < m) m = nums[i];
+    int m = nums.front();
+    for (const auto& n : nums) {
+        if (n < m) m = n;
     }
     return m;
 }
