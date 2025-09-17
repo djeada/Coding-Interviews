@@ -40,7 +40,7 @@ I aimed to modernize or expand on certain approaches while keeping these notes f
 | 3 | Majority element    | [C++](https://github.com/djeada/CodingInterviews/blob/master/src/1_Arrays/majority_element.cpp)                                |
 | 4 | Merge arrays        | [C++](https://github.com/djeada/CodingInterviews/blob/master/src/1_Arrays/merge_arrays.cpp)                                    |
 | 5 | Min number          | [C++](https://github.com/djeada/CodingInterviews/blob/master/src/1_Arrays/min_number.cpp)                                      |
-| 6 | Permutations        | [C++](https://github.com/djeada/CodingInterviews/blob/master/src/1_Arrays/permutations.cpp)                                    |
+| 6 | Cartesian Product   | [C++](https://github.com/djeada/CodingInterviews/blob/master/src/1_Arrays/cartesian_product.cpp)                                    |
 | 7 | Reorder numbers     | [C++](https://github.com/djeada/CodingInterviews/blob/master/src/1_Arrays/reorder_numbers.cpp)                                 |
 
 ## Strings
@@ -70,6 +70,7 @@ I aimed to modernize or expand on certain approaches while keeping these notes f
 | 3 | Min in stack          | [C++](https://github.com/djeada/CodingInterviews/blob/master/src/3_Stack_Queue/min_in_stack.cpp)                                        |
 | 4 | Stack push pop order  | [C++](https://github.com/djeada/CodingInterviews/blob/master/src/3_Stack_Queue/stack_push_pop_order.cpp)                                |
 | 5 | Stream median         | [C++](https://github.com/djeada/CodingInterviews/blob/master/src/3_Stack_Queue/stream_median.cpp)                                       |
+| 6 | K least numbers       | [C++](https://github.com/djeada/CodingInterviews/blob/master/src/3_Stack_Queue/k_least_numbers.cpp)                                     |
 
 ## Lists
 
@@ -142,7 +143,6 @@ I aimed to modernize or expand on certain approaches while keeping these notes f
 | 4 | Eight queens                 | [C++](https://github.com/djeada/CodingInterviews/blob/master/src/9_Dynamic_Programming/eight_queens.cpp)                                     |
 | 5 | Fibonacci                    | [C++](https://github.com/djeada/CodingInterviews/blob/master/src/9_Dynamic_Programming/fibonacci.cpp)                                        |
 | 6 | Greatest sum subarrays       | [C++](https://github.com/djeada/CodingInterviews/blob/master/src/9_Dynamic_Programming/greatest_sum_subarrays.cpp)                               |
-| 7 | K least numbers              | [C++](https://github.com/djeada/CodingInterviews/blob/master/src/9_Dynamic_Programming/k_least_numbers.cpp)                                    |
 | 8 | Longest increasing path      | [C++](https://github.com/djeada/CodingInterviews/blob/master/src/9_Dynamic_Programming/longest_increasing_path.cpp)                            |
 | 9 | Matrix chain multiplication  | [C++](https://github.com/djeada/CodingInterviews/blob/master/src/9_Dynamic_Programming/matrix_chain_multiplication.cpp)                          |
 
