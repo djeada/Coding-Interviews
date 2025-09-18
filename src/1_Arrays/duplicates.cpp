@@ -139,9 +139,6 @@ void runTests(
 }
 
 // --- Example usage ---
-int countDuplicatesSimple(const std::vector<int>& arr);   // assume defined
-int countDuplicatesOptimal(const std::vector<int>& arr);  // assume defined
-std::vector<int> findDuplicatesOptimal(const std::vector<int>& arr); // assume defined
 
 int main() {
     std::vector<TestCaseCount> countCases = {
