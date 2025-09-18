@@ -41,7 +41,7 @@ int majorityFrequency(const std::vector<int>& arr) {
     if (arr.empty()) throw std::invalid_argument("Array is empty.");
     std::unordered_map<int, int> freq;
     for (int v : arr) {
-        if (++freq[v] > static_cast<int>(arr.size()) / 2) {
+        if (freq[v] * 2 > static_cast<int>(arr.size())) {
             return v; // early exit
         }
     }
