@@ -3,22 +3,16 @@
  *
  * A majority element is an element that appears more than n/2 times in an array
  * of size n. If such an element exists, return it; otherwise, indicate no majority.
- *
- * Example:
- * Input: [2, 2, 2, 1, 1]
- * Output: 2
- *
- * Input: [1, 2, 3, 4, 5]
- * Output: No majority
  */
 #include <algorithm>
 #include <cassert>
 #include <iostream>
-#include <random>
 #include <stdexcept>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
+// ---- Utility ----
 bool isMajority(const std::vector<int>& arr, int candidate) {
     return std::count(arr.begin(), arr.end(), candidate) * 2 > static_cast<int>(arr.size());
 }
@@ -42,43 +36,19 @@ int majorityCounting(const std::vector<int>& arr) {
     return candidate;
 }
 
-// Quickselect-based partition (average O(n), modifies array)
-int randomIndex(int start, int end) {
-    static std::mt19937 gen{std::random_device{}()};
-    std::uniform_int_distribution<> dist(start, end);
-    return dist(gen);
-}
-
-int partition(std::vector<int>& arr, int start, int end) {
-    int pivotIdx = randomIndex(start, end);
-    std::swap(arr[pivotIdx], arr[end]);
-    int store = start;
-    for (int i = start; i < end; ++i) {
-        if (arr[i] < arr[end]) {
-            std::swap(arr[i], arr[store++]);
+// Frequency dictionary approach (O(n) time, O(n) space)
+int majorityFrequency(const std::vector<int>& arr) {
+    if (arr.empty()) throw std::invalid_argument("Array is empty.");
+    std::unordered_map<int, int> freq;
+    for (int v : arr) {
+        if (++freq[v] > static_cast<int>(arr.size()) / 2) {
+            return v; // early exit
         }
     }
-    std::swap(arr[store], arr[end]);
-    return store;
-}
-
-int majorityPartition(std::vector<int>& arr) {
-    if (arr.empty()) throw std::invalid_argument("Array is empty.");
-    int mid = arr.size() / 2, lo = 0, hi = arr.size() - 1;
-    while (true) {
-        int idx = partition(arr, lo, hi);
-        if (idx == mid) break;
-        if (idx < mid) lo = idx + 1;
-        else           hi = idx - 1;
-    }
-    int candidate = arr[mid];
-    if (!isMajority(arr, candidate))
-        throw std::invalid_argument("No majority exists.");
-    return candidate;
+    throw std::invalid_argument("No majority exists.");
 }
 
 // ---- Testing infrastructure ----
-
 struct TestCase {
     std::string name;
     std::vector<int> arr;
@@ -86,49 +56,25 @@ struct TestCase {
     int expected;  // only meaningful if expectException == false
 };
 
-void testMajorityCounting(const std::vector<TestCase>& cases) {
-    std::cout << "=== Testing majorityCounting ===\n";
+// Generic runner
+template <typename Func>
+void runTests(const std::string& title, const std::vector<TestCase>& cases, Func func) {
+    std::cout << "=== " << title << " ===\n";
     for (auto& tc : cases) {
         bool passed = false;
         try {
-            int result = majorityCounting(tc.arr);
+            int result = func(tc.arr);
             if (!tc.expectException && result == tc.expected) {
                 passed = true;
             }
         } catch (const std::invalid_argument&) {
             if (tc.expectException) passed = true;
         }
-        std::cout
-            << tc.name
-            << " -> " << (passed ? "PASS" : "FAIL")
-            << "\n";
+        std::cout << tc.name << " -> " << (passed ? "PASS" : "FAIL") << "\n";
         assert(passed);
     }
     std::cout << "\n";
 }
-
-void testMajorityPartition(const std::vector<TestCase>& cases) {
-    std::cout << "=== Testing majorityPartition ===\n";
-    for (auto& tc : cases) {
-        bool passed = false;
-        try {
-            auto copy = tc.arr;               // partition modifies in-place
-            int result = majorityPartition(copy);
-            if (!tc.expectException && result == tc.expected) {
-                passed = true;
-            }
-        } catch (const std::invalid_argument&) {
-            if (tc.expectException) passed = true;
-        }
-        std::cout
-            << tc.name
-            << " -> " << (passed ? "PASS" : "FAIL")
-            << "\n";
-        assert(passed);
-    }
-    std::cout << "\n";
-}
-
 
 int main() {
     std::vector<TestCase> cases = {
@@ -151,8 +97,8 @@ int main() {
            }(),                  false, 1 }
     };
 
-    testMajorityCounting(cases);
-    testMajorityPartition(cases);
+    runTests("Testing majorityCounting (Boyer–Moore)", cases, majorityCounting);
+    runTests("Testing majorityFrequency (Hash Map)",  cases, majorityFrequency);
 
     std::cout << "All tests passed successfully!\n";
     return 0;
