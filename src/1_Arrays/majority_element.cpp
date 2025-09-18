@@ -36,7 +36,7 @@ int majorityCounting(const std::vector<int>& arr) {
     return candidate;
 }
 
-// Frequency dictionary approach (O(n) time, O(n) space)
+// Finds and returns the majority element using the frequency dictionary approach (O(n) time, O(n) space).
 int majorityFrequency(const std::vector<int>& arr) {
     if (arr.empty()) throw std::invalid_argument("Array is empty.");
     std::unordered_map<int, int> freq;
