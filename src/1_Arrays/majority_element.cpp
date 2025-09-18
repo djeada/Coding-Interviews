@@ -40,13 +40,14 @@ int majorityCounting(const std::vector<int>& arr) {
 int majorityFrequency(const std::vector<int>& arr) {
     if (arr.empty()) throw std::invalid_argument("Array is empty.");
     std::unordered_map<int, int> freq;
+    const int n = static_cast<int>(arr.size());
     for (int v : arr) {
-        if (freq[v] * 2 > static_cast<int>(arr.size())) {
-            return v; // early exit
-        }
+        int c = ++freq[v];                // increment the count for v
+        if (c * 2 > n) return v;          // early exit if v is majority
     }
     throw std::invalid_argument("No majority exists.");
 }
+
 
 // ---- Testing infrastructure ----
 struct TestCase {
