@@ -1,9 +1,31 @@
 /*
- * TASK: Identify the Majority Element
- *
- * A majority element is an element that appears more than n/2 times in an array
- * of size n. If such an element exists, return it; otherwise, indicate no majority.
- */
+* Task: Identify the majority element in an array.
+*
+* A majority element is a value that appears more than ⌊n/2⌋ times
+* in an array of length n. If such an element exists, return it;
+* otherwise, indicate that no majority exists.
+*
+* Visual intuition:
+* For an array of length n, a majority must occupy more than half
+* of the positions. That means at most one majority element can exist.
+*
+* Examples:
+* [2, 2, 2, 1, 3]           -> Majority: 2   (appears 3/5 > 2.5)
+* [7, 7, 7, 7]              -> Majority: 7   (appears 4/4 > 2)
+* [1, 1, 2, 2]              -> No majority   (2/4 is not > 2)
+* [42]                      -> Majority: 42  (1/1 > 0.5)
+*
+* Example Input/Output:
+* Input:  [3, 3, 4, 2, 3, 3, 3]
+* Output: 3
+*
+* Input:  [1, 2, 3, 4, 5]
+* Output: No majority
+*
+* Input:  [1, 1, 1, 2, 2]
+* Output: 1
+*/
+
 #include <algorithm>
 #include <cassert>
 #include <iostream>
