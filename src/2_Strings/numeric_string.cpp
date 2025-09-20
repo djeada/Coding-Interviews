@@ -1,8 +1,46 @@
 /**
- * This program checks if a given string can represent a valid number.
- * Valid numbers can be in the form of integers, floating points, or exponential
- * notation.
- */
+* VALIDATE NUMERIC STRING
+*
+* Determine whether a given ASCII string represents a valid number.
+* Supported forms include integers, decimals, and scientific notation.
+*
+* Accepted Grammar (informal):
+*   number := [sign] integer [fraction] [exponent]
+*           | [sign]        fraction   [exponent]
+*   sign   := '+' | '-'
+*   integer:= DIGIT{1,}
+*   fraction:= '.' DIGIT{0,} | DIGIT{1,} '.' DIGIT{0,}
+*   exponent:= ('e'|'E') [sign] DIGIT{1,}
+*
+* Notes & Assumptions:
+* - Leading/trailing spaces are NOT allowed.
+* - Only ASCII digits '0'–'9' are recognized.
+* - A standalone sign ('+' or '-') is invalid.
+* - A trailing dot is allowed if the integer part exists (e.g., "600.").
+* - A leading dot is allowed if followed by digits (e.g., "-.123").
+* - Exponent must be an integer with optional sign and at least one digit.
+*
+* Examples (Valid):
+*   "100"
+*   "+500"
+*   "3.145"
+*   "600."
+*   "-.123"
+*   "5e2"
+*   "123.45e+6"
+*   "1.484278348325E+308"
+*
+* Examples (Invalid):
+*   ""              (empty)
+*   "12e"           (missing exponent digits)
+*   "1a3.14"        (invalid character)
+*   "+-5"           (misplaced signs)
+*   "11.2.3"        (multiple dots)
+*
+* Complexity:
+* - Time: O(n), single left-to-right scan.
+* - Space: O(1) auxiliary.
+*/
 
 #include <cassert>
 #include <cctype>
