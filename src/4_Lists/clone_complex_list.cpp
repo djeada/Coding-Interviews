@@ -16,9 +16,9 @@
  *    Original List:      Copied List:
  *
  *      1  -->  2  -->  3       1  -->  2  -->  3
- *       \       \             \       \
- *        v       v             v       v
- *        3       5             3       5
+ *       \       \              \       \
+ *        v       v              v       v
+ *        3       5              3       5
  *
  * Example:
  * Input List:
