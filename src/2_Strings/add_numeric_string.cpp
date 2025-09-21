@@ -14,7 +14,6 @@
  * Output: "1002"
  * Explanation: 999 + 3 = 1002.
  */
-
 #include <algorithm>
 #include <cassert>
 #include <iostream>
@@ -22,26 +21,34 @@
 #include <string>
 #include <vector>
 
-// Helper function to check if a string contains only digits
+// Helper: Check if a string contains only digits
 bool isDigitString(const std::string& s) {
-    return std::all_of(s.begin(), s.end(), ::isdigit);
+    return !s.empty() && std::all_of(s.begin(), s.end(), [](unsigned char c) {
+        return std::isdigit(c);
+    });
 }
 
-// Optimal Solution: Adds two numbers represented as strings, O(n)
-std::string optimalSolution(const std::string& num1, const std::string& num2) {
+// Adds two non-negative integers represented as strings
+std::string addStrings(const std::string& num1, const std::string& num2) {
     if (!isDigitString(num1) || !isDigitString(num2)) {
         throw std::invalid_argument("Inputs must be digit strings.");
     }
 
     std::string result;
-    int carry = 0, i = (int)num1.size() - 1, j = (int)num2.size() - 1;
+    result.reserve(std::max(num1.size(), num2.size()) + 1); // preallocate
+
+    int carry = 0;
+    int i = static_cast<int>(num1.size()) - 1;
+    int j = static_cast<int>(num2.size()) - 1;
 
     while (i >= 0 || j >= 0 || carry) {
-        int d1 = (i >= 0 ? num1[i--] - '0' : 0);
-        int d2 = (j >= 0 ? num2[j--] - '0' : 0);
+        int d1 = (i >= 0) ? num1[i--] - '0' : 0;
+        int d2 = (j >= 0) ? num2[j--] - '0' : 0;
+
         int sum = d1 + d2 + carry;
         carry = sum / 10;
-        result.push_back(char('0' + (sum % 10)));
+
+        result.push_back(static_cast<char>('0' + (sum % 10)));
     }
 
     std::reverse(result.begin(), result.end());
