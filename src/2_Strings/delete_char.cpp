@@ -1,33 +1,25 @@
 /*
- * DELETE SPECIFIED CHARACTERS FROM STRING
- *
- * This program deletes specified characters from a given string using modern C++ practices.
- * It demonstrates three approaches:
- *   1. simpleSolution: Iterates through the string and checks for deletion via std::string::find.
- *      - Time Complexity: O(n*m) where n is the length of the string and m is the length of the deletion set.
- *   2. optimalSolution: Uses an unordered_set for O(1) average lookup to quickly determine whether a character should be deleted.
- *      - Time Complexity: Average O(n + m), which is more efficient for larger inputs.
- *   3. alternativeSolution: Leverages std::remove_if with a lambda to remove characters in place.
- *
-* ASCII Illustration:
+* DELETE SPECIFIED CHARACTERS FROM STRING
 *
-*   Input String:           W  e     a  r  e     s  t  u  d  e  n  t  s
-*   Characters to Delete:      a     e     i     o     u
-*                              ↓     ↓     ↓     ↓     ↓
-*   Resulting String:        W     r     s  t  d  n  t  s
- * Example Input/Output:
- * Input:  str = "8613761352066", charsToDelete = "1234567890"
- * Output: ""
- * Explanation: All numeric characters are deleted, resulting in an empty string.
- */
+* Write a program that deletes specified characters 
+* from a given string.
+*
+* Constraints:
+* - The input string may include letters, digits, spaces, or special characters.
+* - The charsToDelete string may contain one or more characters.
+* - Aim for an efficient solution without relying solely on built-in replace functions.
+* - Try to achieve the result in-place, minimizing extra memory usage.
+*/
 
 #include <cassert>
 #include <iostream>
 #include <string>
 #include <unordered_set>
 #include <algorithm>
+#include <bitset>
+#include <vector>
 
-// Simple (Brute-force) Solution
+// Simple (Brute-force) Solution | Time: O(n*m), Space: O(1)
 std::string simpleSolution(const std::string& input, const std::string& charsToDelete) {
     std::string result;
     for (char c : input) {
@@ -38,11 +30,11 @@ std::string simpleSolution(const std::string& input, const std::string& charsToD
     return result;
 }
 
-// Optimal (Efficient) Solution
+// Optimal Solution (unordered_set) | Time: O(n+m), Space: O(m)
 std::string optimalSolution(const std::string& input, const std::string& charsToDelete) {
     std::unordered_set<char> deleteSet(charsToDelete.begin(), charsToDelete.end());
     std::string result;
-    result.reserve(input.size());  // Reserve memory to reduce reallocations
+    result.reserve(input.size());
     for (char c : input) {
         if (deleteSet.find(c) == deleteSet.end()) {
             result.push_back(c);
@@ -51,7 +43,7 @@ std::string optimalSolution(const std::string& input, const std::string& charsTo
     return result;
 }
 
-// (Optional) Alternative Solution using std::remove_if
+// Alternative Solution (remove_if) | Time: O(n+m), Space: O(n)
 std::string alternativeSolution(const std::string& input, const std::string& charsToDelete) {
     std::unordered_set<char> deleteSet(charsToDelete.begin(), charsToDelete.end());
     std::string result = input;
@@ -61,44 +53,52 @@ std::string alternativeSolution(const std::string& input, const std::string& cha
     return result;
 }
 
-// Test cases for correctness
-void test() {
-    {
-        std::string input = "We are students";
-        std::string charsToDelete = "aeiou";
-        std::string expected = "W r stdnts";
-        assert(simpleSolution(input, charsToDelete) == expected);
-        assert(optimalSolution(input, charsToDelete) == expected);
-        assert(alternativeSolution(input, charsToDelete) == expected);
+// In-place Solution (bitset lookup) | Time: O(n+m), Space: O(1)
+void inplaceSolution(std::string& input, const std::string& charsToDelete) {
+    std::bitset<256> deleteTable;
+    for (unsigned char c : charsToDelete) {
+        deleteTable.set(c);
     }
-    {
-        std::string input = "We are students";
-        std::string charsToDelete = "wxyz";
-        std::string expected = "We are students";
-        assert(simpleSolution(input, charsToDelete) == expected);
-        assert(optimalSolution(input, charsToDelete) == expected);
-        assert(alternativeSolution(input, charsToDelete) == expected);
+    auto write = input.begin();
+    for (char c : input) {
+        if (!deleteTable.test((unsigned char)c)) {
+            *write++ = c;
+        }
     }
-    {
-        std::string input = "8613761352066";
-        std::string charsToDelete = "1234567890";
-        std::string expected = "";
-        assert(simpleSolution(input, charsToDelete) == expected);
-        assert(optimalSolution(input, charsToDelete) == expected);
-        assert(alternativeSolution(input, charsToDelete) == expected);
+    input.erase(write, input.end());
+}
+
+// Tests
+struct TestCase {
+    std::string input;
+    std::string charsToDelete;
+    std::string expected;
+};
+
+void runTests() {
+    std::vector<TestCase> cases = {
+        {"We are students", "aeiou", "W r stdnts"},
+        {"We are students", "wxyz",  "We are students"},
+        {"8613761352066",   "1234567890", ""},
+        {"119911",          "", "119911"}
+    };
+
+    for (const auto& tc : cases) {
+        // Test return-by-value solutions
+        assert(simpleSolution(tc.input, tc.charsToDelete) == tc.expected);
+        assert(optimalSolution(tc.input, tc.charsToDelete) == tc.expected);
+        assert(alternativeSolution(tc.input, tc.charsToDelete) == tc.expected);
+
+        // Test in-place solution
+        std::string inplaceInput = tc.input;
+        inplaceSolution(inplaceInput, tc.charsToDelete);
+        assert(inplaceInput == tc.expected);
     }
-    {
-        std::string input = "119911";
-        std::string charsToDelete = "";
-        std::string expected = "119911";
-        assert(simpleSolution(input, charsToDelete) == expected);
-        assert(optimalSolution(input, charsToDelete) == expected);
-        assert(alternativeSolution(input, charsToDelete) == expected);
-    }
+
     std::cout << "All tests passed!\n";
 }
 
 int main() {
-    test();
+    runTests();
     return 0;
 }
