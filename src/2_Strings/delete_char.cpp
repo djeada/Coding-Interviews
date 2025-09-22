@@ -95,6 +95,20 @@ struct TestCase {
     std::string expected;
 };
 
+// Helper to check and report results
+bool checkResult(const std::string& got, const std::string& expected,
+                 const std::string& funcName, const TestCase& tc) {
+    if (got != expected) {
+        std::cerr << "[FAIL] " << funcName << "\n"
+                  << "  Input: \"" << tc.input << "\"\n"
+                  << "  CharsToDelete: \"" << tc.charsToDelete << "\"\n"
+                  << "  Expected: \"" << expected << "\"\n"
+                  << "  Got:      \"" << got << "\"\n\n";
+        return false;
+    }
+    return true;
+}
+
 void runTests() {
     std::vector<TestCase> cases = {
         {"We are students", "aeiou", "W r stdnts"},
@@ -103,19 +117,32 @@ void runTests() {
         {"119911",          "", "119911"}
     };
 
+    int total = 0, passed = 0;
+
     for (const auto& tc : cases) {
         // Test return-by-value solutions
-        assert(simpleSolution(tc.input, tc.charsToDelete) == tc.expected);
-        assert(optimalSolution(tc.input, tc.charsToDelete) == tc.expected);
-        assert(alternativeSolution(tc.input, tc.charsToDelete) == tc.expected);
+        total++;
+        if (checkResult(simpleSolution(tc.input, tc.charsToDelete), tc.expected, "simpleSolution", tc)) passed++;
+
+        total++;
+        if (checkResult(optimalSolution(tc.input, tc.charsToDelete), tc.expected, "optimalSolution", tc)) passed++;
+
+        total++;
+        if (checkResult(alternativeSolution(tc.input, tc.charsToDelete), tc.expected, "alternativeSolution", tc)) passed++;
 
         // Test in-place solution
         std::string inplaceInput = tc.input;
         inplaceSolution(inplaceInput, tc.charsToDelete);
-        assert(inplaceInput == tc.expected);
+        total++;
+        if (checkResult(inplaceInput, tc.expected, "inplaceSolution", tc)) passed++;
     }
 
-    std::cout << "All tests passed!\n";
+    std::cout << passed << " / " << total << " tests passed.\n";
+    if (passed == total) {
+        std::cout << "✅ All tests passed!\n";
+    } else {
+        std::cout << "❌ Some tests failed.\n";
+    }
 }
 
 int main() {
