@@ -1,37 +1,41 @@
 /*
- * REPLACE SPACES IN A STRING
- *
- * This task requires replacing every space in a given string with the sequence "%20".
- * Three solutions are provided:
- *
- * 1. Simple Solution:
- *    - Uses std::string to build a new string by iterating through the input.
- *    - Straightforward implementation with O(n) time complexity.
- *
- * 2. Optimal (Efficient) Solution:
- *    - Performs in-place modification on a C-style string provided there is enough capacity.
- *    - Employs a two-pointer technique to reduce extra memory usage.
- *
- * 3. Alternative Solution:
- *    - Demonstrates modern C++ regex usage to replace spaces.
- *
- * ASCII Illustration:
- *
- *        "hello world"
- *              |
- *    replace ' ' with "%20"
- *              |
- *       "hello%20world"
- *
- * Example Input/Output:
- * Input (as C-style string with capacity): "hello world", capacity: 100
- * Output: "hello%20world"
- *
- * Explanation:
- * Each space is substituted by the characters '%', '2', and '0'. The simple and alternative
- * solutions create a new string, while the optimal solution modifies the input array in-place.
- */
-
+* REPLACE SPACES IN A STRING
+*
+* Given a string s, replace every space character ' ' with the sequence "%20".
+* Return the resulting string.
+*
+* Constraints:
+* - 0 <= s.length <= 10^5
+* - s may consist of letters, digits, spaces, or special characters.
+* - Aim for O(n) time complexity.
+* - In-place modification is encouraged when possible (assume sufficient buffer capacity).
+*
+* ASCII Illustration:
+*
+*        "hello world"
+*              |
+*    replace ' ' with "%20"
+*              |
+*       "hello%20world"
+*
+* Example 1:
+* Input:  
+*   s = "hello world"
+* Output:  
+*   "hello%20world"
+*
+* Example 2:
+* Input:  
+*   s = "Mr John Smith"
+* Output:  
+*   "Mr%20John%20Smith"
+*
+* Example 3:
+* Input:  
+*   s = "nospace"
+* Output:  
+*   "nospace"
+*/
 #include <algorithm>
 #include <cassert>
 #include <cstring>
