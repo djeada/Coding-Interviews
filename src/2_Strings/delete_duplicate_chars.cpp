@@ -1,23 +1,38 @@
 /*
- * REMOVE DUPLICATE CHARACTERS
- *
- * This program removes duplicate characters from a given string while preserving the order of first occurrences.
- * It demonstrates two main implementations:
- *   - simpleSolution: A brute-force approach that checks for each character's presence in the result string (O(n²)).
- *   - optimalSolution: An efficient approach using a hash table (std::unordered_set) to track characters (average O(n)).
- *
- * ASCII Illustration:
- *
- *   Input:   g  o  o  g  l  e
- *            |  |  |  |  |  |
- *            V  V  V  V  V  V
- *   Output:  g  o  l  e
- *
- * Example Input/Output:
- * Input: "google"
- * Output: "gole"
- * Explanation: The duplicate 'o' and 'g' characters are removed, preserving only their first appearance.
- */
+* REMOVE DUPLICATE CHARACTERS FROM STRING
+*
+* Given a string s, remove all duplicate characters while preserving 
+* the order of their first occurrences.
+*
+* Return the resulting string.
+*
+* Constraints:
+* - 0 <= s.length <= 10^5
+* - s may consist of letters, digits, spaces, or special characters.
+* - Try to achieve an efficient solution with O(n) time complexity 
+*   and minimal extra space.
+*
+* Example 1:
+* Input:  
+*   s = "google"
+* Output:  
+*   "gole"
+* Explanation:  
+*   The duplicates 'o' and 'g' are removed. Only the first appearance 
+*   of each character is kept.
+*
+* Example 2:
+* Input:  
+*   s = "abcabc"
+* Output:  
+*   "abc"
+*
+* Example 3:
+* Input:  
+*   s = "aaaa"
+* Output:  
+*   "a"
+*/
 
 #include <algorithm>
 #include <cassert>
