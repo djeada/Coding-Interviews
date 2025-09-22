@@ -1,45 +1,49 @@
 /*
- * REVERSE WORDS IN A STRING
- *
- * This program reverses the order of words in a given string.
- * Three solutions are provided:
- *
- * 1. Simple Solution:
- *    - Uses std::istringstream to split the input into words,
- *      reverses the vector of words, and then joins them back together.
- *    - Straightforward and highly readable, with O(n) time complexity,
- *      but uses extra memory for the words.
- *
- * 2. Optimal (Efficient) Solution:
- *    - Performs the reversal in-place on a mutable copy of the input string.
- *    - First, it reverses each word individually, and then reverses the entire string.
- *    - This solution minimizes extra memory usage and also runs in O(n) time.
- *
- * 3. Alternative Solution:
- *    - Uses modern C++ iterators and the standard library to achieve the reversal.
- *    - Splits the string with std::istream_iterator and then uses reverse iterators
- *      to build the final result.
- *
- * ASCII Illustration:
- *
- *     Input: "hello world"
- *          +----------------+
- *          |hello world     |
- *          +----------------+
- *                 |
- *        (reverse words order)
- *                 V
- *          +----------------+
- *          |world hello     |
- *          +----------------+
- *
- * Example Input/Output:
- * Input: "hello world"
- * Output: "world hello"
- *
- * Explanation:
- * The order of words is inverted so that the first word becomes the last.
- */
+* REVERSE WORDS IN A STRING
+*
+* Given a string s, reverse the order of the words.
+* A word is defined as a sequence of non-space characters.
+* The words in s will be separated by a single space with no leading or trailing spaces.
+*
+* Return the resulting string after reversing the order of words.
+*
+* Constraints:
+* - 1 <= s.length <= 10^5
+* - s consists of printable ASCII characters.
+* - Words are separated by a single space.
+* - The goal is O(n) time complexity with minimal extra space.
+*
+* ASCII Illustration:
+*
+*     Input:  "hello world"
+*             +------------+
+*             |hello world |
+*             +------------+
+*                   |
+*         (reverse word order)
+*                   V
+*             +------------+
+*             |world hello |
+*             +------------+
+*
+* Example 1:
+* Input:  
+*   s = "hello world"
+* Output:  
+*   "world hello"
+*
+* Example 2:
+* Input:  
+*   s = "the sky is blue"
+* Output:  
+*   "blue is sky the"
+*
+* Example 3:
+* Input:  
+*   s = "a b c"
+* Output:  
+*   "c b a"
+*/
 
 #include <algorithm>
 #include <cassert>
