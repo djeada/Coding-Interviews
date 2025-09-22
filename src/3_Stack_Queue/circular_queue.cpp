@@ -1,7 +1,7 @@
 /*
  * CIRCULAR QUEUE SIMULATION
  *
- * This task requires simulating a circular queue with fixed capacity. A sequence
+ * Simulate a circular queue with fixed capacity. A sequence
  * of operations (given as strings) is provided, and the goal is to determine the
  * final state of the queue after processing all operations.
  *
