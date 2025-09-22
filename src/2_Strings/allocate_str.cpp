@@ -1,22 +1,36 @@
 /*
- * STRING MEMORY ALLOCATION - C & C++ COMPATIBLE TECHNIQUES
- *
- * This program demonstrates various correct (and one incorrect) ways to allocate and manage
- * memory for strings in a C/C++ environment. These methods showcase how strings can be
- * handled safely across C and C++ paradigms.
- *
- * Scenarios covered:
- * 1. Traditional C-style allocation using malloc + strcpy
- * 2. Modern C++ using std::unique_ptr for RAII
- * 3. Using std::string (C++ standard container)
- * 4. Incorrect usage: returning a pointer to local stack memory
- *
- * Example Output:
- * Hello my friend (C)
- * Hello my friend (unique_ptr)
- * Hello my friend (std::string)
- * Undefined behavior (likely garbage or crash)
- */
+* STRING MEMORY ALLOCATION
+*
+* Demonstrate different approaches to allocate, manage, and return strings 
+* in C and C++. Highlight both correct and incorrect techniques.
+*
+* Implement the following scenarios:
+*
+* 1. Traditional C-style allocation:
+*    - Use malloc + strcpy to allocate and return a string.
+*
+* 2. Modern C++ with RAII:
+*    - Use std::unique_ptr<char[]> to manage dynamic memory safely.
+*
+* 3. Standard C++ container:
+*    - Use std::string for safe and idiomatic memory management.
+*
+* 4. Incorrect usage (to illustrate a pitfall):
+*    - Return a pointer to a local stack-allocated buffer (leads to 
+*      undefined behavior).
+*
+* Constraints:
+* - Focus on memory allocation and lifetime management, not algorithmic complexity.
+* - Highlight why RAII (e.g., std::unique_ptr, std::string) should be 
+*   preferred in modern C++.
+* - Demonstrate why returning pointers to stack memory is unsafe.
+*
+* Example Output:
+*   Hello my friend (C)
+*   Hello my friend (unique_ptr)
+*   Hello my friend (std::string)
+*   Undefined behavior (likely garbage or crash)
+*/
 
 #include <cstring>
 #include <iostream>
