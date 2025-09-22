@@ -1,26 +1,38 @@
 /*
- * FIND FIRST NON-REPEATING CHARACTER
- *
- * This program finds the first non-repeating character in a given string.
- * A non-repeating character is one that appears exactly once in the string.
- * Three approaches are demonstrated:
- *   1. simpleSolution: Brute-force approach with nested loops (O(n²)).
- *   2. optimalSolution: Uses an unordered_map to count frequencies and then finds the first character with a count of one (O(n)).
- *   3. alternativeSolution: Uses a fixed-size array to store first occurrence indices and counts,
- *      then selects the character with the smallest index that occurs exactly once.
- *
- * ASCII Illustration:
- *
- *   Input String:    a   b   a   c   d   c   b
- *                    |   |   |   |   |   |   |
- *                    V   V   V   V   V   V   V
- *   Non-Repeating:   d (first character that appears only once)
- *
- * Example Input/Output:
- * Input:  "ababac"
- * Output: "c"
- * Explanation: Characters 'a' and 'b' repeat, so the first non-repeating character is 'c'.
- */
+* FIND FIRST NON-REPEATING CHARACTER
+*
+* Given a string s, return the first non-repeating character in s. 
+* A non-repeating character is one that appears exactly once in the string.
+* If no such character exists, return a special value (e.g., '\0').
+*
+* Constraints:
+* - 1 <= s.length <= 10^5
+* - s may consist of lowercase and uppercase letters, digits, spaces, or special characters.
+* - Aim for O(n) time and O(1) or O(σ) extra space, 
+*   where σ is the character set size (e.g., 256 for ASCII).
+*
+* Example 1:
+* Input:  
+*   s = "ababac"
+* Output:  
+*   "c"
+* Explanation:  
+*   Characters 'a' and 'b' repeat, so the first non-repeating character is 'c'.
+*
+* Example 2:
+* Input:  
+*   s = "aabb"
+* Output:  
+*   ""
+* Explanation:  
+*   All characters repeat. No non-repeating character exists.
+*
+* Example 3:
+* Input:  
+*   s = "leetcode"
+* Output:  
+*   "l"
+*/
 
 #include <algorithm>
 #include <array>
