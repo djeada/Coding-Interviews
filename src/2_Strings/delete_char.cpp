@@ -53,7 +53,7 @@ std::string alternativeSolution(const std::string& input, const std::string& cha
 }
 
 // In-place Solution (bitset lookup) | Time: O(n+m), Space: O(1)
-std::string inplaceSolution(std::string input, const std::string& charsToDelete) {
+void inplaceSolution(std::string& input, const std::string& charsToDelete) {
     std::bitset<256> deleteTable;
     for (unsigned char c : charsToDelete) {
         deleteTable.set(c);
@@ -65,51 +65,39 @@ std::string inplaceSolution(std::string input, const std::string& charsToDelete)
         }
     }
     input.erase(write, input.end());
-    return input;
 }
 
 // Tests
-void test() {
-    {
-        std::string input = "We are students";
-        std::string charsToDelete = "aeiou";
-        std::string expected = "W r stdnts";
-        assert(simpleSolution(input, charsToDelete) == expected);
-        assert(optimalSolution(input, charsToDelete) == expected);
-        assert(alternativeSolution(input, charsToDelete) == expected);
-        assert(inplaceSolution(input, charsToDelete) == expected);
+struct TestCase {
+    std::string input;
+    std::string charsToDelete;
+    std::string expected;
+};
+
+void runTests() {
+    std::vector<TestCase> cases = {
+        {"We are students", "aeiou", "W r stdnts"},
+        {"We are students", "wxyz",  "We are students"},
+        {"8613761352066",   "1234567890", ""},
+        {"119911",          "", "119911"}
+    };
+
+    for (const auto& tc : cases) {
+        // Test return-by-value solutions
+        assert(simpleSolution(tc.input, tc.charsToDelete) == tc.expected);
+        assert(optimalSolution(tc.input, tc.charsToDelete) == tc.expected);
+        assert(alternativeSolution(tc.input, tc.charsToDelete) == tc.expected);
+
+        // Test in-place solution
+        std::string inplaceInput = tc.input;
+        inplaceSolution(inplaceInput, tc.charsToDelete);
+        assert(inplaceInput == tc.expected);
     }
-    {
-        std::string input = "We are students";
-        std::string charsToDelete = "wxyz";
-        std::string expected = "We are students";
-        assert(simpleSolution(input, charsToDelete) == expected);
-        assert(optimalSolution(input, charsToDelete) == expected);
-        assert(alternativeSolution(input, charsToDelete) == expected);
-        assert(inplaceSolution(input, charsToDelete) == expected);
-    }
-    {
-        std::string input = "8613761352066";
-        std::string charsToDelete = "1234567890";
-        std::string expected = "";
-        assert(simpleSolution(input, charsToDelete) == expected);
-        assert(optimalSolution(input, charsToDelete) == expected);
-        assert(alternativeSolution(input, charsToDelete) == expected);
-        assert(inplaceSolution(input, charsToDelete) == expected);
-    }
-    {
-        std::string input = "119911";
-        std::string charsToDelete = "";
-        std::string expected = "119911";
-        assert(simpleSolution(input, charsToDelete) == expected);
-        assert(optimalSolution(input, charsToDelete) == expected);
-        assert(alternativeSolution(input, charsToDelete) == expected);
-        assert(inplaceSolution(input, charsToDelete) == expected);
-    }
+
     std::cout << "All tests passed!\n";
 }
 
 int main() {
-    test();
+    runTests();
     return 0;
 }
