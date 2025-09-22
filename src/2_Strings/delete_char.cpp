@@ -1,14 +1,34 @@
 /*
 * DELETE SPECIFIED CHARACTERS FROM STRING
 *
-* Write a program that deletes specified characters 
-* from a given string.
+* Given a string `s` and another string `charsToDelete`, 
+* remove all characters from `s` that are present in `charsToDelete`.
+* Return the resulting string.
 *
 * Constraints:
 * - The input string may include letters, digits, spaces, or special characters.
 * - The charsToDelete string may contain one or more characters.
 * - Aim for an efficient solution without relying solely on built-in replace functions.
 * - Try to achieve the result in-place, minimizing extra memory usage.
+*
+* ASCII Illustration:
+*
+*   Input String:           W  e     a  r  e     s  t  u  d  e  n  t  s
+*   Characters to Delete:      a     e     i     o     u
+*                              ↓     ↓     ↓     ↓     ↓
+*   Resulting String:        W     r     s  t  d  n  t  s
+*
+* Example Input/Output:
+*
+* Input:  
+*   str = "8613761352066"
+*   charsToDelete = "1234567890"
+*
+* Output:  
+*   ""
+*
+* Explanation:  
+*   All numeric characters are deleted, resulting in an empty string.
 */
 
 #include <cassert>
