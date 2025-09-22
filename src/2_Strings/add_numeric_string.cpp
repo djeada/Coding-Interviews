@@ -67,7 +67,7 @@ void testOptimalSolution(const std::vector<TestCase>& cases) {
     for (const auto& tc : cases) {
         bool passed = false;
         try {
-            std::string got = optimalSolution(tc.num1, tc.num2);
+            std::string got = addStrings(tc.num1, tc.num2);
             if (!tc.expectException && got == tc.expected) {
                 passed = true;
             }
