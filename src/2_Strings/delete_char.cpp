@@ -17,6 +17,7 @@
 #include <unordered_set>
 #include <algorithm>
 #include <bitset>
+#include <vector>
 
 // Simple (Brute-force) Solution | Time: O(n*m), Space: O(1)
 std::string simpleSolution(const std::string& input, const std::string& charsToDelete) {
