@@ -34,6 +34,17 @@
 *   "a"
 */
 
+#include <algorithm>
+#include <bitset>
+#include <cassert>
+#include <chrono>
+#include <iomanip>
+#include <iostream>
+#include <random>
+#include <string>
+#include <unordered_set>
+#include <vector>
+
 // 1) Simple (Brute-force) Solution
 // Time Complexity: O(n²)
 std::string simpleSolution(const std::string& input) {
