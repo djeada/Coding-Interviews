@@ -34,17 +34,6 @@
 *   "a"
 */
 
-#include <algorithm>
-#include <bitset>
-#include <cassert>
-#include <chrono>
-#include <iomanip>
-#include <iostream>
-#include <random>
-#include <string>
-#include <unordered_set>
-#include <vector>
-
 // 1) Simple (Brute-force) Solution
 // Time Complexity: O(n²)
 std::string simpleSolution(const std::string& input) {
@@ -88,39 +77,38 @@ std::string alternativeSolution(const std::string& input) {
 // 4) In-place, iterator-based; O(n) time, O(1) extra space (32-byte bitmap).
 // Mutates the input string directly.
 void inplaceSolution(std::string& s) {
-    std::bitset<256> seen;   // tracks byte values 0..255
-    auto writer = s.begin(); // where we write the next unique char
+    std::bitset<256> seen;
+    auto writer = s.begin();
 
     for (auto it = s.begin(); it != s.end(); ++it) {
-        unsigned char uc = static_cast<unsigned char>(*it); // avoid signed-char issues
+        unsigned char uc = static_cast<unsigned char>(*it);
         if (!seen.test(uc)) {
             seen.set(uc);
             *writer++ = *it;
         }
     }
 
-    // Trim the leftover duplicate tail
     s.erase(writer, s.end());
 }
 
-
-// -------------------- Tests --------------------
-
+// Adapter to fit in the same runner
 std::string inplaceAdapter(const std::string& input) {
     std::string s = input;
     inplaceSolution(s);
     return s;
 }
 
+// -------------------- Testing Harness --------------------
+
 struct TestCase {
     std::string name;
     std::string input;
-    std::string expected;
+    std::string expected; // If empty, computed via referenceExpected
 };
 
 using SolverFn = std::string(*)(const std::string&);
 
-// Reference expected: byte-wise first-occurrence keeping (ASCII/byte-oriented)
+// Reference expected: keep first occurrence of each byte
 std::string referenceExpected(const std::string& s) {
     std::bitset<256> seen;
     std::string out;
@@ -187,7 +175,7 @@ std::string makeLongStressInput(size_t n = 100000) {
     return s;
 }
 
-// Randomized cases (deterministic seed). Alphabet is bytes 32..126 to keep printable.
+// Randomized cases
 std::vector<TestCase> makeRandomCases(size_t count, size_t minLen, size_t maxLen, uint32_t seed = 123456789) {
     std::mt19937 rng(seed);
     std::uniform_int_distribution<size_t> lenDist(minLen, maxLen);
@@ -202,7 +190,7 @@ std::vector<TestCase> makeRandomCases(size_t count, size_t minLen, size_t maxLen
         for (size_t j = 0; j < L; ++j) {
             s[j] = static_cast<char>(chDist(rng));
         }
-        v.push_back({ "Random #" + std::to_string(i+1), s, "" }); // expected computed via reference
+        v.push_back({ "Random #" + std::to_string(i+1), s, "" });
     }
     return v;
 }
@@ -218,14 +206,14 @@ int main() {
         { "Mixed repeats",       "abcacbbacbcacabcba",         "abc" },
         { "All unique",          "abcdef",                     "abcdef" },
         { "Digits mixed",        "1122334455",                 "12345" },
-        { "Spaces kept",         "a a a  b b   c",             "a bc" }, // first space kept
-        { "Punctuation",         "!!!??!!??..,,",              "!?.,," }, // first of each punctuation
+        { "Spaces kept",         "a a a  b b   c",             "a bc" },
+        { "Punctuation",         "!!!??!!??..,,",              "!?.," },
         { "Case sensitive",      "AaAaBbBb",                   "AaBb" },
         { "Symbols",             "@@##$$%%^^&&**(()))",        "@#$%^&*()" },
         { "Long stress (100k)",  makeLongStressInput(),        "abcdefghijklmnopqrstuvwxyz" }
     };
 
-    // Random property tests (expected computed via reference)
+    // Random property tests
     auto randomSmall  = makeRandomCases(10, 0,   32, 0xBEEF1234);
     auto randomMedium = makeRandomCases(10, 33, 256, 0xDEADBEEF);
 
@@ -238,20 +226,19 @@ int main() {
         { "simpleSolution (O(n^2))",    &simpleSolution    },
         { "optimalSolution (hash)",     &optimalSolution   },
         { "alternativeSolution (erase)",&alternativeSolution },
-        { "inplaceSolution (iterator)", &inplaceAdapter    }, // adapter wraps the in-place ref version
+        { "inplaceSolution (iterator)", &inplaceAdapter    },
     };
 
     std::vector<SuiteResult> results;
     results.reserve(std::size(solvers));
 
-    // Run suites
     for (const auto& s : solvers) {
         SuiteResult r;
         runSuite(s.name, s.fn, allCases, r);
         results.push_back(r);
     }
 
-    // Final summary (and return non-zero if any failures)
+    // Final summary
     bool allPassed = true;
     std::cout << "=== Overall Summary ===\n";
     for (const auto& r : results) {
