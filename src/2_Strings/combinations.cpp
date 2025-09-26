@@ -29,6 +29,7 @@
 #include <vector>
 
 // Simple (Recursive) Solution
+// Time: O(2^n * n), Space: O(2^n * n) + O(n) recursion stack
 std::set<std::string> simpleSolutionHelper(const std::string &str, int idx, const std::string &curr) {
     std::set<std::string> result;
     if (idx == (int)str.size()) {
@@ -49,6 +50,7 @@ std::set<std::string> simpleSolution(const std::string &str) {
 }
 
 // Optimal (Bitmask) Solution
+// Time: O(2^n * n), Space: O(2^n * n)
 std::set<std::string> optimalSolution(const std::string &str) {
     std::set<std::string> result;
     int n = (int)str.size();
@@ -64,6 +66,7 @@ std::set<std::string> optimalSolution(const std::string &str) {
 }
 
 // Alternative (STL Combinations) Solution
+// Time: O(2^n * n), Space: O(2^n * n)
 std::set<std::string> alternativeSolution(std::string str) {
     std::set<std::string> result;
     int n = (int)str.size();
