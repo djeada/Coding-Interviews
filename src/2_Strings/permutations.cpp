@@ -32,6 +32,8 @@
 // --- Implementations ---
 
 // Simple (Brute-force) Solution
+// Time: O(n! * n)  — generates all n! permutations, each taking O(n) to store/insert.
+// Space: O(n! * n) — to store all unique permutations, plus O(n) recursion stack.
 void permuteSimple(std::string s, int l, int r, std::set<std::string>& results) {
     if (l == r) {
         results.insert(s);
@@ -52,6 +54,8 @@ std::vector<std::string> simpleSolution(const std::string& input) {
 }
 
 // Optimal Solution (using next_permutation)
+// Time: O(n! * n) — next_permutation generates each permutation in O(n).
+// Space: O(n! * n) — to store all permutations.
 std::vector<std::string> optimalSolution(const std::string& input) {
     if (input.empty()) return {""};
     std::vector<std::string> results;
@@ -64,6 +68,8 @@ std::vector<std::string> optimalSolution(const std::string& input) {
 }
 
 // Alternative (Iterative) Solution
+// Time: O(n! * n) — inserting each new char across all permutations costs O(n).
+// Space: O(n! * n) — stores all unique permutations in a set/vector.
 std::vector<std::string> alternativeSolution(const std::string& input) {
     if (input.empty()) return {""};
     std::vector<std::string> results = { std::string(1, input[0]) };
