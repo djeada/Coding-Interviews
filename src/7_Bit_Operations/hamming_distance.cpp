@@ -1,16 +1,19 @@
 /*
  * TOTAL HAMMING DISTANCE
  *
- * Given an array of integers, this program computes the total Hamming distance between
- * all pairs of integers in the array. The Hamming distance between two numbers is defined as 
- * the number of positions at which the corresponding bits are different.
+ * Given an array of integers, this program computes the total Hamming distance
+ * between all pairs of integers in the array. The Hamming distance between two
+ * numbers is defined as the number of positions at which the corresponding bits
+ * are different.
  *
  * Two modern C++ solutions are provided:
  *
  * 1. Simple (Brute-force) Solution:
- *    - Compares every pair of numbers and counts differing bits using bitwise operations.
+ *    - Compares every pair of numbers and counts differing bits using bitwise
+ * operations.
  *    - Complexity: O(n^2 * b), where b is the number of bits (typically 32).
- *    - This solution is straightforward but may be inefficient for large arrays.
+ *    - This solution is straightforward but may be inefficient for large
+ * arrays.
  *
  * 2. Optimal (Efficient) Solution using Bitwise Aggregation:
  *    - For each bit position, counts the number of numbers with that bit set.
@@ -47,62 +50,57 @@
 
 // Simple (Brute-force) Solution
 // Compares every pair and counts differing bits.
-int simpleSolution(const std::vector<int>& nums) {
-    int total = 0;
-    int n = static_cast<int>(nums.size());
-    for (int i = 0; i < n; ++i) {
-        for (int j = i + 1; j < n; ++j) {
-            int xorVal = nums[i] ^ nums[j];
-            while (xorVal) {
-                total += xorVal & 1;
-                xorVal >>= 1;
-            }
-        }
+int simpleSolution(const std::vector<int> &nums) {
+  int total = 0;
+  int n = static_cast<int>(nums.size());
+  for (int i = 0; i < n; ++i) {
+    for (int j = i + 1; j < n; ++j) {
+      int xorVal = nums[i] ^ nums[j];
+      while (xorVal) {
+        total += xorVal & 1;
+        xorVal >>= 1;
+      }
     }
-    return total;
+  }
+  return total;
 }
 
 // Optimal (Efficient) Solution using Bitwise Aggregation
-int optimalSolution(const std::vector<int>& nums) {
-    int total = 0;
-    int n = static_cast<int>(nums.size());
-    for (int bit = 0; bit < 32; ++bit) {
-        int countOnes = 0;
-        for (int num : nums) {
-            if (num & (1 << bit))
-                ++countOnes;
-        }
-        total += countOnes * (n - countOnes);
+int optimalSolution(const std::vector<int> &nums) {
+  int total = 0;
+  int n = static_cast<int>(nums.size());
+  for (int bit = 0; bit < 32; ++bit) {
+    int countOnes = 0;
+    for (int num : nums) {
+      if (num & (1 << bit))
+        ++countOnes;
     }
-    return total;
+    total += countOnes * (n - countOnes);
+  }
+  return total;
 }
 
 // Test cases for correctness
 void test() {
-    std::vector<std::vector<int>> testInputs = {
-        {4, 14, 2},
-        {0, 0},
-        {1, 2, 3, 4},
-        {7, 7, 7}
-    };
-std::vector<int> expectedOutputs = {
-    6,  // For [4, 14, 2], total Hamming distance is 6.
-    0,  // For [0, 0], all elements are 0, so distance is 0.
-    11, //  For [1, 2, 3, 4], total Hamming distance is 11.
-    0   // For [7, 7, 7], all elements are identical, so distance is 0.
-};
+  std::vector<std::vector<int>> testInputs = {
+      {4, 14, 2}, {0, 0}, {1, 2, 3, 4}, {7, 7, 7}};
+  std::vector<int> expectedOutputs = {
+      6,  // For [4, 14, 2], total Hamming distance is 6.
+      0,  // For [0, 0], all elements are 0, so distance is 0.
+      11, //  For [1, 2, 3, 4], total Hamming distance is 11.
+      0   // For [7, 7, 7], all elements are identical, so distance is 0.
+  };
 
-
-    for (size_t i = 0; i < testInputs.size(); ++i) {
-        int resSimple = simpleSolution(testInputs[i]);
-        int resOptimal = optimalSolution(testInputs[i]);
-        assert(resSimple == expectedOutputs[i]);
-        assert(resOptimal == expectedOutputs[i]);
-    }
-    std::cout << "All tests passed!\n";
+  for (size_t i = 0; i < testInputs.size(); ++i) {
+    int resSimple = simpleSolution(testInputs[i]);
+    int resOptimal = optimalSolution(testInputs[i]);
+    assert(resSimple == expectedOutputs[i]);
+    assert(resOptimal == expectedOutputs[i]);
+  }
+  std::cout << "All tests passed!\n";
 }
 
 int main() {
-    test();
-    return 0;
+  test();
+  return 0;
 }

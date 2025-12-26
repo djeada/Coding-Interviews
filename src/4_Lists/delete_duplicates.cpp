@@ -1,11 +1,11 @@
 /*
  * DELETE DUPLICATE NODES IN A LINKED LIST
  *
- * This program defines a class named UniqueList that extends a basic singly linked
- * list (from list.h) and provides an operation to delete duplicate nodes from the list.
- * The deletion process is implemented by traversing the list and using an unordered_set
- * to keep track of seen values. When a duplicate node is encountered, it is removed from
- * the list.
+ * This program defines a class named UniqueList that extends a basic singly
+ * linked list (from list.h) and provides an operation to delete duplicate nodes
+ * from the list. The deletion process is implemented by traversing the list and
+ * using an unordered_set to keep track of seen values. When a duplicate node is
+ * encountered, it is removed from the list.
  *
  * Three conceptual approaches could be considered:
  *
@@ -14,13 +14,14 @@
  *    - This method is straightforward but uses extra space.
  *
  * 2. Optimal (Efficient) Approach:
- *    - Use an unordered_set during a single pass to mark nodes seen and delete duplicates
- *      in-place.
+ *    - Use an unordered_set during a single pass to mark nodes seen and delete
+ * duplicates in-place.
  *    - Achieves O(n) time with O(n) extra space for the set.
  *
  * 3. Alternative Approach:
  *    - Sort the list first and then remove adjacent duplicates.
- *    - Not used here due to the extra overhead of sorting and potential changes to the original order.
+ *    - Not used here due to the extra overhead of sorting and potential changes
+ * to the original order.
  *
  * ASCII Illustration:
  *
@@ -35,7 +36,8 @@
  * Output List: 1, 2, 3, 4, 5
  *
  * Explanation:
- * The duplicate node containing 4 is removed so that each value appears only once.
+ * The duplicate node containing 4 is removed so that each value appears only
+ * once.
  */
 
 #include "list.h"
@@ -55,8 +57,8 @@ public:
       return;
 
     std::unordered_set<int> visited;
-    Node* current = head.get();
-    Node* previous = nullptr;
+    Node *current = head.get();
+    Node *previous = nullptr;
 
     while (current) {
       if (visited.find(current->data) != visited.end()) {

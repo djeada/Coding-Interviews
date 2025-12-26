@@ -2,14 +2,13 @@
  * CIRCULAR QUEUE SIMULATION
  *
  * Simulate a circular queue with fixed capacity. A sequence
- * of operations (given as strings) is provided, and the goal is to determine the
- * final state of the queue after processing all operations.
+ * of operations (given as strings) is provided, and the goal is to determine
+ * the final state of the queue after processing all operations.
  *
  * Supported operations:
- *   "enQueue x" - Insert integer x at the rear of the queue. If the queue is full,
- *                 the operation is ignored.
- *   "deQueue"   - Remove the front element of the queue. If the queue is empty,
- *                 the operation is ignored.
+ *   "enQueue x" - Insert integer x at the rear of the queue. If the queue is
+ * full, the operation is ignored. "deQueue"   - Remove the front element of the
+ * queue. If the queue is empty, the operation is ignored.
  *
  * The final state of the queue should be returned as a vector of integers, from
  * the front element to the rear.
@@ -27,7 +26,8 @@
  * Example:
  *   Input:
  *      capacity = 3
- *      operations = {"enQueue 1", "enQueue 2", "enQueue 3", "deQueue", "enQueue 4"}
+ *      operations = {"enQueue 1", "enQueue 2", "enQueue 3", "deQueue", "enQueue
+ * 4"}
  *
  *   Output:
  *      {2, 3, 4}
@@ -51,107 +51,109 @@
 // Simple (Brute-force) Solution
 // Uses a vector to simulate the queue; on deQueue, it shifts elements.
 // Complexity: O(n) per deQueue operation due to element shifting.
-std::vector<int> simpleSolution(int capacity, const std::vector<std::string>& operations) {
-    std::vector<int> queue;
-    for (const auto& op : operations) {
-        std::istringstream iss(op);
-        std::string command;
-        iss >> command;
-        if (command == "enQueue") {
-            int x;
-            iss >> x;
-            if (queue.size() < static_cast<size_t>(capacity)) {
-                queue.push_back(x);
-            }
-        } else if (command == "deQueue") {
-            if (!queue.empty()) {
-                queue.erase(queue.begin());
-            }
-        }
+std::vector<int> simpleSolution(int capacity,
+                                const std::vector<std::string> &operations) {
+  std::vector<int> queue;
+  for (const auto &op : operations) {
+    std::istringstream iss(op);
+    std::string command;
+    iss >> command;
+    if (command == "enQueue") {
+      int x;
+      iss >> x;
+      if (queue.size() < static_cast<size_t>(capacity)) {
+        queue.push_back(x);
+      }
+    } else if (command == "deQueue") {
+      if (!queue.empty()) {
+        queue.erase(queue.begin());
+      }
     }
-    return queue;
+  }
+  return queue;
 }
 
 // Optimal (Efficient) Solution
-// Implements a circular queue using an array (vector) with head and tail indices.
-// Complexity: O(1) for each operation.
-std::vector<int> optimalSolution(int capacity, const std::vector<std::string>& operations) {
-    std::vector<int> buffer(capacity);
-    int head = 0;
-    int tail = 0;
-    int count = 0;
+// Implements a circular queue using an array (vector) with head and tail
+// indices. Complexity: O(1) for each operation.
+std::vector<int> optimalSolution(int capacity,
+                                 const std::vector<std::string> &operations) {
+  std::vector<int> buffer(capacity);
+  int head = 0;
+  int tail = 0;
+  int count = 0;
 
-    for (const auto& op : operations) {
-        std::istringstream iss(op);
-        std::string command;
-        iss >> command;
-        if (command == "enQueue") {
-            int x;
-            iss >> x;
-            if (count < capacity) {
-                buffer[tail] = x;
-                tail = (tail + 1) % capacity;
-                count++;
-            }
-        } else if (command == "deQueue") {
-            if (count > 0) {
-                head = (head + 1) % capacity;
-                count--;
-            }
-        }
+  for (const auto &op : operations) {
+    std::istringstream iss(op);
+    std::string command;
+    iss >> command;
+    if (command == "enQueue") {
+      int x;
+      iss >> x;
+      if (count < capacity) {
+        buffer[tail] = x;
+        tail = (tail + 1) % capacity;
+        count++;
+      }
+    } else if (command == "deQueue") {
+      if (count > 0) {
+        head = (head + 1) % capacity;
+        count--;
+      }
     }
+  }
 
-    std::vector<int> result;
-    for (int i = 0; i < count; i++) {
-        result.push_back(buffer[(head + i) % capacity]);
-    }
-    return result;
+  std::vector<int> result;
+  for (int i = 0; i < count; i++) {
+    result.push_back(buffer[(head + i) % capacity]);
+  }
+  return result;
 }
 
 // Alternative (Educational) Solution
 // Uses std::deque from the STL to simulate the circular queue.
 // Complexity: O(1) for push/pop operations.
-std::vector<int> alternativeSolution(int capacity, const std::vector<std::string>& operations) {
-    std::deque<int> dq;
-    for (const auto& op : operations) {
-        std::istringstream iss(op);
-        std::string command;
-        iss >> command;
-        if (command == "enQueue") {
-            int x;
-            iss >> x;
-            if (dq.size() < static_cast<size_t>(capacity)) {
-                dq.push_back(x);
-            }
-        } else if (command == "deQueue") {
-            if (!dq.empty()) {
-                dq.pop_front();
-            }
-        }
+std::vector<int>
+alternativeSolution(int capacity, const std::vector<std::string> &operations) {
+  std::deque<int> dq;
+  for (const auto &op : operations) {
+    std::istringstream iss(op);
+    std::string command;
+    iss >> command;
+    if (command == "enQueue") {
+      int x;
+      iss >> x;
+      if (dq.size() < static_cast<size_t>(capacity)) {
+        dq.push_back(x);
+      }
+    } else if (command == "deQueue") {
+      if (!dq.empty()) {
+        dq.pop_front();
+      }
     }
-    return std::vector<int>(dq.begin(), dq.end());
+  }
+  return std::vector<int>(dq.begin(), dq.end());
 }
 
 // Test cases for correctness
 void test() {
-    int capacity = 3;
-    std::vector<std::string> operations = {
-        "enQueue 1", "enQueue 2", "enQueue 3", "deQueue", "enQueue 4"
-    };
-    std::vector<int> expected = {2, 3, 4};
+  int capacity = 3;
+  std::vector<std::string> operations = {"enQueue 1", "enQueue 2", "enQueue 3",
+                                         "deQueue", "enQueue 4"};
+  std::vector<int> expected = {2, 3, 4};
 
-    auto result1 = simpleSolution(capacity, operations);
-    auto result2 = optimalSolution(capacity, operations);
-    auto result3 = alternativeSolution(capacity, operations);
+  auto result1 = simpleSolution(capacity, operations);
+  auto result2 = optimalSolution(capacity, operations);
+  auto result3 = alternativeSolution(capacity, operations);
 
-    assert(result1 == expected);
-    assert(result2 == expected);
-    assert(result3 == expected);
+  assert(result1 == expected);
+  assert(result2 == expected);
+  assert(result3 == expected);
 
-    std::cout << "All tests passed!\n";
+  std::cout << "All tests passed!\n";
 }
 
 int main() {
-    test();
-    return 0;
+  test();
+  return 0;
 }

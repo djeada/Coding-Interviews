@@ -1,9 +1,10 @@
 /*
  * REVERSE A LINKED LIST USING UNIQUE_PTR
  *
- * This program defines a class ListWithReversion that extends a basic singly linked list
- * (from list.h) by providing a function to reverse the list. The reversal is done by 
- * re-linking the nodes, which are managed by std::unique_ptr, without creating new nodes.
+ * This program defines a class ListWithReversion that extends a basic singly
+ * linked list (from list.h) by providing a function to reverse the list. The
+ * reversal is done by re-linking the nodes, which are managed by
+ * std::unique_ptr, without creating new nodes.
  *
  * The reversal algorithm works as follows:
  * - It iteratively detaches the head node from the original list.
@@ -89,7 +90,7 @@ void test2() {
 void test3() {
   ListWithReversion list;
   List expected;
-  
+
   list.reverse();
   assert(list == expected);
 }

@@ -31,20 +31,20 @@
  */
 
 #include "list.h"
+#include <algorithm>
 #include <cassert>
 #include <iostream>
 #include <vector>
-#include <algorithm>
 
 // ---------------- Optimal (Two-Pointer) Solution ----------------
 List mergeTwoPointer(const List &list1, const List &list2) {
   List result;
   unsigned int i = 0, j = 0;
-  
+
   while (i < list1.size() && j < list2.size()) {
     auto data1 = list1.get(i);
     auto data2 = list2.get(j);
-    
+
     if (data1 < data2) {
       result.append(data1);
       ++i;
@@ -53,37 +53,37 @@ List mergeTwoPointer(const List &list1, const List &list2) {
       ++j;
     }
   }
-  
+
   // Append any remaining elements.
   for (; i < list1.size(); ++i)
     result.append(list1.get(i));
   for (; j < list2.size(); ++j)
     result.append(list2.get(j));
-  
+
   return result;
 }
 
 // ---------------- Alternative (Concatenate and Sort) Solution ----------------
 List mergeConcatenateAndSort(const List &list1, const List &list2) {
   List result;
-  
+
   // Concatenate list1 and list2 into result.
   for (unsigned int i = 0; i < list1.size(); ++i)
     result.append(list1.get(i));
   for (unsigned int j = 0; j < list2.size(); ++j)
     result.append(list2.get(j));
-  
+
   // Extract elements, sort them, and rebuild the list.
   std::vector<int> elems;
   for (unsigned int i = 0; i < result.size(); ++i)
     elems.push_back(result.get(i));
-  
+
   std::sort(elems.begin(), elems.end());
-  
+
   List sortedResult;
   for (int val : elems)
     sortedResult.append(val);
-  
+
   return sortedResult;
 }
 

@@ -1,11 +1,12 @@
 /*
  * FIND KTH TO TAIL ELEMENT IN A LINKED LIST
  *
- * This program finds the kth element from the tail (0-indexed) of a singly linked list.
- * Three solutions are provided:
+ * This program finds the kth element from the tail (0-indexed) of a singly
+ * linked list. Three solutions are provided:
  *
  * 1. Simple Solution:
- *    - Traverses the list to store all elements in a vector and then indexes from the end.
+ *    - Traverses the list to store all elements in a vector and then indexes
+ * from the end.
  *    - Easy to implement and understand, but uses O(n) extra space.
  *
  * 2. Optimal (Efficient) Solution:
@@ -29,14 +30,15 @@
  * Output: 4
  *
  * Explanation:
- * For k=1, the kth element from the tail is the second-to-last element in the list.
+ * For k=1, the kth element from the tail is the second-to-last element in the
+ * list.
  */
 
 #include "list.h"
 #include <cassert>
+#include <functional>
 #include <stdexcept>
 #include <vector>
-#include <functional>
 
 // Inherits from the pre-defined List class.
 class ListWithFind : public List {
@@ -48,7 +50,7 @@ public:
   // Then, return the element at the position (size - 1 - k).
   int findKthToTailSimple(unsigned int k) {
     std::vector<int> elems;
-    for (auto* node = head.get(); node != nullptr; node = node->next.get()) {
+    for (auto *node = head.get(); node != nullptr; node = node->next.get()) {
       elems.push_back(node->data);
     }
     if (k >= elems.size())
@@ -57,12 +59,13 @@ public:
   }
 
   // ---------------- Optimal (Efficient) Solution ----------------
-  // Uses a two-pointer technique to find the kth element from the tail in one pass.
+  // Uses a two-pointer technique to find the kth element from the tail in one
+  // pass.
   int findKthToTailOptimal(unsigned int k) {
     if (empty())
       throw std::out_of_range("Index out of range!");
-    auto* current = head.get();
-    auto* follower = head.get();
+    auto *current = head.get();
+    auto *follower = head.get();
     for (unsigned int i = 0; i < k; ++i) {
       if (!current->next)
         throw std::out_of_range("Index out of range!");
@@ -78,7 +81,7 @@ public:
   // ---------------- Alternative Solution ----------------
   // Recursive approach: traverses to the end and then counts backwards.
   // The helper function returns the count from the tail.
-  int findKthToTailAlternativeHelper(Node* node, unsigned int k, int& result) {
+  int findKthToTailAlternativeHelper(Node *node, unsigned int k, int &result) {
     if (!node)
       return 0;
     int index = findKthToTailAlternativeHelper(node->next.get(), k, result) + 1;

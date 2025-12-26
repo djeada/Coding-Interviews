@@ -1,8 +1,9 @@
 /*
  * REMOVE ELEMENT FROM A LINKED LIST
  *
- * This program extends a basic singly linked list (as defined in list.h) by providing
- * a function to remove the first occurrence of a given value from the list.
+ * This program extends a basic singly linked list (as defined in list.h) by
+ * providing a function to remove the first occurrence of a given value from the
+ * list.
  *
  * The remove operation works as follows:
  * - It traverses the list looking for the node containing the target value.
@@ -33,7 +34,7 @@ class ListWithDeletion : public List {
 public:
   // Remove the first occurrence of the node containing the specified value.
   void remove(int value) {
-    Node* prev = nullptr;
+    Node *prev = nullptr;
     auto current = head.get();
 
     // Traverse the list until the target value is found.
@@ -131,6 +132,6 @@ int main() {
   test2();
   test3();
   test4();
-  
+
   return 0;
 }

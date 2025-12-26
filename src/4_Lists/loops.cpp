@@ -1,9 +1,10 @@
 /*
  * DETECT LOOP IN A LINKED LIST (WITH LOOPS)
  *
- * This program defines a linked list class (ListWithLoops) that supports creating loops
- * in the list by connecting nodes arbitrarily. Memory management is handled by storing all
- * allocated nodes in a vector so that they can be safely deleted even if a loop exists.
+ * This program defines a linked list class (ListWithLoops) that supports
+ * creating loops in the list by connecting nodes arbitrarily. Memory management
+ * is handled by storing all allocated nodes in a vector so that they can be
+ * safely deleted even if a loop exists.
  *
  * The class provides:
  *  - append: Add a new node with a given value.
@@ -29,93 +30,91 @@
  *  - A node connected to itself.
  */
 
-#include <iostream>
-#include <vector>
-#include <stdexcept>
-#include <cassert>
 #include <algorithm>
+#include <cassert>
+#include <iostream>
+#include <stdexcept>
+#include <vector>
 
 // A simple node that holds an int and a pointer to the next node.
 struct Node {
-    int data;
-    Node* next;
-    Node(int val) : data(val), next(nullptr) {}
+  int data;
+  Node *next;
+  Node(int val) : data(val), next(nullptr) {}
 };
 
 // A list class that supports loops.
 // Memory management is done by storing all allocated nodes in a vector.
 class ListWithLoops {
 public:
-    ListWithLoops() : head(nullptr) {}
+  ListWithLoops() : head(nullptr) {}
 
-    ~ListWithLoops() {
-        // Delete each node exactly once regardless of loop structure.
-        for (Node* node : nodes) {
-            delete node;
-        }
+  ~ListWithLoops() {
+    // Delete each node exactly once regardless of loop structure.
+    for (Node *node : nodes) {
+      delete node;
     }
+  }
 
-    // Append a new node with the given value.
-    void append(int value) {
-        Node* newNode = new Node(value);
-        if (!head) {
-            head = newNode;
-        } else {
-            Node* current = head;
-            // Traverse until the end of the list.
-            while (current->next != nullptr) {
-                current = current->next;
-            }
-            current->next = newNode;
-        }
-        nodes.push_back(newNode);
+  // Append a new node with the given value.
+  void append(int value) {
+    Node *newNode = new Node(value);
+    if (!head) {
+      head = newNode;
+    } else {
+      Node *current = head;
+      // Traverse until the end of the list.
+      while (current->next != nullptr) {
+        current = current->next;
+      }
+      current->next = newNode;
     }
+    nodes.push_back(newNode);
+  }
 
-    // Connect the node at index 'from' to the node at index 'to'.
-    // Indices are 0-based.
-    // Throws std::out_of_range if indices are invalid.
-    void connectNodes(int from, int to) {
-        if (from < 0 || from >= size() || to < 0 || to >= size()) {
-            throw std::out_of_range("Index out of range!");
-        }
-        Node* fromNode = getNode(from);
-        Node* toNode   = getNode(to);
-        if (!fromNode || !toNode) {
-            throw std::runtime_error("Unexpected null node encountered.");
-        }
-        fromNode->next = toNode;
+  // Connect the node at index 'from' to the node at index 'to'.
+  // Indices are 0-based.
+  // Throws std::out_of_range if indices are invalid.
+  void connectNodes(int from, int to) {
+    if (from < 0 || from >= size() || to < 0 || to >= size()) {
+      throw std::out_of_range("Index out of range!");
     }
+    Node *fromNode = getNode(from);
+    Node *toNode = getNode(to);
+    if (!fromNode || !toNode) {
+      throw std::runtime_error("Unexpected null node encountered.");
+    }
+    fromNode->next = toNode;
+  }
 
-    // Detects a loop using Floyd's cycle-finding algorithm.
-    bool hasLoop() {
-        Node* slow = head;
-        Node* fast = head;
-        while (fast && fast->next) {
-            slow = slow->next;
-            fast = fast->next->next;
-            if (slow == fast)
-                return true;
-        }
-        return false;
+  // Detects a loop using Floyd's cycle-finding algorithm.
+  bool hasLoop() {
+    Node *slow = head;
+    Node *fast = head;
+    while (fast && fast->next) {
+      slow = slow->next;
+      fast = fast->next->next;
+      if (slow == fast)
+        return true;
     }
+    return false;
+  }
 
-    // Return the number of nodes in the list.
-    int size() const { 
-      return static_cast<int>(nodes.size()); 
-    }
+  // Return the number of nodes in the list.
+  int size() const { return static_cast<int>(nodes.size()); }
 
 private:
-    Node* head;
-    // Store pointers to all nodes allocated. This list owns the nodes.
-    std::vector<Node*> nodes;
+  Node *head;
+  // Store pointers to all nodes allocated. This list owns the nodes.
+  std::vector<Node *> nodes;
 
-    // Helper method to retrieve the node at a given index.
-    Node* getNode(int index) {
-        if (index < 0 || index >= size()) {
-            return nullptr;
-        }
-        return nodes[index];
+  // Helper method to retrieve the node at a given index.
+  Node *getNode(int index) {
+    if (index < 0 || index >= size()) {
+      return nullptr;
     }
+    return nodes[index];
+  }
 };
 
 // ------------------- Test Cases -------------------

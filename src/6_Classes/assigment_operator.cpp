@@ -1,12 +1,14 @@
 /*
  * Custom String Class with Assignment Operator
  *
- * This program defines a simple custom String class that manages its own dynamic memory.
- * It demonstrates the implementation of the copy assignment operator to correctly handle
- * resource management and avoid memory leaks. The class includes:
+ * This program defines a simple custom String class that manages its own
+ * dynamic memory. It demonstrates the implementation of the copy assignment
+ * operator to correctly handle resource management and avoid memory leaks. The
+ * class includes:
  *   - Default, parameterized, and copy constructors.
  *   - Destructor to clean up allocated memory.
- *   - Copy assignment operator to enable safe assignment between String objects.
+ *   - Copy assignment operator to enable safe assignment between String
+ * objects.
  *
  * ASCII Illustration:
  *
@@ -61,7 +63,7 @@ public:
   // Copy Assignment Operator
   String &operator=(const String &str) {
     if (this != &str) { // Check for self-assignment
-      delete[] data; // Deallocate existing memory
+      delete[] data;    // Deallocate existing memory
       length = str.length;
       data = new char[length + 1];
       std::strncpy(data, str.data, length);
@@ -84,7 +86,7 @@ int main() {
   String a("Hello");
   String b = a; // Copy constructor
   String c;
-  c = a;        // Copy assignment operator
+  c = a; // Copy assignment operator
 
   std::cout << "String a: " << a << std::endl;
   std::cout << "String b: " << b << std::endl;

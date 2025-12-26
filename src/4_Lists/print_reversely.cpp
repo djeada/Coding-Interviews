@@ -1,15 +1,19 @@
 /*
  * PRINT LINKED LIST IN REVERSE ORDER
  *
- * This program demonstrates two approaches to print the elements of a linked list in reverse order.
+ * This program demonstrates two approaches to print the elements of a linked
+ * list in reverse order.
  *
  * 1. Iterative Approach:
- *    - Uses a stack to store list elements and then prints them in reverse order by popping the stack.
+ *    - Uses a stack to store list elements and then prints them in reverse
+ * order by popping the stack.
  *    - Time Complexity: O(n), Space Complexity: O(n)
  *
  * 2. Recursive Approach:
- *    - Uses recursion to traverse the list to the end and then prints the elements as the recursion unwinds.
- *    - Time Complexity: O(n), Space Complexity: O(n) due to the recursion stack.
+ *    - Uses recursion to traverse the list to the end and then prints the
+ * elements as the recursion unwinds.
+ *    - Time Complexity: O(n), Space Complexity: O(n) due to the recursion
+ * stack.
  *
  * ASCII Illustration:
  *
@@ -41,7 +45,7 @@
 // Iterative approach: prints the list in reverse using a stack.
 void printReverseIter(List &list) {
   std::stack<int> nodes;
-  
+
   for (unsigned int i = 0; i < list.size(); i++)
     nodes.push(list.get(i));
 
@@ -52,7 +56,8 @@ void printReverseIter(List &list) {
 }
 
 // Recursive approach: prints the list in reverse by recursion.
-// The parameter 'i' starts at -1 and is incremented until it reaches the last index.
+// The parameter 'i' starts at -1 and is incremented until it reaches the last
+// index.
 void printReverseRecursive(List &list, int i = -1) {
   if (i == static_cast<int>(list.size()) - 1)
     return;

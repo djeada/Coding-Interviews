@@ -4,14 +4,14 @@
 
 class BinaryTree {
 public:
-  BinaryTree();           // declare
-  virtual ~BinaryTree();  // declare
+  BinaryTree();          // declare
+  virtual ~BinaryTree(); // declare
 
-  BinaryTree(const BinaryTree&) = delete;
-  BinaryTree& operator=(const BinaryTree&) = delete;
+  BinaryTree(const BinaryTree &) = delete;
+  BinaryTree &operator=(const BinaryTree &) = delete;
 
-  BinaryTree(BinaryTree&&) = default;
-  BinaryTree& operator=(BinaryTree&&) = default;
+  BinaryTree(BinaryTree &&) = default;
+  BinaryTree &operator=(BinaryTree &&) = default;
 
   void add(int value);
   bool contains(int value) const;
