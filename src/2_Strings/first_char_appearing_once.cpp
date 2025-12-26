@@ -35,7 +35,6 @@
  *   "l"
  */
 
-#include <algorithm>
 #include <array>
 #include <cassert>
 #include <iostream>
@@ -48,9 +47,10 @@
 
 // Simple (Brute-force) Solution O(n²)
 char simpleSolution(const std::string &input) {
-  for (size_t i = 0; i < input.size(); ++i) {
+  const size_t size = input.size();
+  for (size_t i = 0; i < size; ++i) {
     bool repeating = false;
-    for (size_t j = 0; j < input.size(); ++j) {
+    for (size_t j = 0; j < size; ++j) {
       if (i != j && input[i] == input[j]) {
         repeating = true;
         break;
@@ -66,8 +66,10 @@ char simpleSolution(const std::string &input) {
 // Optimal (Hash map) Solution O(n)
 char optimalSolution(const std::string &input) {
   std::unordered_map<char, int> freq;
-  for (char c : input)
+  freq.reserve(input.size());
+  for (char c : input) {
     ++freq[c];
+  }
   for (char c : input) {
     if (freq[c] == 1)
       return c;
@@ -77,19 +79,20 @@ char optimalSolution(const std::string &input) {
 
 // Alternative (Fixed-size array) Solution O(n), O(1) space
 char alternativeSolution(const std::string &input) {
-  constexpr int ASCII = 256;
+  constexpr size_t ASCII = 256;
   std::array<int, ASCII> firstIdx;
-  firstIdx.fill(-1);
   std::array<int, ASCII> count{};
-  for (int i = 0; i < (int)input.size(); ++i) {
+  firstIdx.fill(-1);
+  for (size_t i = 0; i < input.size(); ++i) {
     unsigned char c = static_cast<unsigned char>(input[i]);
-    if (firstIdx[c] == -1)
-      firstIdx[c] = i;
+    if (firstIdx[c] == -1) {
+      firstIdx[c] = static_cast<int>(i);
+    }
     ++count[c];
   }
   int minPos = std::numeric_limits<int>::max();
   char result = '\0';
-  for (int c = 0; c < ASCII; ++c) {
+  for (size_t c = 0; c < ASCII; ++c) {
     if (count[c] == 1 && firstIdx[c] < minPos) {
       minPos = firstIdx[c];
       result = static_cast<char>(c);
@@ -106,13 +109,21 @@ struct TestCase {
   char expected;
 };
 
+std::string printableChar(char c) {
+  if (c == '\0') {
+    return "\\0";
+  }
+  return std::string(1, c);
+}
+
 void testSimple(const std::vector<TestCase> &cases) {
   std::cout << "=== Testing simpleSolution ===\n";
-  for (auto &tc : cases) {
+  for (const auto &tc : cases) {
     char got = simpleSolution(tc.input);
     bool pass = (got == tc.expected);
-    std::cout << tc.name << ": expected='" << tc.expected << "', got='" << got
-              << "' -> " << (pass ? "PASS" : "FAIL") << "\n";
+    std::cout << tc.name << ": expected='" << printableChar(tc.expected)
+              << "', got='" << printableChar(got) << "' -> "
+              << (pass ? "PASS" : "FAIL") << "\n";
     assert(pass);
   }
   std::cout << "\n";
@@ -120,11 +131,12 @@ void testSimple(const std::vector<TestCase> &cases) {
 
 void testOptimal(const std::vector<TestCase> &cases) {
   std::cout << "=== Testing optimalSolution ===\n";
-  for (auto &tc : cases) {
+  for (const auto &tc : cases) {
     char got = optimalSolution(tc.input);
     bool pass = (got == tc.expected);
-    std::cout << tc.name << ": expected='" << tc.expected << "', got='" << got
-              << "' -> " << (pass ? "PASS" : "FAIL") << "\n";
+    std::cout << tc.name << ": expected='" << printableChar(tc.expected)
+              << "', got='" << printableChar(got) << "' -> "
+              << (pass ? "PASS" : "FAIL") << "\n";
     assert(pass);
   }
   std::cout << "\n";
@@ -132,11 +144,12 @@ void testOptimal(const std::vector<TestCase> &cases) {
 
 void testAlternative(const std::vector<TestCase> &cases) {
   std::cout << "=== Testing alternativeSolution ===\n";
-  for (auto &tc : cases) {
+  for (const auto &tc : cases) {
     char got = alternativeSolution(tc.input);
     bool pass = (got == tc.expected);
-    std::cout << tc.name << ": expected='" << tc.expected << "', got='" << got
-              << "' -> " << (pass ? "PASS" : "FAIL") << "\n";
+    std::cout << tc.name << ": expected='" << printableChar(tc.expected)
+              << "', got='" << printableChar(got) << "' -> "
+              << (pass ? "PASS" : "FAIL") << "\n";
     assert(pass);
   }
   std::cout << "\n";
