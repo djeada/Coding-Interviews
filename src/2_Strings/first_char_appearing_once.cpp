@@ -80,25 +80,16 @@ char optimalSolution(const std::string &input) {
 // Alternative (Fixed-size array) Solution O(n), O(1) space
 char alternativeSolution(const std::string &input) {
   constexpr size_t ASCII = 256;
-  std::array<int, ASCII> firstIdx;
   std::array<int, ASCII> count{};
-  firstIdx.fill(-1);
-  for (size_t i = 0; i < input.size(); ++i) {
-    unsigned char c = static_cast<unsigned char>(input[i]);
-    if (firstIdx[c] == -1) {
-      firstIdx[c] = static_cast<int>(i);
-    }
-    ++count[c];
+  for (char c : input) {
+    ++count[static_cast<unsigned char>(c)];
   }
-  int minPos = std::numeric_limits<int>::max();
-  char result = '\0';
-  for (size_t c = 0; c < ASCII; ++c) {
-    if (count[c] == 1 && firstIdx[c] < minPos) {
-      minPos = firstIdx[c];
-      result = static_cast<char>(c);
+  for (char c : input) {
+    if (count[static_cast<unsigned char>(c)] == 1) {
+      return c;
     }
   }
-  return result;
+  return '\0';
 }
 
 // --- Testing Infrastructure ---
