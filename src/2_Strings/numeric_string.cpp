@@ -77,24 +77,32 @@ bool isValidNumericString(const std::string &str) {
   if (str[i] == '+' || str[i] == '-')
     ++i;
   // integer part
-  while (i < str.size() && std::isdigit(static_cast<unsigned char>(str[i])))
+  size_t digitsBefore = 0;
+  while (i < str.size() && std::isdigit(static_cast<unsigned char>(str[i]))) {
     ++i;
+    ++digitsBefore;
+  }
+  bool hasDigits = (digitsBefore > 0);
   bool numeric = true;
   // fraction or exponent
   if (i < str.size()) {
     if (str[i] == '.') {
       ++i;
-      while (i < str.size() && std::isdigit(static_cast<unsigned char>(str[i])))
+      size_t digitsAfter = 0;
+      while (i < str.size() && std::isdigit(static_cast<unsigned char>(str[i]))) {
         ++i;
+        ++digitsAfter;
+      }
+      hasDigits = hasDigits || (digitsAfter > 0);
     }
     if (i < str.size() && (str[i] == 'e' || str[i] == 'E')) {
-      numeric = isValidExponential(str.substr(i));
+      numeric = hasDigits && isValidExponential(str.substr(i));
       i = str.size();
     } else if (i < str.size()) {
       numeric = false;
     }
   }
-  return numeric && i == str.size();
+  return hasDigits && numeric && i == str.size();
 }
 
 // --- Testing Infrastructure ---
