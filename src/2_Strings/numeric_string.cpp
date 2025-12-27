@@ -50,59 +50,39 @@
 
 // --- Implementation ---
 
-bool containsOnlyDigits(const std::string &str) {
-  for (char c : str) {
-    if (!std::isdigit(static_cast<unsigned char>(c)))
-      return false;
-  }
-  return true;
-}
-
-bool isValidExponential(const std::string &str) {
-  if (str.size() < 2 || (str[0] != 'e' && str[0] != 'E'))
-    return false;
-  size_t i = 1;
-  if (str[i] == '+' || str[i] == '-') {
-    if (str.size() == 2)
-      return false;
-    ++i;
-  }
-  return containsOnlyDigits(str.substr(i));
-}
-
 bool isValidNumericString(const std::string &str) {
   if (str.empty())
     return false;
   size_t i = 0;
   if (str[i] == '+' || str[i] == '-')
     ++i;
-  // integer part
-  size_t digitsBefore = 0;
-  while (i < str.size() && std::isdigit(static_cast<unsigned char>(str[i]))) {
-    ++i;
-    ++digitsBefore;
-  }
-  bool hasDigits = (digitsBefore > 0);
-  bool numeric = true;
-  // fraction or exponent
-  if (i < str.size()) {
-    if (str[i] == '.') {
-      ++i;
-      size_t digitsAfter = 0;
-      while (i < str.size() && std::isdigit(static_cast<unsigned char>(str[i]))) {
+  bool seenDigit = false;
+  bool seenDot = false;
+  bool seenExp = false;
+  for (; i < str.size(); ++i) {
+    unsigned char c = static_cast<unsigned char>(str[i]);
+    if (std::isdigit(c)) {
+      seenDigit = true;
+      continue;
+    }
+    if (c == '.') {
+      if (seenDot || seenExp)
+        return false;
+      seenDot = true;
+      continue;
+    }
+    if (c == 'e' || c == 'E') {
+      if (seenExp || !seenDigit)
+        return false;
+      seenExp = true;
+      seenDigit = false;
+      if (i + 1 < str.size() && (str[i + 1] == '+' || str[i + 1] == '-'))
         ++i;
-        ++digitsAfter;
-      }
-      hasDigits = hasDigits || (digitsAfter > 0);
+      continue;
     }
-    if (i < str.size() && (str[i] == 'e' || str[i] == 'E')) {
-      numeric = hasDigits && isValidExponential(str.substr(i));
-      i = str.size();
-    } else if (i < str.size()) {
-      numeric = false;
-    }
+    return false;
   }
-  return hasDigits && numeric && i == str.size();
+  return seenDigit;
 }
 
 // --- Testing Infrastructure ---
