@@ -51,33 +51,40 @@
 // --- Implementation ---
 
 bool isValidNumericString(const std::string &str) {
-  if (str.empty())
+  if (str.empty()) {
     return false;
+  }
   size_t i = 0;
-  if (str[i] == '+' || str[i] == '-')
+  if (str.front() == '+' || str.front() == '-') {
     ++i;
+  }
   bool seenDigit = false;
-  bool seenDot = false;
   bool seenExp = false;
-  for (; i < str.size(); ++i) {
-    unsigned char c = static_cast<unsigned char>(str[i]);
+  bool seenDot = false;
+
+  for (; i < str.size(); i++) {
+    unsigned char c = static_cast<unsigned char>(str.at(i));
     if (std::isdigit(c)) {
       seenDigit = true;
       continue;
     }
     if (c == '.') {
-      if (seenDot || seenExp)
+      if (seenDot || seenExp) {
         return false;
+      }
       seenDot = true;
       continue;
     }
     if (c == 'e' || c == 'E') {
-      if (seenExp || !seenDigit)
+      if (seenExp || !seenDigit) {
         return false;
+      }
       seenExp = true;
       seenDigit = false;
-      if (i + 1 < str.size() && (str[i + 1] == '+' || str[i + 1] == '-'))
+      if (i + 1 < str.size() &&
+          (str.at(i + 1) == '+' || str.at(i + 1) == '-')) {
         ++i;
+      }
       continue;
     }
     return false;

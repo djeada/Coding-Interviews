@@ -37,11 +37,9 @@
  * Output:
  *   "nospace"
  */
-#include <algorithm>
 #include <cassert>
 #include <cstring>
 #include <iostream>
-#include <regex>
 #include <string>
 #include <vector>
 
@@ -50,38 +48,51 @@
 // Simple (Brute-force) Solution using std::string
 std::string simpleSolution(const std::string &input) {
   std::string result;
+  result.reserve(input.size());
   for (char c : input) {
-    result += (c == ' ') ? "%20" : std::string(1, c);
+    if (c == ' ') {
+      result += "%20";
+    } else {
+      result.push_back(c);
+    }
   }
   return result;
 }
 
-// Alternative Solution using std::regex
+// Alternative Solution using in-place replace on std::string
 std::string alternativeSolution(const std::string &input) {
-  return std::regex_replace(input, std::regex(" "), "%20");
+  std::string result = input;
+  for (size_t pos = 0; (pos = result.find(' ', pos)) != std::string::npos;) {
+    result.replace(pos, 1, "%20");
+    pos += 3;
+  }
+  return result;
 }
 
 // Optimal (In-place) Solution on C-string buffer
-void optimalSolution(char str[], int capacity) {
-  if (!str || capacity <= 0)
+void optimalSolution(char str[], size_t capacity) {
+  if (!str || capacity == 0)
     return;
-  int origLen = 0, spaces = 0;
-  while (str[origLen]) {
-    if (str[origLen] == ' ')
+  const size_t origLen = std::strlen(str);
+  size_t spaces = 0;
+  for (size_t i = 0; i < origLen; ++i) {
+    if (str[i] == ' ')
       spaces++;
-    origLen++;
   }
-  int newLen = origLen + spaces * 2;
+  const size_t newLen = origLen + spaces * 2;
   if (newLen >= capacity)
     return;
   str[newLen] = '\0';
-  for (int i = origLen - 1, j = newLen - 1; i >= 0; --i) {
+  size_t i = origLen;
+  size_t j = newLen;
+  while (i > 0) {
+    --i;
     if (str[i] == ' ') {
-      str[j--] = '0';
-      str[j--] = '2';
-      str[j--] = '%';
+      str[--j] = '0';
+      str[--j] = '2';
+      str[--j] = '%';
     } else {
-      str[j--] = str[i];
+      str[--j] = str[i];
     }
   }
 }
@@ -98,18 +109,17 @@ struct CStrTestCase {
   std::string expected;
 };
 
-void testSimpleAndAlternative(const std::vector<StrTestCase> &cases) {
-  std::cout << "=== Testing simpleSolution & alternativeSolution ===\n";
+template <typename Func>
+void runStringTests(const std::string &label,
+                    const std::vector<StrTestCase> &cases, Func func) {
+  std::cout << "=== Testing " << label << " ===\n";
   for (auto &tc : cases) {
-    std::string s1 = simpleSolution(tc.input);
-    std::string s2 = alternativeSolution(tc.input);
-    bool p1 = (s1 == tc.expected);
-    bool p2 = (s2 == tc.expected);
-    std::cout << tc.name << ": simple=\"" << s1 << "\" alt=\"" << s2
-              << "\" expected=\"" << tc.expected << "\" -> simple "
-              << (p1 ? "PASS" : "FAIL") << ", alternative "
-              << (p2 ? "PASS" : "FAIL") << "\n";
-    assert(p1 && p2);
+    std::string got = func(tc.input);
+    bool pass = (got == tc.expected);
+    std::cout << tc.name << ": " << label << "(\"" << tc.input << "\")=\""
+              << got << "\" expected=\"" << tc.expected << "\" -> "
+              << (pass ? "PASS" : "FAIL") << "\n";
+    assert(pass);
   }
   std::cout << "\n";
 }
@@ -118,12 +128,13 @@ void testOptimal(const std::vector<CStrTestCase> &cases) {
   std::cout << "=== Testing optimalSolution (in-place) ===\n";
   for (auto &tc : cases) {
     char buffer[100];
-    std::strncpy(buffer, tc.initial, sizeof(buffer));
+    std::strncpy(buffer, tc.initial, sizeof(buffer) - 1);
     buffer[sizeof(buffer) - 1] = '\0';
     optimalSolution(buffer, sizeof(buffer));
-    bool pass = (std::string(buffer) == tc.expected);
-    std::cout << tc.name << ": got=\"" << buffer << "\" expected=\""
-              << tc.expected << "\" -> " << (pass ? "PASS" : "FAIL") << "\n";
+    const std::string got(buffer);
+    bool pass = (got == tc.expected);
+    std::cout << tc.name << ": got=\"" << got << "\" expected=\"" << tc.expected
+              << "\" -> " << (pass ? "PASS" : "FAIL") << "\n";
     assert(pass);
   }
   std::cout << "\n";
@@ -143,7 +154,8 @@ int main() {
       {"In-place no spaces", "nospace", "nospace"},
       {"In-place all spaces", "   ", "%20%20%20"}};
 
-  testSimpleAndAlternative(stringCases);
+  runStringTests("simpleSolution", stringCases, simpleSolution);
+  runStringTests("alternativeSolution", stringCases, alternativeSolution);
   testOptimal(cstrCases);
 
   std::cout << "All tests passed successfully!\n";

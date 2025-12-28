@@ -25,7 +25,6 @@
  * Matches: '.' matches 'a', '*' allows '.' to match 'b' also.
  */
 
-#include <algorithm>
 #include <cassert>
 #include <iostream>
 #include <string>
@@ -34,18 +33,16 @@
 // --- Implementations ---
 
 // Simple Recursive Solution (O(2^n))
-bool simpleMatchHelper(const std::string &s, const std::string &p, int i,
-                       int j) {
-  if (j == (int)p.size())
-    return i == (int)s.size();
-  bool first_match = (i < (int)s.size() && (p[j] == s[i] || p[j] == '.'));
-  if (j + 1 < (int)p.size() && p[j + 1] == '*') {
-    // Skip '*' or consume one char and stay on '*'
+bool simpleMatchHelper(const std::string &s, const std::string &p, size_t i,
+                       size_t j) {
+  if (j == p.size())
+    return i == s.size();
+  bool first_match = (i < s.size() && (p[j] == s[i] || p[j] == '.'));
+  if (j + 1 < p.size() && p[j + 1] == '*') {
     return simpleMatchHelper(s, p, i, j + 2) ||
            (first_match && simpleMatchHelper(s, p, i + 1, j));
-  } else {
-    return first_match && simpleMatchHelper(s, p, i + 1, j + 1);
   }
+  return first_match && simpleMatchHelper(s, p, i + 1, j + 1);
 }
 
 bool simpleMatch(const std::string &s, const std::string &p) {
@@ -54,19 +51,22 @@ bool simpleMatch(const std::string &s, const std::string &p) {
 
 // Optimal Dynamic Programming Solution (O(m*n))
 bool optimalMatch(const std::string &s, const std::string &p) {
-  int m = s.size(), n = p.size();
+  const size_t m = s.size();
+  const size_t n = p.size();
   std::vector<std::vector<bool>> dp(m + 1, std::vector<bool>(n + 1, false));
   dp[0][0] = true;
   // Patterns like a*, a*b*, a*b*c* can match empty string
-  for (int j = 2; j <= n; j += 2) {
+  for (size_t j = 2; j <= n; j += 2) {
     dp[0][j] = dp[0][j - 2] && p[j - 1] == '*';
   }
-  for (int i = 1; i <= m; ++i) {
-    for (int j = 1; j <= n; ++j) {
-      if (p[j - 1] == '*') {
+  for (size_t i = 1; i <= m; ++i) {
+    for (size_t j = 1; j <= n; ++j) {
+      if (p[j - 1] == '*' && j >= 2) {
         // zero occurrences or at least one
         dp[i][j] = dp[i][j - 2] ||
                    (dp[i - 1][j] && (p[j - 2] == s[i - 1] || p[j - 2] == '.'));
+      } else if (p[j - 1] == '*') {
+        dp[i][j] = false;
       } else {
         dp[i][j] =
             dp[i - 1][j - 1] && (p[j - 1] == s[i - 1] || p[j - 1] == '.');
@@ -85,26 +85,14 @@ struct TestCase {
   bool expected;
 };
 
-void testSimpleMatch(const std::vector<TestCase> &cases) {
-  std::cout << "=== Testing simpleMatch ===\n";
+template <typename Func>
+void runTests(const std::string &label, const std::vector<TestCase> &cases,
+              Func func) {
+  std::cout << "=== Testing " << label << " ===\n";
   for (const auto &tc : cases) {
-    bool got = simpleMatch(tc.s, tc.p);
+    bool got = func(tc.s, tc.p);
     bool pass = (got == tc.expected);
-    std::cout << tc.name << ": simpleMatch(\"" << tc.s << "\", \"" << tc.p
-              << "\")" << " expected=" << (tc.expected ? "true" : "false")
-              << ", got=" << (got ? "true" : "false") << " -> "
-              << (pass ? "PASS" : "FAIL") << "\n";
-    assert(pass);
-  }
-  std::cout << "\n";
-}
-
-void testOptimalMatch(const std::vector<TestCase> &cases) {
-  std::cout << "=== Testing optimalMatch ===\n";
-  for (const auto &tc : cases) {
-    bool got = optimalMatch(tc.s, tc.p);
-    bool pass = (got == tc.expected);
-    std::cout << tc.name << ": optimalMatch(\"" << tc.s << "\", \"" << tc.p
+    std::cout << tc.name << ": " << label << "(\"" << tc.s << "\", \"" << tc.p
               << "\")" << " expected=" << (tc.expected ? "true" : "false")
               << ", got=" << (got ? "true" : "false") << " -> "
               << (pass ? "PASS" : "FAIL") << "\n";
@@ -122,8 +110,8 @@ int main() {
       {"Wildcard .*", "ab", ".*", true},
       {"Complex mix", "aaa", "ab*a*c*a", true}};
 
-  testSimpleMatch(cases);
-  testOptimalMatch(cases);
+  runTests("simpleMatch", cases, simpleMatch);
+  runTests("optimalMatch", cases, optimalMatch);
 
   std::cout << "All tests passed successfully!\n";
   return 0;

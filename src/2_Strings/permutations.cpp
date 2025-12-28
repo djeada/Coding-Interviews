@@ -26,32 +26,39 @@
 #include <algorithm>
 #include <cassert>
 #include <iostream>
-#include <set>
 #include <string>
 #include <vector>
 
 // --- Implementations ---
 
-// Simple (Brute-force) Solution
-void permuteSimple(std::string s, int l, int r,
-                   std::set<std::string> &results) {
-  if (l == r) {
-    results.insert(s);
+// Simple (Backtracking) Solution
+void permuteSimple(std::string &s, size_t idx,
+                   std::vector<std::string> &results) {
+  if (idx == s.size()) {
+    results.push_back(s);
     return;
   }
-  for (int i = l; i <= r; ++i) {
-    std::swap(s[l], s[i]);
-    permuteSimple(s, l + 1, r, results);
-    std::swap(s[l], s[i]);
+  bool used[256] = {false};
+  for (size_t i = idx; i < s.size(); ++i) {
+    unsigned char key = static_cast<unsigned char>(s[i]);
+    if (used[key])
+      continue;
+    used[key] = true;
+    std::swap(s[idx], s[i]);
+    permuteSimple(s, idx + 1, results);
+    std::swap(s[idx], s[i]);
   }
 }
 
 std::vector<std::string> simpleSolution(const std::string &input) {
   if (input.empty())
     return {""};
-  std::set<std::string> resultSet;
-  permuteSimple(input, 0, (int)input.size() - 1, resultSet);
-  return {resultSet.begin(), resultSet.end()};
+  std::string s = input;
+  std::sort(s.begin(), s.end());
+  std::vector<std::string> results;
+  results.reserve(128);
+  permuteSimple(s, 0, results);
+  return results;
 }
 
 // Optimal Solution (using next_permutation)
@@ -71,18 +78,21 @@ std::vector<std::string> optimalSolution(const std::string &input) {
 std::vector<std::string> alternativeSolution(const std::string &input) {
   if (input.empty())
     return {""};
-  std::vector<std::string> results = {std::string(1, input[0])};
-  for (size_t i = 1; i < input.size(); ++i) {
-    std::vector<std::string> newPerms;
+  std::vector<std::string> results = {""};
+  for (char ch : input) {
+    std::vector<std::string> next;
+    next.reserve(results.size() *
+                 (results.empty() ? 1 : results[0].size() + 1));
     for (const auto &str : results) {
       for (size_t pos = 0; pos <= str.size(); ++pos) {
-        newPerms.push_back(str.substr(0, pos) + input[i] + str.substr(pos));
+        next.push_back(str.substr(0, pos) + ch + str.substr(pos));
       }
     }
-    results = std::move(newPerms);
+    results = std::move(next);
   }
-  std::set<std::string> uniqueSet(results.begin(), results.end());
-  return {uniqueSet.begin(), uniqueSet.end()};
+  std::sort(results.begin(), results.end());
+  results.erase(std::unique(results.begin(), results.end()), results.end());
+  return results;
 }
 
 // --- Testing Infrastructure ---
@@ -93,8 +103,9 @@ struct TestCase {
   std::vector<std::string> expected; // must be sorted
 };
 
+template <typename Func>
 void runTest(const std::string &label, const std::vector<TestCase> &cases,
-             std::vector<std::string> (*func)(const std::string &)) {
+             Func func) {
   std::cout << "=== Testing " << label << " ===\n";
   for (const auto &tc : cases) {
     auto got = func(tc.input);
