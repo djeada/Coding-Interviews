@@ -4,21 +4,6 @@
  * This program checks if a given sequence of numbers can be a valid popping
  * order from a stack given a specific pushing order.
  *
- * Two solutions are provided:
- *
- * 1. Simulation Solution:
- *    This approach simulates the process of pushing and popping. It pushes
- * numbers from the given push order onto a stack until the top matches the
- * current number in the pop order. If the entire pop order can be reproduced
- * this way, the sequence is valid. Complexity: O(n) where n is the length of
- * the sequence.
- *
- * 2. Alternative Recursive (Educational) Solution:
- *    This method recursively explores both possible operations (push and pop)
- * to generate all possible pop orders from the given push order, then checks if
- * the target pop order is among them. Complexity: Exponential (O(2^n)) and
- * suitable only for small input sizes.
- *
  * ASCII Illustration:
  *
  *     Push Order:  1  2  3  4  5
