@@ -4,22 +4,6 @@
  * This program demonstrates three approaches for dynamically computing the
  * median of a stream of numbers as new elements are inserted:
  *
- * 1. Simple Solution:
- *    Uses a sorted vector to store numbers. Every insertion sorts the vector
- *    so that retrieving the median is straightforward. This approach is easy to
- *    implement but becomes inefficient with a large number of insertions.
- *    Complexity: O(n log n) per insertion.
- *
- * 2. Optimal Solution:
- *    Uses two heaps (a max-heap for the lower half and a min-heap for the upper
- * half) to maintain balance and enable efficient median retrieval. Complexity:
- * O(log n) per insertion and O(1) median retrieval.
- *
- * 3. Alternative (Educational) Solution:
- *    Utilizes a balanced multiset with an iterator tracking the median. This
- * approach allows logarithmic insertion and direct access to the median,
- * showcasing another way to maintain order dynamically.
- *
  * ASCII Illustration:
  *
  *         Dynamic Median Calculation:
