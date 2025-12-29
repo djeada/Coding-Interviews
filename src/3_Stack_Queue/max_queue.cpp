@@ -7,25 +7,6 @@
  *   - pop(): Remove the front element from the queue.
  *   - max(): Retrieve the maximum element currently in the queue.
  *
- * Two main approaches are provided:
- *
- * 1. Simple (Brute-force) Solution:
- *    Uses a standard queue (implemented with std::deque) and, for each max()
- * call, scans through all elements to find the maximum. This approach is
- * straightforward but inefficient with a complexity of O(n) per max()
- * operation.
- *
- * 2. Optimal (Efficient) Solution:
- *    Uses a standard queue along with an auxiliary deque that maintains
- * potential maximum candidates. This structure enables all operations to run in
- * O(1) amortized time.
- *
- * 3. Alternative (Educational) Solution:
- *    Uses a multiset to maintain the queue elements in sorted order. With each
- * push and pop, the multiset is updated accordingly. This approach achieves
- * O(log n) operations, demonstrating an alternative trade-off between
- * simplicity and performance.
- *
  * ASCII Illustration:
  *
  *   Operations:
