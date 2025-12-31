@@ -5,22 +5,6 @@
  * A magic square is defined as an n x n matrix in which the sums of each row,
  * each column, the main diagonal, and the anti-diagonal are all equal.
  *
- * Three solutions are provided:
- *
- * 1. Simple (Brute-force) Solution:
- *    Iterates over each row, column, and both diagonals to compute their sums,
- *    then compares them to determine if the matrix is magic.
- *    Complexity: O(n^2) for an n x n matrix.
- *
- * 2. Optimal (Single-pass) Solution:
- *    Computes row and column sums in a single traversal of the matrix and then
- *    checks the two diagonals separately. This minimizes redundant
- * computations.
- *
- * 3. Alternative (STL-based) Solution:
- *    Utilizes STL algorithms such as std::accumulate to compute the sums of
- * rows, resulting in more concise code while maintaining clarity.
- *
  * ASCII Illustration:
  *
  *         [ 8, 1, 6 ]
