@@ -6,22 +6,6 @@
  * right) and without revisiting cells, the characters along the path form a
  * specified string.
  *
- * Three solutions are provided:
- *
- * 1. Simple Solution:
- *    - Uses a recursive Depth-First Search (DFS) with a helper function.
- *    - Explores every possible path and backtracks upon dead ends.
- *
- * 2. Optimal (Efficient) Solution:
- *    - Uses a lambda function to encapsulate the recursive DFS logic.
- *    - This version reduces the scope of helper functions and leverages modern
- * C++ features.
- *
- * 3. Alternative Solution:
- *    - Implements DFS iteratively using an explicit stack.
- *    - Although less memory efficient due to copying the visited state, it
- * demonstrates how recursion can be converted to an iterative process.
- *
  * ASCII Illustration:
  *
  *          Matrix:
