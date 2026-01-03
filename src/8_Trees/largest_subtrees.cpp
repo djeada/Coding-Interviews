@@ -1,9 +1,11 @@
 /*
+ * Task: Find the size of the largest BST subtree in a binary tree.
+ *
  * LARGEST BINARY SEARCH TREE (BST) SUBTREE SIZE
  *
- * This program extends an assumed BinaryTree implementation (from
- * "binary_tree.h") by adding a method to determine the size of the largest
- * subtree that is a valid Binary Search Tree (BST).
+ * Extend an assumed BinaryTree implementation (from "binary_tree.h") by
+ * adding a method to determine the size of the largest subtree that is a valid
+ * Binary Search Tree (BST).
  *
  * The algorithm uses a recursive helper function to traverse the tree and
  * calculate:

@@ -1,7 +1,9 @@
 /*
+ * Task: Count all valid arrangements of 8 queens on an 8x8 chessboard.
+ *
  * N-QUEENS PUZZLE (N=8)
  *
- * Find all valid arrangements to place eight chess queens on an 8×8 chessboard
+ * Find all valid arrangements to place eight chess queens on an 8x8 chessboard
  * such that no two queens threaten each other. Queens threaten each other if
  * they share the same row, column, or diagonal.
  *

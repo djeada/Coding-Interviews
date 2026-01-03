@@ -1,7 +1,9 @@
 /*
+ * Task: Demonstrate diamond inheritance, covariant returns, and object slicing.
+ *
  * ADVANCED INHERITANCE IN C++: DIAMOND, COVARIANCE, AND OBJECT SLICING
  *
- * This program demonstrates several tricky parts of inheritance in C++:
+ * Demonstrate several tricky parts of inheritance in C++:
  *
  * 1. Diamond Inheritance with Virtual Inheritance:
  *    Shows how to solve the diamond problem by using virtual inheritance so

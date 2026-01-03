@@ -1,8 +1,10 @@
 /*
+ * Task: Find the kth element from the tail of a singly linked list.
+ *
  * FIND KTH TO TAIL ELEMENT IN A LINKED LIST
  *
- * This program finds the kth element from the tail (0-indexed) of a singly
- * linked list. Three solutions are provided:
+ * Find the kth element from the tail (0-indexed) of a singly linked list.
+ * Three solutions are provided:
  *
  * 1. Simple Solution:
  *    - Traverses the list to store all elements in a vector and then indexes

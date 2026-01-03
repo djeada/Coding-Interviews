@@ -1,9 +1,11 @@
 /*
+ * Task: Find the length of the longest increasing path in a matrix.
+ *
  * LONGEST INCREASING PATH IN A MATRIX
  *
- * This task requires finding the length of the longest strictly increasing path
- * in a given 2D matrix. From any cell, you can move in four directions (up,
- * down, left, right) to a neighboring cell with a higher value.
+ * Find the length of the longest strictly increasing path in a given 2D matrix.
+ * From any cell, you can move in four directions (up, down, left, right) to a
+ * neighboring cell with a higher value.
  *
  * Three solutions are provided:
  *

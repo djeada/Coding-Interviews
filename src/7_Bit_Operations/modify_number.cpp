@@ -1,10 +1,12 @@
 /*
+ * Task: Count the number of differing bits between two integers.
+ *
  * COUNT BITS TO MODIFY
  *
- * This program calculates the number of bits that need to be flipped to convert
- * one integer to another. In other words, it finds the number of bit positions
- * where the two numbers differ. This is done by computing the XOR of the two
- * numbers and counting the number of set bits (1s) in the result.
+ * Calculate the number of bits that need to be flipped to convert one integer
+ * to another. In other words, find the number of bit positions where the two
+ * numbers differ. This is done by computing the XOR of the two numbers and
+ * counting the number of set bits (1s) in the result.
  *
  * Three modern C++ solutions are provided:
  *

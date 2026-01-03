@@ -1,8 +1,10 @@
 /*
+ * Task: Find the contiguous subarray with the maximum sum.
+ *
  * MAXIMUM SUBARRAY PROBLEM
  *
- * This task is to find the contiguous subarray within a one-dimensional array
- * of numbers that has the largest sum.
+ * Find the contiguous subarray within a one-dimensional array of numbers that
+ * has the largest sum.
  *
  * We provide two implementations:
  *  1. Naive Approach (Easy to implement) that computes the sum of every

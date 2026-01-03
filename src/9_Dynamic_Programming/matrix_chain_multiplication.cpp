@@ -1,11 +1,12 @@
 /*
+ * Task: Compute the minimum scalar multiplications for a matrix chain.
+ *
  * MATRIX CHAIN MULTIPLICATION OPTIMIZATION
  *
- * This task is to determine the most efficient way to multiply a given chain of
- * matrices. The matrices are represented by a vector of dimensions where the
- * i-th matrix has dimensions dims[i-1] x dims[i]. The goal is to compute the
- * minimum number of scalar multiplications required to multiply all matrices in
- * the chain.
+ * Determine the most efficient way to multiply a given chain of matrices. The
+ * matrices are represented by a vector of dimensions where the i-th matrix has
+ * dimensions dims[i-1] x dims[i]. The goal is to compute the minimum number of
+ * scalar multiplications required to multiply all matrices in the chain.
  *
  * Three solutions are provided:
  *

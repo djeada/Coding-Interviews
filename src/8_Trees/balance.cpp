@@ -1,10 +1,11 @@
 /*
+ * Task: Check whether a binary tree is height-balanced.
+ *
  * BINARY TREE BALANCE CHECK
  *
- * This program demonstrates two modern C++ solutions to check whether a binary
- * search tree is balanced. A binary tree is considered balanced if, for every
- * node, the difference in height between its left and right subtrees is no more
- * than one.
+ * Demonstrate two modern C++ solutions to check whether a binary search tree is
+ * balanced. A binary tree is considered balanced if, for every node, the
+ * difference in height between its left and right subtrees is no more than one.
  *
  * Two approaches are implemented:
  * 1. Simple (Brute-force) Approach:

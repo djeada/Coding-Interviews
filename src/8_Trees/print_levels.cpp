@@ -1,9 +1,11 @@
 /*
+ * Task: Print a binary tree in level-order (breadth-first) traversal.
+ *
  * BREADTH-FIRST PRINT (LEVEL ORDER TRAVERSAL)
  *
- * This program extends an assumed BinaryTree implementation (from
- * "binary_tree.h") by adding functionality to print the tree in a breadth-first
- * (level order) manner.
+ * Extend an assumed BinaryTree implementation (from "binary_tree.h") by
+ * adding functionality to print the tree in a breadth-first (level order)
+ * manner.
  *
  * The algorithm uses a queue to traverse the tree level by level:
  *   - Start from the root node and push it into the queue.

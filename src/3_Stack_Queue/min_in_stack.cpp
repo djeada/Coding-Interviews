@@ -1,10 +1,12 @@
 /*
+ * Task: Implement a stack that can return the minimum element in O(1) time.
+ *
  * STACK WITH MINIMUM TRACKING
  *
- * This program implements a template class `StackWithMin` which represents a
- * stack data structure capable of tracking the minimum element in constant time
- * (O(1)) for all operations including push, pop, top, and retrieving the
- * minimum value.
+ * Implement a template class `StackWithMin` which represents a stack data
+ * structure capable of tracking the minimum element in constant time (O(1))
+ * for all operations including push, pop, top, and retrieving the minimum
+ * value.
  *
  * The implementation uses a modified stack mechanism where the pushed value is
  * encoded if it is less than the current minimum. This ensures that when an

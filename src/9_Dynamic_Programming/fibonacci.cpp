@@ -1,4 +1,6 @@
 /*
+ * Task: Compute the nth Fibonacci number.
+ *
  * COMPUTING THE N-TH FIBONACCI NUMBER
  *
  * Given a non-negative integer n, compute the nth Fibonacci number.

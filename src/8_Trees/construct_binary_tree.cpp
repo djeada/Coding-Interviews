@@ -1,9 +1,10 @@
 /*
+ * Task: Construct a binary tree from inorder and preorder traversals.
+ *
  * BINARY TREE CONSTRUCTION FROM TRAVERSAL DATA
  *
- * This program constructs a binary tree from given inorder and preorder
- * traversal arrays. It extends an assumed BinaryTree implementation provided in
- * "binary_tree.h".
+ * Construct a binary tree from given inorder and preorder traversal arrays. It
+ * extends an assumed BinaryTree implementation provided in "binary_tree.h".
  *
  * The algorithm is based on the fact that:
  *   - The first element in the preorder array is always the root of the

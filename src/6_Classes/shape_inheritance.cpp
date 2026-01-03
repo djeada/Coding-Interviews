@@ -1,8 +1,10 @@
 /*
+ * Task: Compare runtime polymorphism, CRTP, and composition for shapes.
+ *
  * SHAPE INHERITANCE DEMONSTRATION
  *
- * This program illustrates different approaches to using inheritance and
- * polymorphism in C++.
+ * Illustrate different approaches to using inheritance and polymorphism in
+ * C++.
  *
  * Three solutions are provided:
  *

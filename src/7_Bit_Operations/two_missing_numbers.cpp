@@ -1,8 +1,10 @@
 /*
+ * Task: Find the two missing numbers from the range [1, 2, ..., n].
+ *
  * FIND TWO MISSING NUMBERS IN A SEQUENCE
  *
- * This program finds two missing numbers from a sequence [1, 2, ..., n] when
- * given n-2 numbers. Two modern C++ methods are implemented:
+ * Find two missing numbers from a sequence [1, 2, ..., n] when given n-2
+ * numbers. Two modern C++ methods are implemented:
  *
  * 1. Simple (Brute-force) Solution using Sum and Product:
  *    - Computes the sum and product of the expected full sequence and the given

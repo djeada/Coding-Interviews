@@ -1,4 +1,6 @@
 /*
+ * Task: Find the minimum number of coins needed to reach a target amount.
+ *
  * MINIMUM COIN CHANGE PROBLEM
  *
  * Given a set of coin denominations and a target amount, determine the minimum

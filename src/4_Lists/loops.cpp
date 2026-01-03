@@ -1,10 +1,12 @@
 /*
+ * Task: Detect whether a linked list contains a loop.
+ *
  * DETECT LOOP IN A LINKED LIST (WITH LOOPS)
  *
- * This program defines a linked list class (ListWithLoops) that supports
- * creating loops in the list by connecting nodes arbitrarily. Memory management
- * is handled by storing all allocated nodes in a vector so that they can be
- * safely deleted even if a loop exists.
+ * Define a linked list class (ListWithLoops) that supports creating loops in
+ * the list by connecting nodes arbitrarily. Memory management is handled by
+ * storing all allocated nodes in a vector so that they can be safely deleted
+ * even if a loop exists.
  *
  * The class provides:
  *  - append: Add a new node with a given value.

@@ -1,8 +1,10 @@
 /*
+ * Task: Determine whether a target value exists in a row/column-sorted matrix.
+ *
  * Matrix Value Search
  *
  * Given a matrix where each row and each column is sorted in ascending order,
- * the goal is to determine if a given target value exists within the matrix.
+ * determine if a given target value exists within the matrix.
  *
  * Constraints and Expectations:
  * - Each row is sorted left-to-right.

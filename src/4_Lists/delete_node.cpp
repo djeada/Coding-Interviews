@@ -1,9 +1,10 @@
 /*
+ * Task: Remove the first occurrence of a value from a singly linked list.
+ *
  * REMOVE ELEMENT FROM A LINKED LIST
  *
- * This program extends a basic singly linked list (as defined in list.h) by
- * providing a function to remove the first occurrence of a given value from the
- * list.
+ * Extend a basic singly linked list (as defined in list.h) by providing a
+ * function to remove the first occurrence of a given value from the list.
  *
  * The remove operation works as follows:
  * - It traverses the list looking for the node containing the target value.

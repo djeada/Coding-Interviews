@@ -1,8 +1,10 @@
 /*
+ * Task: Print the elements of a linked list in reverse order.
+ *
  * PRINT LINKED LIST IN REVERSE ORDER
  *
- * This program demonstrates two approaches to print the elements of a linked
- * list in reverse order.
+ * Demonstrate two approaches to print the elements of a linked list in reverse
+ * order.
  *
  * 1. Iterative Approach:
  *    - Uses a stack to store list elements and then prints them in reverse

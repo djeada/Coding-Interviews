@@ -1,11 +1,12 @@
 /*
+ * Task: Determine whether a target value exists in a sorted 2D matrix.
+ *
  * Matrix Binary Search
  *
- * This program searches for a specified value within a 2D matrix, where it is
- * assumed that each row and each column are sorted in ascending order. The
- * function `contains` treats the matrix as a flattened sorted array and
- * performs a binary search to locate the target value. It returns true if the
- * value is found and false otherwise.
+ * Search for a specified value within a 2D matrix, where each row and each
+ * column are sorted in ascending order. The function `contains` treats the
+ * matrix as a flattened sorted array and performs a binary search to locate
+ * the target value. It returns true if the value is found and false otherwise.
  *
  * ASCII Illustration of the Matrix:
  *       +----+----+----+

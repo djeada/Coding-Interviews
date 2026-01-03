@@ -1,12 +1,14 @@
 /*
+ * Task: Deep copy a linked list with sibling pointers.
+ *
  * DEEP COPY OF A COMPLEX LINKED LIST WITH SIBLING POINTERS
  *
- * This program defines a class named ComplexList that represents a singly
- * linked list where each node has an integer value, a pointer to the next node,
- * and an additional "sibling" pointer that can reference any other node in the
- * list. The class supports operations for appending nodes, setting sibling
- * pointers, and performing a deep copy of the entire list while preserving the
- * sibling relationships.
+ * Define a class named ComplexList that represents a singly linked list where
+ * each node has an integer value, a pointer to the next node, and an additional
+ * "sibling" pointer that can reference any other node in the list. The class
+ * supports operations for appending nodes, setting sibling pointers, and
+ * performing a deep copy of the entire list while preserving the sibling
+ * relationships.
  *
  * The deep copy is implemented in the copy constructor, which:
  * - Traverses the original list to create new nodes and maps each original node

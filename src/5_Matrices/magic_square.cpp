@@ -1,9 +1,11 @@
 /*
+ * Task: Verify whether a square matrix is a magic square.
+ *
  * MAGIC SQUARE VERIFICATION
  *
- * This task requires checking if a given square matrix is a magic square.
- * A magic square is defined as an n x n matrix in which the sums of each row,
- * each column, the main diagonal, and the anti-diagonal are all equal.
+ * Check if a given square matrix is a magic square. A magic square is defined
+ * as an n x n matrix in which the sums of each row, each column, the main
+ * diagonal, and the anti-diagonal are all equal.
  *
  * ASCII Illustration:
  *

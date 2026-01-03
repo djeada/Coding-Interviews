@@ -1,9 +1,11 @@
 /*
+ * Task: Find a root-to-leaf path with a given sum in a binary tree.
+ *
  * FIND PATH WITH GIVEN SUM IN A BINARY TREE
  *
- * This program extends an assumed BinaryTree implementation (from
- * "binary_tree.h") by adding functionality to find a path from the root to a
- * leaf whose node values sum up to a given target.
+ * Extend an assumed BinaryTree implementation (from "binary_tree.h") by
+ * adding functionality to find a path from the root to a leaf whose node
+ * values sum up to a given target.
  *
  * The algorithm uses a recursive helper function that traverses the tree while
  * maintaining the current sum and the path taken. If a leaf is reached and the

@@ -1,4 +1,6 @@
 /*
+ * Task: Count the number of ways to climb N steps with allowed step sizes.
+ *
  * CLIMBING STAIRS WITH VARIABLE STEPS
  *
  * Given an integer N representing a staircase with N steps and an array of

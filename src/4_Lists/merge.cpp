@@ -1,8 +1,10 @@
 /*
+ * Task: Merge two sorted linked lists into one sorted list.
+ *
  * MERGE TWO SORTED LINKED LISTS
  *
- * This program merges two sorted linked lists into a single sorted list.
- * Two solutions are provided:
+ * Merge two sorted linked lists into a single sorted list. Two solutions are
+ * provided:
  *
  * 1. Optimal (Two-Pointer) Solution:
  *    - Uses two indices to traverse both lists simultaneously, appending the

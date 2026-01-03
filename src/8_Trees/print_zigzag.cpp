@@ -1,10 +1,12 @@
 /*
+ * Task: Print a binary tree in zigzag (spiral) level order.
+ *
  * ZIGZAG (SPIRAL) LEVEL ORDER TRAVERSAL
  *
- * This program extends an assumed BinaryTree implementation (from
- * "binary_tree.h") by adding functionality to print the tree in a zigzag
- * (spiral) level order. This means that the nodes at each level are printed
- * alternately from left-to-right and right-to-left.
+ * Extend an assumed BinaryTree implementation (from "binary_tree.h") by
+ * adding functionality to print the tree in a zigzag (spiral) level order.
+ * This means that the nodes at each level are printed alternately from
+ * left-to-right and right-to-left.
  *
  * Approach:
  *   - Use two stacks to alternate between levels.

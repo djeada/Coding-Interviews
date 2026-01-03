@@ -1,4 +1,6 @@
 /*
+ * Task: Compute the Levenshtein (edit) distance between two strings.
+ *
  * LEVENSHTEIN DISTANCE (EDIT DISTANCE)
  *
  * Given two strings, calculate the Levenshtein distance (edit distance).

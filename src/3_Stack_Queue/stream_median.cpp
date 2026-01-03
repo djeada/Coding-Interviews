@@ -1,8 +1,10 @@
 /*
+ * Task: Dynamically compute the median of a number stream after each insert.
+ *
  * DYNAMIC MEDIAN CALCULATION OF A NUMBER STREAM
  *
- * This program demonstrates three approaches for dynamically computing the
- * median of a stream of numbers as new elements are inserted:
+ * Demonstrate approaches for computing the median of a stream of numbers as
+ * new elements are inserted:
  *
  * ASCII Illustration:
  *

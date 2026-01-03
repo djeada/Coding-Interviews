@@ -1,8 +1,10 @@
 /*
+ * Task: Implement a queue that can return the current maximum in O(1) time.
+ *
  * MAXIMUM ELEMENT IN A QUEUE (MAX QUEUE)
  *
- * This task involves implementing a data structure called MaxQueue that
- * supports the following operations:
+ * Implement a data structure called MaxQueue that supports the following
+ * operations:
  *   - push(x): Insert an integer x into the queue.
  *   - pop(): Remove the front element from the queue.
  *   - max(): Retrieve the maximum element currently in the queue.

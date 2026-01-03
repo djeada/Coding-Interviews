@@ -1,9 +1,11 @@
 /*
+ * Task: Return inorder and preorder traversals of a binary tree as vectors.
+ *
  * BINARY TREE TRAVERSALS WITH VECTOR OUTPUT
  *
- * This program extends an assumed BinaryTree implementation (from
- * "binary_tree.h") by adding inorder and preorder traversal methods that return
- * the result as a std::vector<int>.
+ * Extend an assumed BinaryTree implementation (from "binary_tree.h") by
+ * adding inorder and preorder traversal methods that return the result as a
+ * std::vector<int>.
  *
  * The inorder() method uses an iterative approach with a stack to traverse the
  * tree in left-root-right order. The preorder() method uses an iterative

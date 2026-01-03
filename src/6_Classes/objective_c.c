@@ -1,11 +1,13 @@
 /*
+ * Task: Simulate class-like behavior in C using structs and function pointers.
+ *
  * Simulating Classes and Objects in Pure C
  *
- * This program demonstrates how to simulate class-like behavior using pure C.
- * We define a struct "Object" that encapsulates data and a function pointer,
- * which acts as a method. Two "methods" (functions) are implemented: method1
- * and method2. Each function takes a pointer to the struct instance ("self") to
- * access the encapsulated data.
+ * Demonstrate how to simulate class-like behavior using pure C. We define a
+ * struct "Object" that encapsulates data and a function pointer, which acts as
+ * a method. Two "methods" (functions) are implemented: method1 and method2.
+ * Each function takes a pointer to the struct instance ("self") to access the
+ * encapsulated data.
  *
  * ASCII Illustration:
  *

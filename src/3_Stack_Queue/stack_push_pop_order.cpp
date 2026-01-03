@@ -1,8 +1,10 @@
 /*
+ * Task: Determine whether a pop sequence is valid for a given push sequence.
+ *
  * VALID STACK POPPING ORDER VERIFICATION
  *
- * This program checks if a given sequence of numbers can be a valid popping
- * order from a stack given a specific pushing order.
+ * Given two sequences, check if the pop sequence can be produced by a stack
+ * when elements are pushed in the given order.
  *
  * ASCII Illustration:
  *

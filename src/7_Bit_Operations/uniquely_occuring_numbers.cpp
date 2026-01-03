@@ -1,8 +1,10 @@
 /*
+ * Task: Find the two numbers that occur once when all others occur twice.
+ *
  * FIND NUMBERS OCCURRING ONCE
  *
- * This program finds the two unique numbers in an array where every other
- * number appears exactly twice. Two solutions are provided:
+ * Find the two unique numbers in an array where every other number appears
+ * exactly twice. Two solutions are provided:
  *
  * 1. Simple (Brute-force) Solution using an unordered_map:
  *    Counts the frequency of each number and returns the ones that appear once.

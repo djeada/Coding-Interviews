@@ -1,9 +1,11 @@
 /*
+ * Task: Find the lowest common ancestor of two nodes in a BST.
+ *
  * LOWEST COMMON ANCESTOR IN A BINARY SEARCH TREE
  *
- * This program extends an assumed BinaryTree implementation (from
- * "binary_tree.h") by adding functionality to find the lowest common ancestor
- * (LCA) of two nodes in a binary search tree (BST).
+ * Extend an assumed BinaryTree implementation (from "binary_tree.h") by
+ * adding functionality to find the lowest common ancestor (LCA) of two nodes
+ * in a binary search tree (BST).
  *
  * The lowest common ancestor of two nodes in a BST is defined as the lowest
  * node in the tree that has both nodes as descendants (where we allow a node to

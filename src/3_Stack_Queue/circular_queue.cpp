@@ -1,9 +1,12 @@
 /*
+ * Task: Simulate a circular queue with fixed capacity and return its final
+ * contents.
+ *
  * CIRCULAR QUEUE SIMULATION
  *
- * Simulate a circular queue with fixed capacity. A sequence
- * of operations (given as strings) is provided, and the goal is to determine
- * the final state of the queue after processing all operations.
+ * Simulate a circular queue with fixed capacity. A sequence of operations
+ * (given as strings) is provided, and the goal is to determine the final state
+ * of the queue after processing all operations.
  *
  * Supported operations:
  *   "enQueue x" - Insert integer x at the rear of the queue. If the queue is

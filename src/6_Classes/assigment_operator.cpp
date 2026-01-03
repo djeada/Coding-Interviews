@@ -1,10 +1,12 @@
 /*
+ * Task: Implement a safe copy assignment operator for a custom string class.
+ *
  * Custom String Class with Assignment Operator
  *
- * This program defines a simple custom String class that manages its own
- * dynamic memory. It demonstrates the implementation of the copy assignment
- * operator to correctly handle resource management and avoid memory leaks. The
- * class includes:
+ * Define a simple custom String class that manages its own dynamic memory.
+ * It demonstrates the implementation of the copy assignment operator to
+ * correctly handle resource management and avoid memory leaks. The class
+ * includes:
  *   - Default, parameterized, and copy constructors.
  *   - Destructor to clean up allocated memory.
  *   - Copy assignment operator to enable safe assignment between String

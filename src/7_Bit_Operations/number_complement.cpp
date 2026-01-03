@@ -1,9 +1,11 @@
 /*
+ * Task: Compute the bitwise complement of a positive integer.
+ *
  * FIND NUMBER COMPLEMENT
  *
- * Given a positive integer, this program finds its complement by flipping all
- * bits in its binary representation (ignoring leading zeros). For example, the
- * complement of 5 (binary: 101) is 2 (binary: 010).
+ * Given a positive integer, find its complement by flipping all bits in its
+ * binary representation (ignoring leading zeros). For example, the complement
+ * of 5 (binary: 101) is 2 (binary: 010).
  *
  * Three modern C++ solutions are provided:
  *

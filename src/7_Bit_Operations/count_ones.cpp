@@ -1,9 +1,10 @@
 /*
+ * Task: Count the number of set bits (1s) in an integer.
+ *
  * COUNT SET BITS IN INTEGER
  *
- * This program demonstrates three modern C++ implementations to count the
- * number of set bits (1s) in the binary representation of an integer. It
- * includes:
+ * Demonstrate three modern C++ implementations to count the number of set bits
+ * (1s) in the binary representation of an integer. It includes:
  *
  * 1. Simple (Brute-force) Solution using Bit Masking:
  *    Iterates through every bit position using a shifting mask.

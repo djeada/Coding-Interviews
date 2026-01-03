@@ -1,10 +1,12 @@
 /*
+ * Task: Determine whether a string can be formed by a path in a 2D matrix.
+ *
  * PATH SEARCH IN MATRIX FOR A STRING
  *
- * This program determines whether there exists a path in a 2D matrix such that,
- * starting from any cell, moving horizontally or vertically (up, down, left,
- * right) and without revisiting cells, the characters along the path form a
- * specified string.
+ * Determine whether there exists a path in a 2D matrix such that, starting
+ * from any cell, moving horizontally or vertically (up, down, left, right) and
+ * without revisiting cells, the characters along the path form a specified
+ * string.
  *
  * ASCII Illustration:
  *

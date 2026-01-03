@@ -1,10 +1,12 @@
 /*
+ * Task: Compute the depth (height) of a binary tree.
+ *
  * BINARY TREE DEPTH CALCULATION
  *
- * This program extends an assumed BinaryTree implementation (from
- * "binary_tree.h") by adding a method to calculate the depth (height) of the
- * tree. The depth is defined as the number of nodes along the longest path from
- * the root node down to the farthest leaf node.
+ * Extend an assumed BinaryTree implementation (from "binary_tree.h") by
+ * adding a method to calculate the depth (height) of the tree. The depth is
+ * defined as the number of nodes along the longest path from the root node down
+ * to the farthest leaf node.
  *
  * The algorithm is implemented recursively:
  *   - For an empty node, the depth is 0.

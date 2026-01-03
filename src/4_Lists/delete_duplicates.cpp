@@ -1,10 +1,12 @@
 /*
+ * Task: Delete duplicate values from a singly linked list.
+ *
  * DELETE DUPLICATE NODES IN A LINKED LIST
  *
- * This program defines a class named UniqueList that extends a basic singly
- * linked list (from list.h) and provides an operation to delete duplicate nodes
- * from the list. The deletion process is implemented by traversing the list and
- * using an unordered_set to keep track of seen values. When a duplicate node is
+ * Define a class named UniqueList that extends a basic singly linked list
+ * (from list.h) and provides an operation to delete duplicate nodes from the
+ * list. The deletion process is implemented by traversing the list and using
+ * an unordered_set to keep track of seen values. When a duplicate node is
  * encountered, it is removed from the list.
  *
  * Three conceptual approaches could be considered:

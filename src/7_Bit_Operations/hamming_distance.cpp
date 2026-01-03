@@ -1,10 +1,12 @@
 /*
+ * Task: Compute the total Hamming distance across all pairs in an array.
+ *
  * TOTAL HAMMING DISTANCE
  *
- * Given an array of integers, this program computes the total Hamming distance
- * between all pairs of integers in the array. The Hamming distance between two
- * numbers is defined as the number of positions at which the corresponding bits
- * are different.
+ * Given an array of integers, compute the total Hamming distance between all
+ * pairs of integers in the array. The Hamming distance between two numbers is
+ * defined as the number of positions at which the corresponding bits are
+ * different.
  *
  * Two modern C++ solutions are provided:
  *

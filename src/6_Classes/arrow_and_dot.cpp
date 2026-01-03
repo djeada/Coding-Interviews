@@ -1,11 +1,13 @@
 /*
+ * Task: Demonstrate member access with dot and arrow operators in C++.
+ *
  * Arrow and Dot Showcase
  *
- * This program demonstrates how to access class members using both the dot (.)
- * and arrow (->) operators in C++. A class "Human" is defined with private and
- * public members. We create an object (accessed via the dot operator) and a
- * pointer to an object (accessed via the arrow operator). The program also uses
- * the scope resolution operator (::) to call a static member function.
+ * Demonstrate how to access class members using both the dot (.) and arrow (->)
+ * operators in C++. A class "Human" is defined with private and public members.
+ * We create an object (accessed via the dot operator) and a pointer to an
+ * object (accessed via the arrow operator). The program also uses the scope
+ * resolution operator (::) to call a static member function.
  *
  * ASCII Illustration:
  *

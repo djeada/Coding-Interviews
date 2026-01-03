@@ -1,8 +1,10 @@
 /*
+ * Task: Find the smallest k numbers from an unsorted list.
+ *
  * SMALLEST K NUMBERS EXTRACTION
  *
- * This program finds the smallest 'k' numbers from a given list of numbers.
- * It demonstrates three modern C++ implementations:
+ * Find the smallest 'k' numbers from a given list of numbers. It demonstrates
+ * three modern C++ implementations:
  * Edge Cases:
  *  - If k is 0, an empty vector is returned.
  *  - If k is greater than or equal to the input size, the entire sorted list is
