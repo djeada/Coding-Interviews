@@ -50,16 +50,17 @@
 //   - Single pass through the input string.
 //   - Each append operation is amortized O(1).
 // Space Complexity: O(n)
-//   - Creates a new string that can grow up to n + 2k characters (k = number of spaces).
+//   - Creates a new string that can grow up to n + 2k characters (k = number of
+//   spaces).
 std::string simpleSolution(const std::string &input) {
   std::string result;
   result.reserve(input.size()); // avoids repeated reallocations
 
   for (char c : input) {
     if (c == ' ') {
-      result += "%20";          // constant-time append (3 chars)
+      result += "%20"; // constant-time append (3 chars)
     } else {
-      result.push_back(c);      // amortized O(1)
+      result.push_back(c); // amortized O(1)
     }
   }
   return result;

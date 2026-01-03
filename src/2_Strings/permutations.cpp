@@ -75,26 +75,26 @@ std::vector<std::string> optimalSolution(const std::string &input) {
 }
 
 // Alternative (Iterative) Solution
-std::vector<std::string> alternativeSolution(const std::string& input) {
-    std::vector<std::string> results{""};
+std::vector<std::string> alternativeSolution(const std::string &input) {
+  std::vector<std::string> results{""};
 
-    for (char ch : input) {
-        std::vector<std::string> next;
-        next.reserve(results.size() * (results.front().size() + 1));
+  for (char ch : input) {
+    std::vector<std::string> next;
+    next.reserve(results.size() * (results.front().size() + 1));
 
-        for (const auto& s : results) {
-            for (std::size_t pos = 0; pos <= s.size(); ++pos) {
-                auto t = s;                 // copy once
-                t.insert(t.begin() + pos, ch);
-                next.push_back(std::move(t));
-            }
-        }
-        results = std::move(next);
+    for (const auto &s : results) {
+      for (std::size_t pos = 0; pos <= s.size(); ++pos) {
+        auto t = s; // copy once
+        t.insert(t.begin() + pos, ch);
+        next.push_back(std::move(t));
+      }
     }
+    results = std::move(next);
+  }
 
-    std::sort(results.begin(), results.end());
-    results.erase(std::unique(results.begin(), results.end()), results.end());
-    return results;
+  std::sort(results.begin(), results.end());
+  results.erase(std::unique(results.begin(), results.end()), results.end());
+  return results;
 }
 
 // --- Testing Infrastructure ---

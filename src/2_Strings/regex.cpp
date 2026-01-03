@@ -33,18 +33,20 @@
 // --- Implementations ---
 
 // Simple Recursive Solution (O(2^n))
-bool simpleMatchHelper(const std::string& s, const std::string& p,
-                       size_t i, size_t j) {
-  // If we've consumed the whole pattern, we match only if we've consumed the whole string.
-  if (j == p.size()) return i == s.size();
+bool simpleMatchHelper(const std::string &s, const std::string &p, size_t i,
+                       size_t j) {
+  // If we've consumed the whole pattern, we match only if we've consumed the
+  // whole string.
+  if (j == p.size())
+    return i == s.size();
 
-  const bool firstMatch =
-      (i < s.size()) && (p[j] == s[i] || p[j] == '.');
+  const bool firstMatch = (i < s.size()) && (p[j] == s[i] || p[j] == '.');
 
   // Handle "x*" where x is p[j]
   if (j + 1 < p.size() && p[j + 1] == '*') {
     // Option 1: skip "x*" (zero occurrences)
-    // Option 2: if first matches, consume one char from s and stay on same pattern position j
+    // Option 2: if first matches, consume one char from s and stay on same
+    // pattern position j
     return simpleMatchHelper(s, p, i, j + 2) ||
            (firstMatch && simpleMatchHelper(s, p, i + 1, j));
   }
@@ -53,12 +55,12 @@ bool simpleMatchHelper(const std::string& s, const std::string& p,
   return firstMatch && simpleMatchHelper(s, p, i + 1, j + 1);
 }
 
-bool simpleMatch(const std::string& s, const std::string& p) {
+bool simpleMatch(const std::string &s, const std::string &p) {
   return simpleMatchHelper(s, p, 0, 0);
 }
 
 // Optimal Dynamic Programming Solution (O(m*n))
-bool optimalMatch(const std::string& s, const std::string& p) {
+bool optimalMatch(const std::string &s, const std::string &p) {
   const size_t m = s.size();
   const size_t n = p.size();
 
@@ -67,9 +69,11 @@ bool optimalMatch(const std::string& s, const std::string& p) {
   dp[0][0] = true;
 
   // Patterns like a*, a*b*, a*b*c* can match empty string.
-  // dp[0][j] is true if p[0..j) can represent empty => last is '*' and dp[0][j-2] true.
+  // dp[0][j] is true if p[0..j) can represent empty => last is '*' and
+  // dp[0][j-2] true.
   for (size_t j = 2; j <= n; ++j) {
-    if (p[j - 1] == '*') dp[0][j] = dp[0][j - 2];
+    if (p[j - 1] == '*')
+      dp[0][j] = dp[0][j - 2];
   }
 
   for (size_t i = 1; i <= m; ++i) {
@@ -89,7 +93,8 @@ bool optimalMatch(const std::string& s, const std::string& p) {
         // One or more occurrences if preceding element matches s[i-1]:
         const char prev = p[j - 2];
         const bool matchesPrev = (prev == '.' || prev == s[i - 1]);
-        if (matchesPrev) dp[i][j] = dp[i][j] || dp[i - 1][j];
+        if (matchesPrev)
+          dp[i][j] = dp[i][j] || dp[i - 1][j];
       } else {
         const bool matches = (pj == '.' || pj == s[i - 1]);
         dp[i][j] = matches && dp[i - 1][j - 1];
