@@ -3,21 +3,6 @@
  *
  * This program finds the smallest 'k' numbers from a given list of numbers.
  * It demonstrates three modern C++ implementations:
- *
- * 1. Simple Sort Method:
- *    - Sorts the entire list and then takes the first k numbers.
- *    - Time Complexity: O(n log n)
- *
- * 2. Max Heap (Priority Queue) Method:
- *    - Maintains a max heap of size k, inserting numbers and removing the
- *      largest when the heap exceeds size k.
- *    - Time Complexity: O(n log k)
- *
- * 3. nth_element Method:
- *    - Uses std::nth_element to partition the vector so that the first k
- * elements are the smallest, then sorts those k numbers.
- *    - Average Time Complexity: O(n)
- *
  * Edge Cases:
  *  - If k is 0, an empty vector is returned.
  *  - If k is greater than or equal to the input size, the entire sorted list is
