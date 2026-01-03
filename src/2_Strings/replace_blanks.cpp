@@ -46,45 +46,70 @@
 // --- Implementations ---
 
 // Simple (Brute-force) Solution using std::string
+// Time Complexity: O(n)
+//   - Single pass through the input string.
+//   - Each append operation is amortized O(1).
+// Space Complexity: O(n)
+//   - Creates a new string that can grow up to n + 2k characters (k = number of spaces).
 std::string simpleSolution(const std::string &input) {
   std::string result;
-  result.reserve(input.size());
+  result.reserve(input.size()); // avoids repeated reallocations
+
   for (char c : input) {
     if (c == ' ') {
-      result += "%20";
+      result += "%20";          // constant-time append (3 chars)
     } else {
-      result.push_back(c);
+      result.push_back(c);      // amortized O(1)
     }
   }
   return result;
 }
 
 // Alternative Solution using in-place replace on std::string
+// Time Complexity: O(n^2) in the worst case
+//   - std::string::find is O(n)
+//   - std::string::replace may shift characters → O(n)
+//   - Done for each space (up to n times).
+// Space Complexity: O(n)
+//   - Operates on a copy of the input string; may reallocate internally.
 std::string alternativeSolution(const std::string &input) {
   std::string result = input;
+
   for (size_t pos = 0; (pos = result.find(' ', pos)) != std::string::npos;) {
-    result.replace(pos, 1, "%20");
-    pos += 3;
+    result.replace(pos, 1, "%20"); // causes shifting of remaining characters
+    pos += 3;                      // skip over "%20"
   }
   return result;
 }
 
 // Optimal (In-place) Solution on C-string buffer
+// Time Complexity: O(n)
+//   - One pass to count spaces.
+//   - One backward pass to rewrite characters.
+// Space Complexity: O(1)
+//   - Uses constant extra space; modifies the buffer in place.
 void optimalSolution(char str[], size_t capacity) {
   if (!str || capacity == 0)
     return;
+
   const size_t origLen = std::strlen(str);
+
   size_t spaces = 0;
   for (size_t i = 0; i < origLen; ++i) {
     if (str[i] == ' ')
       spaces++;
   }
+
   const size_t newLen = origLen + spaces * 2;
   if (newLen >= capacity)
     return;
+
   str[newLen] = '\0';
+
   size_t i = origLen;
   size_t j = newLen;
+
+  // Rewrite from the end to avoid overwriting unprocessed characters
   while (i > 0) {
     --i;
     if (str[i] == ' ') {
