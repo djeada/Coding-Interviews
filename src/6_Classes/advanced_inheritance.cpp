@@ -42,10 +42,31 @@
  *   Object slicing prevention test passed!
  */
 
-#include <cassert>
 #include <iostream>
 #include <memory>
 #include <string>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectTrue(bool condition, const std::string &label) {
+    ++total;
+    if (condition) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=true got=false\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 // ------------------- Diamond Inheritance with Virtual Inheritance
 // -------------------
@@ -108,28 +129,28 @@ private:
   int extraValue;
 };
 
-void testDiamondInheritance() {
+void testDiamondInheritance(TestRunner &runner) {
   FinalDerived fd;
   // Both Derived1 and Derived2 subobjects share a single Base subobject.
   // Calling show() will only print one Base value.
   fd.show();
-  std::cout << "Diamond inheritance test passed!\n";
+  runner.expectTrue(true, "diamond inheritance executed");
 }
 
 // ------------------- Covariant Return Types -------------------
 
 // Demonstrate that FinalDerived::clone() returns FinalDerived*.
-void testCovariantReturnTypes() {
+void testCovariantReturnTypes(TestRunner &runner) {
   FinalDerived original;
   // Clone the object using base pointer.
   Base *clonedBase = original.clone();
   // Check if the returned pointer is actually of type FinalDerived.
   FinalDerived *clonedFinal = dynamic_cast<FinalDerived *>(clonedBase);
-  assert(clonedFinal != nullptr);
-  // Use the cloned object.
-  clonedFinal->show();
+  runner.expectTrue(clonedFinal != nullptr, "covariant clone type");
+  if (clonedFinal) {
+    clonedFinal->show();
+  }
   delete clonedBase;
-  std::cout << "Covariant return types test passed!\n";
 }
 
 // ------------------- Object Slicing Prevention -------------------
@@ -145,7 +166,7 @@ private:
   Base baseCopy; // Object slicing happens here.
 };
 
-void testObjectSlicing() {
+void testObjectSlicing(TestRunner &runner) {
   FinalDerived fd;
   // Demonstrate object slicing: storing a FinalDerived in a BaseHolder slices
   // off derived parts.
@@ -158,14 +179,16 @@ void testObjectSlicing() {
   std::cout << "Referenced object: ";
   ref.show(); // Calls FinalDerived::show() due to polymorphism.
 
-  std::cout << "Object slicing prevention test passed!\n";
+  runner.expectTrue(true, "object slicing prevention executed");
 }
 
 // ------------------- Test Runner -------------------
 void test() {
-  testDiamondInheritance();
-  testCovariantReturnTypes();
-  testObjectSlicing();
+  TestRunner runner;
+  testDiamondInheritance(runner);
+  testCovariantReturnTypes(runner);
+  testObjectSlicing(runner);
+  runner.summary();
 }
 
 int main() {

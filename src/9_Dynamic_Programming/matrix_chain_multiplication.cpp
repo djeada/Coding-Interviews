@@ -43,12 +43,34 @@
  * results. This requires 26000 scalar multiplications.
  */
 
-#include <cassert>
 #include <climits>
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <vector>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(int got, int expected, const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << expected
+              << " got=" << got << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 // ----------------------- Simple (Brute-force) Recursive Solution
 // -----------------------
@@ -121,28 +143,32 @@ int alternativeSolution(const std::vector<int> &dims) {
 
 // ----------------------- Test cases for correctness -----------------------
 void test() {
+  TestRunner runner;
   // Test case 1
   std::vector<int> dims1 = {40, 20, 30, 10, 30};
   int expected1 = 26000;
-  assert(simpleSolution(dims1) == expected1);
-  assert(optimalSolution(dims1) == expected1);
-  assert(alternativeSolution(dims1) == expected1);
+  runner.expectEqual(simpleSolution(dims1), expected1, "simple dims1");
+  runner.expectEqual(optimalSolution(dims1), expected1, "optimal dims1");
+  runner.expectEqual(alternativeSolution(dims1), expected1,
+                     "alternative dims1");
 
   // Test case 2
   std::vector<int> dims2 = {10, 20, 30, 40, 30};
   int expected2 = 30000;
-  assert(simpleSolution(dims2) == expected2);
-  assert(optimalSolution(dims2) == expected2);
-  assert(alternativeSolution(dims2) == expected2);
+  runner.expectEqual(simpleSolution(dims2), expected2, "simple dims2");
+  runner.expectEqual(optimalSolution(dims2), expected2, "optimal dims2");
+  runner.expectEqual(alternativeSolution(dims2), expected2,
+                     "alternative dims2");
 
   // Test case 3: Single matrix multiplication cost is 0
   std::vector<int> dims3 = {10, 20};
   int expected3 = 0;
-  assert(simpleSolution(dims3) == expected3);
-  assert(optimalSolution(dims3) == expected3);
-  assert(alternativeSolution(dims3) == expected3);
+  runner.expectEqual(simpleSolution(dims3), expected3, "simple dims3");
+  runner.expectEqual(optimalSolution(dims3), expected3, "optimal dims3");
+  runner.expectEqual(alternativeSolution(dims3), expected3,
+                     "alternative dims3");
 
-  std::cout << "All tests passed!\n";
+  runner.summary();
 }
 
 int main() {

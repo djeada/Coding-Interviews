@@ -36,10 +36,32 @@
  */
 
 #include "list.h"
-#include <cassert>
 #include <iostream>
 #include <memory>
+#include <string>
 #include <unordered_map>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectTrue(bool condition, const std::string &label) {
+    ++total;
+    if (condition) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=true got=false\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 // ComplexList inherits from List (defined in list.h) and adds a sibling pointer
 // to each node.
@@ -146,7 +168,7 @@ public:
 
 // ----- Test Cases -----
 
-void test1() {
+void test1(TestRunner &runner) {
   ComplexList list;
   auto node1 = list.append(1);
   auto node2 = list.append(2);
@@ -159,10 +181,10 @@ void test1() {
   list.setSibling(node5, node2);
 
   ComplexList copy(list);
-  assert(list == copy);
+  runner.expectTrue(list == copy, "clone test1");
 }
 
-void test2() {
+void test2(TestRunner &runner) {
   ComplexList list;
   auto node1 = list.append(1);
   auto node2 = list.append(2);
@@ -176,27 +198,28 @@ void test2() {
   list.setSibling(node4, node1);
 
   ComplexList copy(list);
-  assert(list == copy);
+  runner.expectTrue(list == copy, "clone test2");
 }
 
-void test3() {
+void test3(TestRunner &runner) {
   ComplexList list;
   auto node1 = list.append(1);
   ComplexList copy(list);
-  assert(list == copy);
+  runner.expectTrue(list == copy, "clone test3");
 }
 
-void test4() {
+void test4(TestRunner &runner) {
   ComplexList list;
   ComplexList copy(list);
-  assert(list == copy);
+  runner.expectTrue(list == copy, "clone test4");
 }
 
 int main() {
-  test1();
-  test2();
-  test3();
-  test4();
-  std::cout << "All tests passed!\n";
+  TestRunner runner;
+  test1(runner);
+  test2(runner);
+  test3(runner);
+  test4(runner);
+  runner.summary();
   return 0;
 }

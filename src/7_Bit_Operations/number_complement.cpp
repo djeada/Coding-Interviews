@@ -40,10 +40,32 @@
  */
 
 #include <bitset>
-#include <cassert>
 #include <iostream>
 #include <sstream>
 #include <string>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(int got, int expected, const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << expected
+              << " got=" << got << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 // Simple (Brute-force) Solution using string conversion
 int simpleSolution(int num) {
@@ -109,16 +131,18 @@ void test() {
       {0, 0},  // Edge case: 0 returns 0 (by definition)
       {7, 0}   // 7 (111) -> 0 (000)
   };
+  TestRunner runner;
 
   for (const auto &tc : testCases) {
     int resSimple = simpleSolution(tc.input);
     int resOptimal = optimalSolution(tc.input);
     int resAlternative = alternativeSolution(tc.input);
-    assert(resSimple == tc.expected);
-    assert(resOptimal == tc.expected);
-    assert(resAlternative == tc.expected);
+    std::string label = "n=" + std::to_string(tc.input);
+    runner.expectEqual(resSimple, tc.expected, "simple " + label);
+    runner.expectEqual(resOptimal, tc.expected, "optimal " + label);
+    runner.expectEqual(resAlternative, tc.expected, "alternative " + label);
   }
-  std::cout << "All tests passed!\n";
+  runner.summary();
 }
 
 int main() {

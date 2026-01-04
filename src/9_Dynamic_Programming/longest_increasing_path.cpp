@@ -50,11 +50,34 @@
  */
 
 #include <algorithm>
-#include <cassert>
 #include <climits>
 #include <iostream>
 #include <queue>
+#include <string>
 #include <vector>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(int got, int expected, const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << expected
+              << " got=" << got << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 // ----------------------- Simple (Brute-force DFS) Solution
 // -----------------------
@@ -171,11 +194,11 @@ void test() {
   int resultOptimal = optimalSolution(matrix1);
   int resultAlternative = alternativeSolution(matrix1);
 
-  assert(resultSimple == expected1);
-  assert(resultOptimal == expected1);
-  assert(resultAlternative == expected1);
-
-  std::cout << "All tests passed!\n";
+  TestRunner runner;
+  runner.expectEqual(resultSimple, expected1, "simple matrix1");
+  runner.expectEqual(resultOptimal, expected1, "optimal matrix1");
+  runner.expectEqual(resultAlternative, expected1, "alternative matrix1");
+  runner.summary();
 }
 
 int main() {

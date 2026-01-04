@@ -36,9 +36,32 @@
  */
 
 #include <algorithm>
-#include <cassert>
 #include <iostream>
+#include <string>
 #include <vector>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(bool got, bool expected, const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << std::boolalpha
+              << expected << " got=" << got << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 // Simple (Divide and Conquer) Solution
 // Recursive approach: divides the matrix into submatrices based on the middle
@@ -63,14 +86,21 @@ bool simpleSolutionHelper(const std::vector<std::vector<int>> &matrix,
   if (matrix[midRow][midCol] == value)
     return true;
 
-  // If target is less than middle element, it could be in the top-left
-  // quadrant.
-  if (value < matrix[midRow][midCol])
-    return simpleSolutionHelper(matrix, value, row1, col1, midRow, midCol);
+  if (value < matrix[midRow][midCol]) {
+    // Exclude the bottom-right quadrant.
+    return simpleSolutionHelper(matrix, value, row1, col1, midRow,
+                                midCol - 1) ||
+           simpleSolutionHelper(matrix, value, row1, midCol, midRow - 1,
+                                col2) ||
+           simpleSolutionHelper(matrix, value, midRow + 1, col1, row2,
+                                midCol - 1);
+  }
 
-  // Otherwise, check the bottom and right submatrices.
-  return simpleSolutionHelper(matrix, value, midRow + 1, col1, row2, midCol) ||
-         simpleSolutionHelper(matrix, value, row1, midCol + 1, midRow, col2);
+  // value > mid: exclude the top-left quadrant.
+  return simpleSolutionHelper(matrix, value, midRow, midCol + 1, row2, col2) ||
+         simpleSolutionHelper(matrix, value, midRow + 1, col1, row2, midCol) ||
+         simpleSolutionHelper(matrix, value, row1, midCol + 1, midRow - 1,
+                              col2);
 }
 
 bool simpleSolution(const std::vector<std::vector<int>> &matrix, int value) {
@@ -119,27 +149,39 @@ bool alternativeSolution(const std::vector<std::vector<int>> &matrix,
 void test() {
   std::vector<std::vector<int>> matrix{
       {1, 2, 8, 9}, {2, 4, 9, 12}, {4, 7, 10, 13}, {6, 8, 11, 15}};
+  TestRunner runner;
 
   // Test for a value that exists in the matrix.
-  assert(simpleSolution(matrix, 7) == true);
-  assert(optimalSolution(matrix, 7) == true);
-  assert(alternativeSolution(matrix, 7) == true);
+  runner.expectEqual(simpleSolution(matrix, 7), true,
+                     "simple contains 7");
+  runner.expectEqual(optimalSolution(matrix, 7), true,
+                     "optimal contains 7");
+  runner.expectEqual(alternativeSolution(matrix, 7), true,
+                     "alternative contains 7");
 
   // Test for a value that does not exist.
-  assert(simpleSolution(matrix, 5) == false);
-  assert(optimalSolution(matrix, 5) == false);
-  assert(alternativeSolution(matrix, 5) == false);
+  runner.expectEqual(simpleSolution(matrix, 5), false,
+                     "simple missing 5");
+  runner.expectEqual(optimalSolution(matrix, 5), false,
+                     "optimal missing 5");
+  runner.expectEqual(alternativeSolution(matrix, 5), false,
+                     "alternative missing 5");
 
   // Test boundaries.
-  assert(simpleSolution(matrix, 1) == true);
-  assert(optimalSolution(matrix, 1) == true);
-  assert(alternativeSolution(matrix, 1) == true);
+  runner.expectEqual(simpleSolution(matrix, 1), true,
+                     "simple contains 1");
+  runner.expectEqual(optimalSolution(matrix, 1), true,
+                     "optimal contains 1");
+  runner.expectEqual(alternativeSolution(matrix, 1), true,
+                     "alternative contains 1");
 
-  assert(simpleSolution(matrix, 15) == true);
-  assert(optimalSolution(matrix, 15) == true);
-  assert(alternativeSolution(matrix, 15) == true);
-
-  std::cout << "All tests passed!\n";
+  runner.expectEqual(simpleSolution(matrix, 15), true,
+                     "simple contains 15");
+  runner.expectEqual(optimalSolution(matrix, 15), true,
+                     "optimal contains 15");
+  runner.expectEqual(alternativeSolution(matrix, 15), true,
+                     "alternative contains 15");
+  runner.summary();
 }
 
 int main() {

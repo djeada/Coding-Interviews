@@ -36,9 +36,33 @@
 
 #include "binary_tree.h" // Assumed to exist and be implemented.
 #include <algorithm>
-#include <cassert>
+#include <iostream>
+#include <string>
 #include <stdexcept>
 #include <vector>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(bool got, bool expected, const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << std::boolalpha
+              << expected << " got=" << got << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 class TreeWithConstruct : public BinaryTree {
 private:
@@ -56,7 +80,8 @@ private:
     if (start == end)
       return root;
 
-    auto ind = std::find(inorder.begin() + start, inorder.begin() + end, val) -
+    auto ind = std::find(inorder.begin() + start, inorder.begin() + end + 1,
+                         val) -
                inorder.begin();
 
     root->left = construct(inorder, preorder, start, ind - 1, preInd);
@@ -77,7 +102,7 @@ public:
   }
 };
 
-void test1() {
+void test1(TestRunner &runner) {
   std::vector<int> preorder{9, 8, 4, 7, 13, 10, 16, 15};
   std::vector<int> inorder{4, 7, 8, 9, 10, 13, 15, 16};
 
@@ -93,10 +118,10 @@ void test1() {
   result.add(7);
   result.add(15);
 
-  assert(tree == result);
+  runner.expectEqual(tree == result, true, "construct tree case 1");
 }
 
-void test2() {
+void test2(TestRunner &runner) {
   std::vector<int> inorder{1, 2, 3, 4, 5};
   std::vector<int> preorder{5, 4, 3, 2, 1};
 
@@ -109,10 +134,10 @@ void test2() {
   result.add(2);
   result.add(1);
 
-  assert(tree == result);
+  runner.expectEqual(tree == result, true, "construct tree case 2");
 }
 
-void test3() {
+void test3(TestRunner &runner) {
   std::vector<int> preorder{1, 2, 3, 4, 5};
   std::vector<int> inorder{1, 2, 3, 4, 5};
 
@@ -125,10 +150,10 @@ void test3() {
   result.add(4);
   result.add(5);
 
-  assert(tree == result);
+  runner.expectEqual(tree == result, true, "construct tree case 3");
 }
 
-void test4() {
+void test4(TestRunner &runner) {
   std::vector<int> preorder{1};
   std::vector<int> inorder{1};
 
@@ -137,14 +162,16 @@ void test4() {
   BinaryTree result;
   result.add(1);
 
-  assert(tree == result);
+  runner.expectEqual(tree == result, true, "construct tree case 4");
 }
 
 int main() {
-  test1();
-  test2();
-  test3();
-  test4();
+  TestRunner runner;
+  test1(runner);
+  test2(runner);
+  test3(runner);
+  test4(runner);
+  runner.summary();
 
   return 0;
 }

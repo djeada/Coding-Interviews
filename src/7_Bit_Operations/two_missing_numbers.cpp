@@ -31,11 +31,37 @@
  */
 
 #include <algorithm>
-#include <cassert>
 #include <cmath>
 #include <iostream>
+#include <string>
 #include <utility>
 #include <vector>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(const std::pair<int, int> &got,
+                   const std::pair<int, int> &expected,
+                   const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected={" << expected.first << ", "
+              << expected.second << "} got={" << got.first << ", " << got.second
+              << "}\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 // Simple (Brute-force) Solution using Sum and Product
 std::pair<int, int> findMissingNumbersMethod1(const std::vector<int> &numbers) {
@@ -119,12 +145,15 @@ void test() {
       {{1}, {2, 3}},
       {{3, 4}, {1, 2}},
   };
+  TestRunner runner;
 
   for (const auto &[input, expected] : testCases) {
-    assert(findMissingNumbersMethod1(input) == expected);
-    assert(findMissingNumbersMethod2(input) == expected);
+    runner.expectEqual(findMissingNumbersMethod1(input), expected,
+                       "method1 case size " + std::to_string(input.size()));
+    runner.expectEqual(findMissingNumbersMethod2(input), expected,
+                       "method2 case size " + std::to_string(input.size()));
   }
-  std::cout << "All tests passed!\n";
+  runner.summary();
 }
 
 int main() {

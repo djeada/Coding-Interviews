@@ -32,9 +32,33 @@
  */
 
 #include <algorithm>
-#include <cassert>
 #include <climits>
+#include <iostream>
+#include <string>
 #include <vector>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(int got, int expected, const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << expected
+              << " got=" << got << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 // Naive approach: Checks all possible contiguous subarrays (O(n^2) time
 // complexity)
@@ -63,25 +87,35 @@ int findMaxSubarraySumKadane(const std::vector<int> &numbers) {
 }
 
 void testMaxSubarraySum() {
+  TestRunner runner;
   std::vector<int> testArray1{1, -2, 3, 10, -4, 7, 2, -5};
   int expected1 = 18;
-  assert(findMaxSubarraySumNaive(testArray1) == expected1);
-  assert(findMaxSubarraySumKadane(testArray1) == expected1);
+  runner.expectEqual(findMaxSubarraySumNaive(testArray1), expected1,
+                     "naive mixed");
+  runner.expectEqual(findMaxSubarraySumKadane(testArray1), expected1,
+                     "kadane mixed");
 
   std::vector<int> testArray2{-2, -8, -1, -5, -9};
   int expected2 = -1;
-  assert(findMaxSubarraySumNaive(testArray2) == expected2);
-  assert(findMaxSubarraySumKadane(testArray2) == expected2);
+  runner.expectEqual(findMaxSubarraySumNaive(testArray2), expected2,
+                     "naive all negative");
+  runner.expectEqual(findMaxSubarraySumKadane(testArray2), expected2,
+                     "kadane all negative");
 
   std::vector<int> testArray3{2, 8, 1, 5, 9};
   int expected3 = 25;
-  assert(findMaxSubarraySumNaive(testArray3) == expected3);
-  assert(findMaxSubarraySumKadane(testArray3) == expected3);
+  runner.expectEqual(findMaxSubarraySumNaive(testArray3), expected3,
+                     "naive all positive");
+  runner.expectEqual(findMaxSubarraySumKadane(testArray3), expected3,
+                     "kadane all positive");
 
   std::vector<int> testArray4{2};
   int expected4 = 2;
-  assert(findMaxSubarraySumNaive(testArray4) == expected4);
-  assert(findMaxSubarraySumKadane(testArray4) == expected4);
+  runner.expectEqual(findMaxSubarraySumNaive(testArray4), expected4,
+                     "naive single");
+  runner.expectEqual(findMaxSubarraySumKadane(testArray4), expected4,
+                     "kadane single");
+  runner.summary();
 }
 
 int main() {

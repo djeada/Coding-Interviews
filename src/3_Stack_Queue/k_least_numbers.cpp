@@ -26,9 +26,49 @@
  */
 
 #include <algorithm>
-#include <cassert>
+#include <iostream>
 #include <queue>
+#include <sstream>
+#include <string>
 #include <vector>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(const std::vector<int> &got,
+                   const std::vector<int> &expected,
+                   const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << toString(expected)
+              << " got=" << toString(got) << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+
+private:
+  static std::string toString(const std::vector<int> &values) {
+    std::ostringstream oss;
+    oss << "{";
+    for (size_t i = 0; i < values.size(); ++i) {
+      if (i > 0)
+        oss << ", ";
+      oss << values[i];
+    }
+    oss << "}";
+    return oss.str();
+  }
+};
+} // namespace
 
 // Implementation 1: Simple Sort
 std::vector<int> findSmallestKNumbersSort(const std::vector<int> &input,
@@ -90,33 +130,47 @@ std::vector<int> findSmallestKNumbersNthElement(const std::vector<int> &input,
 }
 
 void testFindSmallestKNumbers() {
+  TestRunner runner;
   std::vector<int> testArray1{4, 5, 1, 6, 2, 7, 3, 8};
   std::vector<int> expected1{1, 2, 3, 4};
 
   // Test Simple Sort Method
-  assert(findSmallestKNumbersSort(testArray1, 4) == expected1);
+  runner.expectEqual(findSmallestKNumbersSort(testArray1, 4), expected1,
+                     "sort k=4");
   // Test Max Heap Method
-  assert(findSmallestKNumbersHeap(testArray1, 4) == expected1);
+  runner.expectEqual(findSmallestKNumbersHeap(testArray1, 4), expected1,
+                     "heap k=4");
   // Test nth_element Method
-  assert(findSmallestKNumbersNthElement(testArray1, 4) == expected1);
+  runner.expectEqual(findSmallestKNumbersNthElement(testArray1, 4), expected1,
+                     "nth_element k=4");
 
   std::vector<int> testArray2{4, 5, 1, 6, 2, 7, 3, 8};
   std::vector<int> expected2{1, 2, 3, 4, 5, 6, 7, 8};
-  assert(findSmallestKNumbersSort(testArray2, 8) == expected2);
-  assert(findSmallestKNumbersHeap(testArray2, 8) == expected2);
-  assert(findSmallestKNumbersNthElement(testArray2, 8) == expected2);
+  runner.expectEqual(findSmallestKNumbersSort(testArray2, 8), expected2,
+                     "sort k=8");
+  runner.expectEqual(findSmallestKNumbersHeap(testArray2, 8), expected2,
+                     "heap k=8");
+  runner.expectEqual(findSmallestKNumbersNthElement(testArray2, 8), expected2,
+                     "nth_element k=8");
 
   std::vector<int> testArray3{4, 5, 1, 6, 2, 7, 3, 8};
   std::vector<int> expected3{1};
-  assert(findSmallestKNumbersSort(testArray3, 1) == expected3);
-  assert(findSmallestKNumbersHeap(testArray3, 1) == expected3);
-  assert(findSmallestKNumbersNthElement(testArray3, 1) == expected3);
+  runner.expectEqual(findSmallestKNumbersSort(testArray3, 1), expected3,
+                     "sort k=1");
+  runner.expectEqual(findSmallestKNumbersHeap(testArray3, 1), expected3,
+                     "heap k=1");
+  runner.expectEqual(findSmallestKNumbersNthElement(testArray3, 1), expected3,
+                     "nth_element k=1");
 
   std::vector<int> testArray4{4, 5, 1, 6, 2, 7, 2, 8};
   std::vector<int> expected4{1, 2};
-  assert(findSmallestKNumbersSort(testArray4, 2) == expected4);
-  assert(findSmallestKNumbersHeap(testArray4, 2) == expected4);
-  assert(findSmallestKNumbersNthElement(testArray4, 2) == expected4);
+  runner.expectEqual(findSmallestKNumbersSort(testArray4, 2), expected4,
+                     "sort k=2 with dup");
+  runner.expectEqual(findSmallestKNumbersHeap(testArray4, 2), expected4,
+                     "heap k=2 with dup");
+  runner.expectEqual(findSmallestKNumbersNthElement(testArray4, 2), expected4,
+                     "nth_element k=2 with dup");
+  runner.summary();
 }
 
 int main() {

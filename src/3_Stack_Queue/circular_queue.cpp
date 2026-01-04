@@ -44,12 +44,49 @@
  */
 
 #include <algorithm>
-#include <cassert>
 #include <deque>
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <vector>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(const std::vector<int> &got,
+                   const std::vector<int> &expected,
+                   const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << toString(expected)
+              << " got=" << toString(got) << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+
+private:
+  static std::string toString(const std::vector<int> &values) {
+    std::ostringstream oss;
+    oss << "{";
+    for (size_t i = 0; i < values.size(); ++i) {
+      if (i > 0)
+        oss << ", ";
+      oss << values[i];
+    }
+    oss << "}";
+    return oss.str();
+  }
+};
+} // namespace
 
 // Simple (Brute-force) Solution
 // Uses a vector to simulate the queue; on deQueue, it shifts elements.
@@ -145,15 +182,15 @@ void test() {
                                          "deQueue", "enQueue 4"};
   std::vector<int> expected = {2, 3, 4};
 
+  TestRunner runner;
   auto result1 = simpleSolution(capacity, operations);
   auto result2 = optimalSolution(capacity, operations);
   auto result3 = alternativeSolution(capacity, operations);
 
-  assert(result1 == expected);
-  assert(result2 == expected);
-  assert(result3 == expected);
-
-  std::cout << "All tests passed!\n";
+  runner.expectEqual(result1, expected, "simpleSolution basic");
+  runner.expectEqual(result2, expected, "optimalSolution basic");
+  runner.expectEqual(result3, expected, "alternativeSolution basic");
+  runner.summary();
 }
 
 int main() {

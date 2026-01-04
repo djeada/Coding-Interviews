@@ -46,9 +46,32 @@
  * The pairwise Hamming distances are calculated as above and summed.
  */
 
-#include <cassert>
 #include <iostream>
+#include <string>
 #include <vector>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(int got, int expected, const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << expected
+              << " got=" << got << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 // Simple (Brute-force) Solution
 // Compares every pair and counts differing bits.
@@ -92,14 +115,17 @@ void test() {
       11, //  For [1, 2, 3, 4], total Hamming distance is 11.
       0   // For [7, 7, 7], all elements are identical, so distance is 0.
   };
+  TestRunner runner;
 
   for (size_t i = 0; i < testInputs.size(); ++i) {
     int resSimple = simpleSolution(testInputs[i]);
     int resOptimal = optimalSolution(testInputs[i]);
-    assert(resSimple == expectedOutputs[i]);
-    assert(resOptimal == expectedOutputs[i]);
+    runner.expectEqual(resSimple, expectedOutputs[i],
+                       "simple case " + std::to_string(i + 1));
+    runner.expectEqual(resOptimal, expectedOutputs[i],
+                       "optimal case " + std::to_string(i + 1));
   }
-  std::cout << "All tests passed!\n";
+  runner.summary();
 }
 
 int main() {

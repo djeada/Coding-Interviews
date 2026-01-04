@@ -31,9 +31,47 @@
  */
 
 #include "list.h"
-#include <cassert>
 #include <iostream>
 #include <memory>
+#include <sstream>
+#include <string>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(const List &got, const List &expected,
+                   const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << listToString(expected)
+              << " got=" << listToString(got) << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+
+private:
+  static std::string listToString(const List &list) {
+    std::ostringstream oss;
+    oss << "{";
+    for (unsigned int i = 0; i < list.size(); ++i) {
+      if (i > 0)
+        oss << ", ";
+      oss << list.get(i);
+    }
+    oss << "}";
+    return oss.str();
+  }
+};
+} // namespace
 
 class ListWithReversion : public List {
 public:
@@ -59,7 +97,7 @@ public:
 
 // ------------------- Test Cases -------------------
 
-void test1() {
+void test1(TestRunner &runner) {
   ListWithReversion list;
   list.append(1);
   list.append(2);
@@ -75,10 +113,10 @@ void test1() {
   expected.append(1);
 
   list.reverse();
-  assert(list == expected);
+  runner.expectEqual(list, expected, "reverse multi");
 }
 
-void test2() {
+void test2(TestRunner &runner) {
   ListWithReversion list;
   list.append(1);
 
@@ -86,22 +124,22 @@ void test2() {
   expected.append(1);
 
   list.reverse();
-  assert(list == expected);
+  runner.expectEqual(list, expected, "reverse single");
 }
 
-void test3() {
+void test3(TestRunner &runner) {
   ListWithReversion list;
   List expected;
 
   list.reverse();
-  assert(list == expected);
+  runner.expectEqual(list, expected, "reverse empty");
 }
 
 int main() {
-  test1();
-  test2();
-  test3();
-
-  std::cout << "All tests passed!\n";
+  TestRunner runner;
+  test1(runner);
+  test2(runner);
+  test3(runner);
+  runner.summary();
   return 0;
 }

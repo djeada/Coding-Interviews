@@ -35,7 +35,31 @@
 #include <optional>
 #include <queue>
 #include <set>
+#include <string>
 #include <vector>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(int got, int expected, const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << expected
+              << " got=" << got << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 // Simple (Brute-force) Solution
 // Uses a deque for queue operations and scans the entire queue on each max()
@@ -140,6 +164,7 @@ void test() {
   // Simulate a series of operations:
   // push 3, push 1, push 5, max, pop, max
   std::vector<int> expected_max_values = {5, 5};
+  TestRunner runner;
 
   // Test SimpleMaxQueue
   {
@@ -150,8 +175,8 @@ void test() {
     int m1 = mq.max();
     mq.pop();
     int m2 = mq.max();
-    assert(m1 == expected_max_values[0]);
-    assert(m2 == expected_max_values[1]);
+    runner.expectEqual(m1, expected_max_values[0], "SimpleMaxQueue max #1");
+    runner.expectEqual(m2, expected_max_values[1], "SimpleMaxQueue max #2");
   }
 
   // Test OptimalMaxQueue
@@ -163,8 +188,8 @@ void test() {
     int m1 = mq.max();
     mq.pop();
     int m2 = mq.max();
-    assert(m1 == expected_max_values[0]);
-    assert(m2 == expected_max_values[1]);
+    runner.expectEqual(m1, expected_max_values[0], "OptimalMaxQueue max #1");
+    runner.expectEqual(m2, expected_max_values[1], "OptimalMaxQueue max #2");
   }
 
   // Test AlternativeMaxQueue
@@ -176,11 +201,13 @@ void test() {
     int m1 = mq.max();
     mq.pop();
     int m2 = mq.max();
-    assert(m1 == expected_max_values[0]);
-    assert(m2 == expected_max_values[1]);
+    runner.expectEqual(m1, expected_max_values[0],
+                       "AlternativeMaxQueue max #1");
+    runner.expectEqual(m2, expected_max_values[1],
+                       "AlternativeMaxQueue max #2");
   }
 
-  std::cout << "All tests passed!\n";
+  runner.summary();
 }
 
 int main() {

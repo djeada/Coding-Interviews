@@ -23,8 +23,32 @@
  * Explanation: The value 7 is found in the matrix.
  */
 
-#include <cassert>
+#include <iostream>
+#include <string>
 #include <vector>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(bool got, bool expected, const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << std::boolalpha
+              << expected << " got=" << got << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 // Binary search by treating the 2D matrix as a flattened sorted array.
 bool contains(const std::vector<std::vector<int>> &matrix, int value) {
@@ -57,15 +81,17 @@ bool contains(const std::vector<std::vector<int>> &matrix, int value) {
 // Test cases for correctness
 void test() {
   std::vector<std::vector<int>> matrix{{1, 3, 5}, {7, 9, 11}, {13, 15, 17}};
+  TestRunner runner;
 
   // Value exists in the matrix
-  assert(contains(matrix, 7) == true);
+  runner.expectEqual(contains(matrix, 7), true, "contains middle value");
   // Value at the beginning of the matrix
-  assert(contains(matrix, 1) == true);
+  runner.expectEqual(contains(matrix, 1), true, "contains first value");
   // Value at the end of the matrix
-  assert(contains(matrix, 17) == true);
+  runner.expectEqual(contains(matrix, 17), true, "contains last value");
   // Value does not exist in the matrix
-  assert(contains(matrix, 6) == false);
+  runner.expectEqual(contains(matrix, 6), false, "missing value");
+  runner.summary();
 }
 
 int main() {

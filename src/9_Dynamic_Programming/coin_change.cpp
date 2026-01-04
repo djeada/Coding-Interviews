@@ -30,10 +30,33 @@
  */
 
 #include <algorithm>
-#include <cassert>
 #include <climits>
 #include <iostream>
+#include <string>
 #include <vector>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(int got, int expected, const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << expected
+              << " got=" << got << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 // Simple (Brute-force) Recursive Solution
 // Exponential complexity: O(n^targetAmount)
@@ -96,13 +119,19 @@ void test() {
       {{1, 2, 5}, 11, 3},      // optimal: [5,5,1]
       {{1}, 100, 100},         // single denomination
   };
+  TestRunner runner;
 
   for (const auto &test : tests) {
     int simple = simpleSolution(test.coins, test.target);
     int optimal = optimalSolution(test.coins, test.target);
     int greedy = greedySolution(test.coins, test.target);
 
-    assert(simple == optimal);
+    runner.expectEqual(simple, optimal,
+                       "simple == optimal target=" +
+                           std::to_string(test.target));
+    runner.expectEqual(optimal, test.expected,
+                       "expected coins target=" +
+                           std::to_string(test.target));
     std::cout << "Coins: ";
     for (int c : test.coins)
       std::cout << c << " ";
@@ -114,7 +143,7 @@ void test() {
     std::cout << std::endl;
   }
 
-  std::cout << "All tests passed!" << std::endl;
+  runner.summary();
 }
 
 int main() {

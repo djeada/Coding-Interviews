@@ -32,10 +32,43 @@
  * of both the top element and the minimum element after a pop operation.
  */
 
-#include <cassert>
 #include <iostream>
 #include <optional>
 #include <stack>
+#include <string>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  template <typename T>
+  void expectEqual(const std::optional<T> &got, const std::optional<T> &expected,
+                   const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << toString(expected)
+              << " got=" << toString(got) << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+
+private:
+  template <typename T>
+  static std::string toString(const std::optional<T> &value) {
+    if (!value.has_value())
+      return "nullopt";
+    return std::to_string(*value);
+  }
+};
+} // namespace
 
 // Template class for a stack that tracks the minimum element in O(1) time.
 template <typename T> class StackWithMin {
@@ -87,28 +120,31 @@ private:
 
 // Test cases to ensure correctness of StackWithMin operations.
 void test() {
+  TestRunner runner;
   {
     StackWithMin<int> stack;
     stack.push(10);
     stack.push(5);
     stack.push(2);
-    assert(stack.min() == 2);
-    assert(stack.top() == 2);
+    runner.expectEqual(stack.min(), std::optional<int>(2), "min after push");
+    runner.expectEqual(stack.top(), std::optional<int>(2), "top after push");
     stack.pop();
-    assert(stack.min() == 5);
-    assert(stack.top() == 5);
+    runner.expectEqual(stack.min(), std::optional<int>(5), "min after pop");
+    runner.expectEqual(stack.top(), std::optional<int>(5), "top after pop");
   }
   {
     StackWithMin<int> stack;
     stack.push(-1);
     stack.push(7);
     stack.push(-2);
-    assert(stack.min() == -2);
+    runner.expectEqual(stack.min(), std::optional<int>(-2),
+                       "min with negative");
     stack.pop();
-    assert(stack.min() == -1);
-    assert(stack.top() == 7);
+    runner.expectEqual(stack.min(), std::optional<int>(-1),
+                       "min restored");
+    runner.expectEqual(stack.top(), std::optional<int>(7), "top restored");
   }
-  std::cout << "All tests passed!\n";
+  runner.summary();
 }
 
 int main() {

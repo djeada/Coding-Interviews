@@ -42,8 +42,47 @@
  */
 
 #include "binary_tree.h"
-#include <cassert>
+#include <functional>
+#include <iostream>
+#include <string>
 #include <stdexcept>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(int got, int expected, const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << expected
+              << " got=" << got << "\n";
+  }
+
+  void expectThrows(const std::function<void()> &fn,
+                    const std::string &label) {
+    ++total;
+    try {
+      fn();
+      ++failed;
+      std::cout << "[FAIL] " << label << " expected=throw got=no throw\n";
+    } catch (const std::exception &ex) {
+      std::cout << "[PASS] " << label << " threw=\"" << ex.what() << "\"\n";
+    } catch (...) {
+      std::cout << "[PASS] " << label << " threw=non-std exception\n";
+    }
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 class TreeWithLowestCommonAncestor : public BinaryTree {
 public:
@@ -72,12 +111,14 @@ private:
 
 // Test function to verify the correctness of the LCA implementation.
 void runTests() {
+  TestRunner runner;
   {
     TreeWithLowestCommonAncestor tree;
     for (const auto &value : {20, 8, 22, 4, 12, 10, 14}) {
       tree.add(value);
     }
-    assert(tree.findLowestCommonAncestor(10, 14) == 12);
+    runner.expectEqual(tree.findLowestCommonAncestor(10, 14), 12,
+                       "LCA 10,14");
   }
 
   {
@@ -85,7 +126,7 @@ void runTests() {
     for (const auto &value : {20, 8, 22, 4, 12, 10, 14}) {
       tree.add(value);
     }
-    assert(tree.findLowestCommonAncestor(8, 14) == 8);
+    runner.expectEqual(tree.findLowestCommonAncestor(8, 14), 8, "LCA 8,14");
   }
 
   {
@@ -93,7 +134,8 @@ void runTests() {
     for (const auto &value : {20, 8, 22, 4, 12, 10, 14}) {
       tree.add(value);
     }
-    assert(tree.findLowestCommonAncestor(10, 22) == 20);
+    runner.expectEqual(tree.findLowestCommonAncestor(10, 22), 20,
+                       "LCA 10,22");
   }
 
   {
@@ -103,8 +145,17 @@ void runTests() {
     }
     // For this degenerate tree (all nodes to the left), the LCA of 1 and 3
     // is 3.
-    assert(tree.findLowestCommonAncestor(1, 3) == 3);
+    runner.expectEqual(tree.findLowestCommonAncestor(1, 3), 3, "LCA 1,3");
   }
+  {
+    TreeWithLowestCommonAncestor tree;
+    for (const auto &value : {20, 8, 22}) {
+      tree.add(value);
+    }
+    runner.expectThrows([&]() { tree.findLowestCommonAncestor(8, 99); },
+                        "LCA missing value");
+  }
+  runner.summary();
 }
 
 int main() {

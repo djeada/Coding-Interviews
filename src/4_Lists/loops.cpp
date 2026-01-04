@@ -33,10 +33,33 @@
  */
 
 #include <algorithm>
-#include <cassert>
 #include <iostream>
 #include <stdexcept>
+#include <string>
 #include <vector>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(bool got, bool expected, const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << std::boolalpha
+              << expected << " got=" << got << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 // A simple node that holds an int and a pointer to the next node.
 struct Node {
@@ -121,22 +144,22 @@ private:
 
 // ------------------- Test Cases -------------------
 
-void test1() {
+void test1(TestRunner &runner) {
   ListWithLoops list;
   list.append(1);
   // Single node should not have a loop.
-  assert(!list.hasLoop());
+  runner.expectEqual(list.hasLoop(), false, "single node no loop");
 }
 
-void test2() {
+void test2(TestRunner &runner) {
   ListWithLoops list;
   list.append(1);
   // Connect the only node to itself to form a loop.
   list.connectNodes(0, 0);
-  assert(list.hasLoop());
+  runner.expectEqual(list.hasLoop(), true, "self loop");
 }
 
-void test3() {
+void test3(TestRunner &runner) {
   ListWithLoops list;
   list.append(1);
   list.append(2);
@@ -145,10 +168,10 @@ void test3() {
   list.append(5);
   // Connect the last node (index 4) to the node at index 2.
   list.connectNodes(4, 2);
-  assert(list.hasLoop());
+  runner.expectEqual(list.hasLoop(), true, "tail to middle loop");
 }
 
-void test4() {
+void test4(TestRunner &runner) {
   ListWithLoops list;
   list.append(1);
   list.append(2);
@@ -157,14 +180,15 @@ void test4() {
   list.append(5);
   // Connect the last node (index 4) to the first node (index 0).
   list.connectNodes(4, 0);
-  assert(list.hasLoop());
+  runner.expectEqual(list.hasLoop(), true, "tail to head loop");
 }
 
 int main() {
-  test1();
-  test2();
-  test3();
-  test4();
-  std::cout << "All tests passed!\n";
+  TestRunner runner;
+  test1(runner);
+  test2(runner);
+  test3(runner);
+  test4(runner);
+  runner.summary();
   return 0;
 }

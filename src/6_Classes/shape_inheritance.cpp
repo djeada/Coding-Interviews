@@ -56,10 +56,34 @@
  *     - Rectangle area is computed as width * height.
  */
 
-#include <cassert>
 #include <cmath>
 #include <iostream>
 #include <memory>
+#include <string>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectNear(double got, double expected, double tol,
+                  const std::string &label) {
+    ++total;
+    if (std::abs(got - expected) <= tol) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << expected
+              << " got=" << got << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 // --------------------- Simple (Runtime Polymorphism) Solution
 // ---------------------
@@ -87,7 +111,7 @@ private:
   double width, height;
 };
 
-void testRuntimePolymorphism() {
+void testRuntimePolymorphism(TestRunner &runner) {
   std::unique_ptr<Shape> circle = std::make_unique<Circle>(5.0);
   std::unique_ptr<Shape> rectangle = std::make_unique<Rectangle>(4.0, 6.0);
 
@@ -95,10 +119,8 @@ void testRuntimePolymorphism() {
   double rectangleArea = rectangle->area();
 
   // Allow for small floating point error.
-  assert(std::abs(circleArea - (M_PI * 25)) < 1e-6);
-  assert(std::abs(rectangleArea - 24.0) < 1e-6);
-
-  std::cout << "Runtime Polymorphism Test Passed!\n";
+  runner.expectNear(circleArea, M_PI * 25, 1e-6, "runtime circle area");
+  runner.expectNear(rectangleArea, 24.0, 1e-6, "runtime rectangle area");
 }
 
 // ---------------- Optimal (Compile-time Polymorphism using CRTP) Solution
@@ -126,17 +148,15 @@ private:
   double width, height;
 };
 
-void testCompileTimePolymorphism() {
+void testCompileTimePolymorphism(TestRunner &runner) {
   CircleCRTP circle(5.0);
   RectangleCRTP rectangle(4.0, 6.0);
 
   double circleArea = circle.area();
   double rectangleArea = rectangle.area();
 
-  assert(std::abs(circleArea - (M_PI * 25)) < 1e-6);
-  assert(std::abs(rectangleArea - 24.0) < 1e-6);
-
-  std::cout << "Compile-time Polymorphism (CRTP) Test Passed!\n";
+  runner.expectNear(circleArea, M_PI * 25, 1e-6, "crtp circle area");
+  runner.expectNear(rectangleArea, 24.0, 1e-6, "crtp rectangle area");
 }
 
 // ---------------- Alternative (Using Composition) Solution ----------------
@@ -175,7 +195,7 @@ private:
   std::unique_ptr<AreaStrategy> strategy_;
 };
 
-void testComposition() {
+void testComposition(TestRunner &runner) {
   ShapeComposition circleShape(std::make_unique<CircleAreaStrategy>(5.0));
   ShapeComposition rectangleShape(
       std::make_unique<RectangleAreaStrategy>(4.0, 6.0));
@@ -183,17 +203,18 @@ void testComposition() {
   double circleArea = circleShape.area();
   double rectangleArea = rectangleShape.area();
 
-  assert(std::abs(circleArea - (M_PI * 25)) < 1e-6);
-  assert(std::abs(rectangleArea - 24.0) < 1e-6);
-
-  std::cout << "Composition Test Passed!\n";
+  runner.expectNear(circleArea, M_PI * 25, 1e-6, "composition circle area");
+  runner.expectNear(rectangleArea, 24.0, 1e-6,
+                    "composition rectangle area");
 }
 
 // ---------------- Test Runner ----------------
 void test() {
-  testRuntimePolymorphism();
-  testCompileTimePolymorphism();
-  testComposition();
+  TestRunner runner;
+  testRuntimePolymorphism(runner);
+  testCompileTimePolymorphism(runner);
+  testComposition(runner);
+  runner.summary();
 }
 
 int main() {

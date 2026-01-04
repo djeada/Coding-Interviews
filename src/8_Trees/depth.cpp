@@ -35,7 +35,32 @@
 
 #include "binary_tree.h"
 #include <algorithm>
-#include <cassert>
+#include <iostream>
+#include <string>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(unsigned int got, unsigned int expected,
+                   const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << expected
+              << " got=" << got << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 // TreeWithDepth extends BinaryTree with a method to compute the tree's depth.
 class TreeWithDepth : public BinaryTree {
@@ -57,45 +82,61 @@ private:
 };
 
 // Test function to verify that the computed depth matches the expected depth.
-void testTreeWithDepth(const TreeWithDepth &tree, unsigned int expectedDepth) {
-  assert(tree.depth() == expectedDepth);
+void testTreeWithDepth(TestRunner &runner, const TreeWithDepth &tree,
+                       unsigned int expectedDepth,
+                       const std::string &label) {
+  runner.expectEqual(tree.depth(), expectedDepth, label);
 }
 
 int main() {
+  TestRunner runner;
+  {
+    TreeWithDepth empty;
+    testTreeWithDepth(runner, empty, 0, "depth empty");
+  }
   testTreeWithDepth(
+      runner,
       [] {
         TreeWithDepth tree;
         for (int val : {9, 8, 13, 4, 10, 16, 7, 15})
           tree.add(val);
         return tree;
       }(),
-      4);
+      4,
+      "depth balanced");
 
   testTreeWithDepth(
+      runner,
       [] {
         TreeWithDepth tree;
         for (int val : {5, 4, 3, 2, 1})
           tree.add(val);
         return tree;
       }(),
-      5);
+      5,
+      "depth left-skewed");
 
   testTreeWithDepth(
+      runner,
       [] {
         TreeWithDepth tree;
         for (int val : {1, 2, 3, 4, 5})
           tree.add(val);
         return tree;
       }(),
-      5);
+      5,
+      "depth right-skewed");
 
   testTreeWithDepth(
+      runner,
       [] {
         TreeWithDepth tree;
         tree.add(1);
         return tree;
       }(),
-      1);
+      1,
+      "depth single");
+  runner.summary();
 
   return 0;
 }

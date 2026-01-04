@@ -34,9 +34,32 @@
 
 #include <algorithm>
 #include <bitset>
-#include <cassert>
 #include <iostream>
+#include <string>
 #include <vector>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(int got, int expected, const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << expected
+              << " got=" << got << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 // Simple (Brute-force) Solution using Bit Masking
 int countSetBitsSimple(int number) {
@@ -72,16 +95,20 @@ void test() {
       {13, 3},  // 13 in binary: 1101
       {255, 8}, // 255 in binary: 11111111
       {0x7FFFFFFF, 31}};
+  TestRunner runner;
 
   for (const auto &testCase : testCases) {
     int input = testCase.first;
     int expected = testCase.second;
-    assert(countSetBitsSimple(input) == expected);
-    assert(countSetBitsOptimal(input) == expected);
-    assert(countSetBitsAlternative(input) == expected);
+    runner.expectEqual(countSetBitsSimple(input), expected,
+                       "simple count for " + std::to_string(input));
+    runner.expectEqual(countSetBitsOptimal(input), expected,
+                       "optimal count for " + std::to_string(input));
+    runner.expectEqual(countSetBitsAlternative(input), expected,
+                       "alternative count for " + std::to_string(input));
   }
 
-  std::cout << "All tests passed!\n";
+  runner.summary();
 }
 
 int main() {

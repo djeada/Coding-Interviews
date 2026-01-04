@@ -35,9 +35,49 @@
  */
 
 #include "binary_tree.h"
-#include <cassert>
+#include <iostream>
+#include <sstream>
 #include <stack>
+#include <string>
 #include <vector>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(const std::vector<int> &got,
+                   const std::vector<int> &expected,
+                   const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << toString(expected)
+              << " got=" << toString(got) << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+
+private:
+  static std::string toString(const std::vector<int> &values) {
+    std::ostringstream oss;
+    oss << "{";
+    for (size_t i = 0; i < values.size(); ++i) {
+      if (i > 0)
+        oss << ", ";
+      oss << values[i];
+    }
+    oss << "}";
+    return oss.str();
+  }
+};
+} // namespace
 
 class TreeWithVector : public BinaryTree {
 public:
@@ -94,15 +134,17 @@ public:
 };
 
 // Simple test function using assertions
-void testTreeWithVector(const TreeWithVector &tree,
+void testTreeWithVector(TestRunner &runner, const TreeWithVector &tree,
                         const std::vector<int> &inorderExpected,
                         const std::vector<int> &preorderExpected) {
-  assert(tree.inorder() == inorderExpected);
-  assert(tree.preorder() == preorderExpected);
+  runner.expectEqual(tree.inorder(), inorderExpected, "inorder traversal");
+  runner.expectEqual(tree.preorder(), preorderExpected, "preorder traversal");
 }
 
 int main() {
+  TestRunner runner;
   testTreeWithVector(
+      runner,
       [] {
         TreeWithVector tree;
         for (int val : {9, 8, 13, 4, 10, 16, 7, 15})
@@ -112,6 +154,7 @@ int main() {
       {4, 7, 8, 9, 10, 13, 15, 16}, {9, 8, 4, 7, 13, 10, 16, 15});
 
   testTreeWithVector(
+      runner,
       [] {
         TreeWithVector tree;
         for (int val : {5, 4, 3, 2, 1})
@@ -121,6 +164,7 @@ int main() {
       {1, 2, 3, 4, 5}, {5, 4, 3, 2, 1});
 
   testTreeWithVector(
+      runner,
       [] {
         TreeWithVector tree;
         for (int val : {1, 2, 3, 4, 5})
@@ -130,12 +174,14 @@ int main() {
       {1, 2, 3, 4, 5}, {1, 2, 3, 4, 5});
 
   testTreeWithVector(
+      runner,
       [] {
         TreeWithVector tree;
         tree.add(1);
         return tree;
       }(),
       {1}, {1});
+  runner.summary();
 
   return 0;
 }

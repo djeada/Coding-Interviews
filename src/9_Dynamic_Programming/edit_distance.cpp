@@ -27,10 +27,32 @@
  */
 
 #include <algorithm>
-#include <cassert>
 #include <iostream>
 #include <string>
 #include <vector>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(int got, int expected, const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << expected
+              << " got=" << got << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 // Simple (Recursive) Solution
 // Complexity: Exponential O(3^(max(len1, len2))) - for educational purposes
@@ -76,16 +98,22 @@ int optimalSolution(const std::string &s1, const std::string &s2) {
 
 // Test cases for correctness
 void test() {
-  assert(optimalSolution("kitten", "kitten") == 0);
-  assert(optimalSolution("bob", "bub") == 1);
-  assert(optimalSolution("ROBOT", "robot") == 5);
-  assert(optimalSolution("church", "ChUrCh") == 3);
-  assert(optimalSolution("flaw", "lawn") == 2);
+  TestRunner runner;
+  runner.expectEqual(optimalSolution("kitten", "kitten"), 0,
+                     "optimal kitten->kitten");
+  runner.expectEqual(optimalSolution("bob", "bub"), 1,
+                     "optimal bob->bub");
+  runner.expectEqual(optimalSolution("ROBOT", "robot"), 5,
+                     "optimal ROBOT->robot");
+  runner.expectEqual(optimalSolution("church", "ChUrCh"), 3,
+                     "optimal church->ChUrCh");
+  runner.expectEqual(optimalSolution("flaw", "lawn"), 2,
+                     "optimal flaw->lawn");
 
   // Testing simple solution on smaller inputs due to complexity
-  assert(simpleSolution("abc", "yabd", 3, 4) == 2);
-
-  std::cout << "All tests passed!\n";
+  runner.expectEqual(simpleSolution("abc", "yabd", 3, 4), 2,
+                     "simple abc->yabd");
+  runner.summary();
 }
 
 int main() {

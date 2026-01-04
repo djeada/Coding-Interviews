@@ -37,13 +37,46 @@
  */
 
 #include <algorithm>
-#include <cassert>
 #include <cmath>
 #include <exception>
+#include <iomanip>
 #include <iostream>
 #include <queue>
 #include <set>
+#include <sstream>
+#include <string>
 #include <vector>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectNear(double got, double expected, double tol,
+                  const std::string &label) {
+    ++total;
+    if (std::fabs(got - expected) <= tol) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << toString(expected)
+              << " got=" << toString(got) << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+
+private:
+  static std::string toString(double value) {
+    std::ostringstream oss;
+    oss << std::fixed << std::setprecision(6) << value;
+    return oss.str();
+  }
+};
+} // namespace
 
 // Simple (Brute-force) Solution
 // Stores numbers in a vector and sorts on each insertion.
@@ -163,6 +196,7 @@ void test() {
   SimpleMedianCalculator simpleCalc;
   OptimalMedianCalculator optimalCalc;
   AlternativeMedianCalculator alternativeCalc;
+  TestRunner runner;
 
   for (size_t i = 0; i < inputs.size(); ++i) {
     simpleCalc.insert(inputs[i]);
@@ -171,12 +205,15 @@ void test() {
     double m1 = simpleCalc.getMedian();
     double m2 = optimalCalc.getMedian();
     double m3 = alternativeCalc.getMedian();
-    assert(std::fabs(m1 - expectedMedians[i]) < 1e-7);
-    assert(std::fabs(m2 - expectedMedians[i]) < 1e-7);
-    assert(std::fabs(m3 - expectedMedians[i]) < 1e-7);
+    runner.expectNear(m1, expectedMedians[i], 1e-7,
+                      "simple median step " + std::to_string(i + 1));
+    runner.expectNear(m2, expectedMedians[i], 1e-7,
+                      "optimal median step " + std::to_string(i + 1));
+    runner.expectNear(m3, expectedMedians[i], 1e-7,
+                      "alternative median step " + std::to_string(i + 1));
   }
 
-  std::cout << "All tests passed!\n";
+  runner.summary();
 }
 
 int main() {

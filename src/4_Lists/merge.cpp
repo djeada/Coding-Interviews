@@ -34,9 +34,47 @@
 
 #include "list.h"
 #include <algorithm>
-#include <cassert>
 #include <iostream>
+#include <sstream>
+#include <string>
 #include <vector>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(const List &got, const List &expected,
+                   const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << listToString(expected)
+              << " got=" << listToString(got) << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+
+private:
+  static std::string listToString(const List &list) {
+    std::ostringstream oss;
+    oss << "{";
+    for (unsigned int i = 0; i < list.size(); ++i) {
+      if (i > 0)
+        oss << ", ";
+      oss << list.get(i);
+    }
+    oss << "}";
+    return oss.str();
+  }
+};
+} // namespace
 
 // ---------------- Optimal (Two-Pointer) Solution ----------------
 List mergeTwoPointer(const List &list1, const List &list2) {
@@ -91,7 +129,7 @@ List mergeConcatenateAndSort(const List &list1, const List &list2) {
 
 // ------------------- Test Cases -------------------
 
-void test1() {
+void test1(TestRunner &runner) {
   List list1;
   list1.append(1);
   list1.append(3);
@@ -111,10 +149,10 @@ void test1() {
   expected.append(6);
 
   auto result = mergeTwoPointer(list1, list2);
-  assert(result == expected);
+  runner.expectEqual(result, expected, "merge two-pointer #1");
 }
 
-void test2() {
+void test2(TestRunner &runner) {
   List list1;
   list1.append(1);
   list1.append(2);
@@ -134,10 +172,10 @@ void test2() {
   expected.append(6);
 
   auto result = mergeTwoPointer(list1, list2);
-  assert(result == expected);
+  runner.expectEqual(result, expected, "merge two-pointer #2");
 }
 
-void test3() {
+void test3(TestRunner &runner) {
   List list1;
   list1.append(1);
   list1.append(2);
@@ -151,10 +189,10 @@ void test3() {
   expected.append(3);
 
   auto result = mergeTwoPointer(list1, list2);
-  assert(result == expected);
+  runner.expectEqual(result, expected, "merge two-pointer list2 empty");
 }
 
-void test4() {
+void test4(TestRunner &runner) {
   List list1;
   list1.append(1);
   list1.append(3);
@@ -174,10 +212,10 @@ void test4() {
   expected.append(6);
 
   auto result = mergeTwoPointer(list1, list2);
-  assert(result == expected);
+  runner.expectEqual(result, expected, "merge two-pointer #3");
 }
 
-void testAlternative() {
+void testAlternative(TestRunner &runner) {
   List list1;
   list1.append(1);
   list1.append(3);
@@ -197,16 +235,16 @@ void testAlternative() {
   expected.append(6);
 
   auto result = mergeConcatenateAndSort(list1, list2);
-  assert(result == expected);
+  runner.expectEqual(result, expected, "merge concatenate+sort");
 }
 
 int main() {
-  test1();
-  test2();
-  test3();
-  test4();
-  testAlternative();
-
-  std::cout << "All tests passed!\n";
+  TestRunner runner;
+  test1(runner);
+  test2(runner);
+  test3(runner);
+  test4(runner);
+  testAlternative(runner);
+  runner.summary();
   return 0;
 }

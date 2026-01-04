@@ -29,10 +29,33 @@
  * square.
  */
 
-#include <cassert>
 #include <iostream>
 #include <numeric>
+#include <string>
 #include <vector>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(bool got, bool expected, const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << std::boolalpha
+              << expected << " got=" << got << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 // ----------------------- Simple (Brute-force) Solution -----------------------
 bool isMagicSquareSimple(const std::vector<std::vector<int>> &matrix) {
@@ -177,20 +200,25 @@ void test() {
 
   std::vector<std::vector<int>> nonMagicSquare = {
       {5, 3, 4}, {1, 5, 8}, {6, 4, 2}};
+  TestRunner runner;
 
   // Test Simple Solution
-  assert(isMagicSquareSimple(magicSquare) == true);
-  assert(isMagicSquareSimple(nonMagicSquare) == false);
+  runner.expectEqual(isMagicSquareSimple(magicSquare), true, "simple magic");
+  runner.expectEqual(isMagicSquareSimple(nonMagicSquare), false,
+                     "simple non-magic");
 
   // Test Optimal Solution
-  assert(isMagicSquareOptimal(magicSquare) == true);
-  assert(isMagicSquareOptimal(nonMagicSquare) == false);
+  runner.expectEqual(isMagicSquareOptimal(magicSquare), true,
+                     "optimal magic");
+  runner.expectEqual(isMagicSquareOptimal(nonMagicSquare), false,
+                     "optimal non-magic");
 
   // Test Alternative Solution
-  assert(isMagicSquareAlternative(magicSquare) == true);
-  assert(isMagicSquareAlternative(nonMagicSquare) == false);
-
-  std::cout << "All tests passed!\n";
+  runner.expectEqual(isMagicSquareAlternative(magicSquare), true,
+                     "alternative magic");
+  runner.expectEqual(isMagicSquareAlternative(nonMagicSquare), false,
+                     "alternative non-magic");
+  runner.summary();
 }
 
 int main() {

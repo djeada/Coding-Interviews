@@ -26,10 +26,33 @@
  */
 
 #include <algorithm>
-#include <cassert>
 #include <functional>
 #include <iostream>
+#include <string>
 #include <vector>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(int got, int expected, const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << expected
+              << " got=" << got << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 // Simple (Permutation-based) Recursive Solution
 // Complexity: O(N! * N^2), generates all permutations and checks diagonals
@@ -98,13 +121,14 @@ void test() {
   int permSol = permutationSolution(N);
   int backSol = backtrackingSolution(N);
 
-  assert(permSol == expectedSolutions);
-  assert(backSol == expectedSolutions);
+  TestRunner runner;
+  runner.expectEqual(permSol, expectedSolutions, "permutation solution");
+  runner.expectEqual(backSol, expectedSolutions, "backtracking solution");
 
   std::cout << "Permutation Solution: " << permSol << std::endl;
   std::cout << "Backtracking Solution: " << backSol << std::endl;
 
-  std::cout << "All tests passed!" << std::endl;
+  runner.summary();
 }
 
 int main() {

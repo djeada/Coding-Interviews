@@ -24,9 +24,32 @@
  */
 
 #include <algorithm>
-#include <cassert>
 #include <iostream>
+#include <string>
 #include <vector>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(long long got, long long expected, const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << expected
+              << " got=" << got << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 // Simple Recursive Solution
 // Complexity: Exponential time O(2^n), suitable for educational purposes and
@@ -85,6 +108,7 @@ long long alternativeSolution(unsigned int n) {
 // Test cases for correctness
 void test() {
   std::vector<unsigned int> testInputs = {0, 1, 2, 3, 10, 50, 90};
+  TestRunner runner;
 
   for (unsigned int n : testInputs) {
     long long simple =
@@ -95,13 +119,15 @@ void test() {
     long long alternative = alternativeSolution(n);
 
     if (n <= 30)
-      assert(simple == optimal);
-    assert(optimal == alternative);
+      runner.expectEqual(simple, optimal, "simple == optimal n=" +
+                                            std::to_string(n));
+    runner.expectEqual(optimal, alternative, "optimal == alternative n=" +
+                                            std::to_string(n));
 
     std::cout << "Fibonacci(" << n << ") = " << optimal << std::endl;
   }
 
-  std::cout << "All tests passed!\n";
+  runner.summary();
 }
 
 int main() {

@@ -31,12 +31,34 @@
  * down to 'E' at (1,1) forms the target string "ABE".
  */
 
-#include <cassert>
 #include <functional>
 #include <iostream>
 #include <stack>
 #include <string>
 #include <vector>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(bool got, bool expected, const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << std::boolalpha
+              << expected << " got=" << got << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 // ---------------- Simple Solution ----------------
 // Recursive DFS helper function.
@@ -166,32 +188,41 @@ bool alternativeSolution(const std::vector<std::string> &matrix,
 
 // ---------------- Test Cases ----------------
 void test() {
+  TestRunner runner;
   {
     std::vector<std::string> matrix = {"ABCE", "SFCS", "ADEE"};
-    assert(simpleSolution(matrix, "ABCCED"));
-    assert(optimalSolution(matrix, "ABCCED"));
-    assert(alternativeSolution(matrix, "ABCCED"));
+    runner.expectEqual(simpleSolution(matrix, "ABCCED"), true,
+                       "simple ABCCED");
+    runner.expectEqual(optimalSolution(matrix, "ABCCED"), true,
+                       "optimal ABCCED");
+    runner.expectEqual(alternativeSolution(matrix, "ABCCED"), true,
+                       "alternative ABCCED");
   }
   {
     std::vector<std::string> matrix = {"ABCE", "SFCS", "ADEE"};
-    assert(simpleSolution(matrix, "SEE"));
-    assert(optimalSolution(matrix, "SEE"));
-    assert(alternativeSolution(matrix, "SEE"));
+    runner.expectEqual(simpleSolution(matrix, "SEE"), true, "simple SEE");
+    runner.expectEqual(optimalSolution(matrix, "SEE"), true, "optimal SEE");
+    runner.expectEqual(alternativeSolution(matrix, "SEE"), true,
+                       "alternative SEE");
   }
   {
     std::vector<std::string> matrix = {"ABCE", "SFCS", "ADEE"};
-    assert(!simpleSolution(matrix, "ABCB"));
-    assert(!optimalSolution(matrix, "ABCB"));
-    assert(!alternativeSolution(matrix, "ABCB"));
+    runner.expectEqual(simpleSolution(matrix, "ABCB"), false, "simple ABCB");
+    runner.expectEqual(optimalSolution(matrix, "ABCB"), false, "optimal ABCB");
+    runner.expectEqual(alternativeSolution(matrix, "ABCB"), false,
+                       "alternative ABCB");
   }
   {
     std::vector<std::string> matrix = {"ABCEHJIG", "SFCSLOPQ", "ADEEMNOE",
                                        "ADIDEJFM", "VCEIFGGS"};
-    assert(simpleSolution(matrix, "SLHECCEIDEJFGGFIE"));
-    assert(optimalSolution(matrix, "SLHECCEIDEJFGGFIE"));
-    assert(alternativeSolution(matrix, "SLHECCEIDEJFGGFIE"));
+    runner.expectEqual(simpleSolution(matrix, "SLHECCEIDEJFGGFIE"), true,
+                       "simple long path");
+    runner.expectEqual(optimalSolution(matrix, "SLHECCEIDEJFGGFIE"), true,
+                       "optimal long path");
+    runner.expectEqual(alternativeSolution(matrix, "SLHECCEIDEJFGGFIE"), true,
+                       "alternative long path");
   }
-  std::cout << "All tests passed!\n";
+  runner.summary();
 }
 
 int main() {

@@ -26,10 +26,33 @@
  */
 
 #include <algorithm>
-#include <cassert>
 #include <iostream>
 #include <stack>
+#include <string>
 #include <vector>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(bool got, bool expected, const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << std::boolalpha
+              << expected << " got=" << got << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 // Simulation Solution: Efficient O(n) approach.
 bool isValidPopOrderSimulation(const std::vector<int> &push_order,
@@ -49,7 +72,7 @@ bool isValidPopOrderSimulation(const std::vector<int> &push_order,
       }
       s.push(push_order[push_index++]);
     }
-    if (s.top() != pop_value) {
+    if (s.empty() || s.top() != pop_value) {
       return false;
     }
     s.pop();
@@ -114,21 +137,30 @@ void test() {
   std::vector<int> pop_order2 = {3, 5, 4, 2, 1};
   std::vector<int> pop_order3 = {4, 3, 5, 1, 2};
   std::vector<int> pop_order4 = {3, 5, 4, 1, 2};
+  TestRunner runner;
 
   // Testing Simulation Solution.
-  assert(isValidPopOrderSimulation(push_order, pop_order1) == true);
-  assert(isValidPopOrderSimulation(push_order, pop_order2) == true);
-  assert(isValidPopOrderSimulation(push_order, pop_order3) == false);
-  assert(isValidPopOrderSimulation(push_order, pop_order4) == false);
+  runner.expectEqual(isValidPopOrderSimulation(push_order, pop_order1), true,
+                     "simulation valid #1");
+  runner.expectEqual(isValidPopOrderSimulation(push_order, pop_order2), true,
+                     "simulation valid #2");
+  runner.expectEqual(isValidPopOrderSimulation(push_order, pop_order3), false,
+                     "simulation invalid #1");
+  runner.expectEqual(isValidPopOrderSimulation(push_order, pop_order4), false,
+                     "simulation invalid #2");
 
   // Testing Recursive (Educational) Solution on small input.
   // Note: The recursive solution is computationally expensive for large n.
-  assert(isValidPopOrderRecursive(push_order, pop_order1) == true);
-  assert(isValidPopOrderRecursive(push_order, pop_order2) == true);
-  assert(isValidPopOrderRecursive(push_order, pop_order3) == false);
-  assert(isValidPopOrderRecursive(push_order, pop_order4) == false);
+  runner.expectEqual(isValidPopOrderRecursive(push_order, pop_order1), true,
+                     "recursive valid #1");
+  runner.expectEqual(isValidPopOrderRecursive(push_order, pop_order2), true,
+                     "recursive valid #2");
+  runner.expectEqual(isValidPopOrderRecursive(push_order, pop_order3), false,
+                     "recursive invalid #1");
+  runner.expectEqual(isValidPopOrderRecursive(push_order, pop_order4), false,
+                     "recursive invalid #2");
 
-  std::cout << "All tests passed!\n";
+  runner.summary();
 }
 
 int main() {

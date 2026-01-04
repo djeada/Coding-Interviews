@@ -42,7 +42,48 @@
 
 #include "list.h"
 #include <iostream>
+#include <sstream>
 #include <stack>
+#include <string>
+#include <vector>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(const std::vector<int> &got,
+                   const std::vector<int> &expected,
+                   const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << toString(expected)
+              << " got=" << toString(got) << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+
+private:
+  static std::string toString(const std::vector<int> &values) {
+    std::ostringstream oss;
+    oss << "{";
+    for (size_t i = 0; i < values.size(); ++i) {
+      if (i > 0)
+        oss << ", ";
+      oss << values[i];
+    }
+    oss << "}";
+    return oss.str();
+  }
+};
+} // namespace
 
 // Iterative approach: prints the list in reverse using a stack.
 void printReverseIter(List &list) {
@@ -57,6 +98,19 @@ void printReverseIter(List &list) {
   }
 }
 
+std::vector<int> collectReverseIter(const List &list) {
+  std::stack<int> nodes;
+  for (unsigned int i = 0; i < list.size(); i++)
+    nodes.push(list.get(i));
+
+  std::vector<int> result;
+  while (!nodes.empty()) {
+    result.push_back(nodes.top());
+    nodes.pop();
+  }
+  return result;
+}
+
 // Recursive approach: prints the list in reverse by recursion.
 // The parameter 'i' starts at -1 and is incremented until it reaches the last
 // index.
@@ -69,17 +123,30 @@ void printReverseRecursive(List &list, int i = -1) {
   std::cout << list.get(i) << std::endl;
 }
 
+void collectReverseRecursive(const List &list, std::vector<int> &out,
+                             int i = -1) {
+  if (i == static_cast<int>(list.size()) - 1)
+    return;
+
+  i++;
+  collectReverseRecursive(list, out, i);
+  out.push_back(list.get(i));
+}
+
 int main() {
+  TestRunner runner;
   List list;
   list.append(1);
   list.append(2);
   list.append(3);
 
-  std::cout << "Printing the list in reverse iteratively: " << std::endl;
-  printReverseIter(list);
-
-  std::cout << "Printing the list in reverse recursively: " << std::endl;
-  printReverseRecursive(list);
+  std::vector<int> expected{3, 2, 1};
+  runner.expectEqual(collectReverseIter(list), expected,
+                     "reverse print iterative");
+  std::vector<int> recursiveOut;
+  collectReverseRecursive(list, recursiveOut);
+  runner.expectEqual(recursiveOut, expected, "reverse print recursive");
+  runner.summary();
 
   return 0;
 }

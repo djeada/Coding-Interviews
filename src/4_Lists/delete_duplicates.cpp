@@ -43,10 +43,48 @@
  */
 
 #include "list.h"
-#include <cassert>
 #include <iostream>
 #include <memory>
+#include <sstream>
+#include <string>
 #include <unordered_set>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(const List &got, const List &expected,
+                   const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << listToString(expected)
+              << " got=" << listToString(got) << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+
+private:
+  static std::string listToString(const List &list) {
+    std::ostringstream oss;
+    oss << "{";
+    for (unsigned int i = 0; i < list.size(); ++i) {
+      if (i > 0)
+        oss << ", ";
+      oss << list.get(i);
+    }
+    oss << "}";
+    return oss.str();
+  }
+};
+} // namespace
 
 // UniqueList is derived from List and provides deletion of duplicate nodes.
 class UniqueList : public List {
@@ -86,7 +124,7 @@ public:
 
 // ------------------- Test Cases -------------------
 
-void test1() {
+void test1(TestRunner &runner) {
   UniqueList duplicateList;
   duplicateList.append(1);
   duplicateList.append(2);
@@ -103,10 +141,10 @@ void test1() {
   uniqueList.append(5);
 
   duplicateList.deleteDuplication();
-  assert(duplicateList == uniqueList);
+  runner.expectEqual(duplicateList, uniqueList, "delete duplicates #1");
 }
 
-void test2() {
+void test2(TestRunner &runner) {
   UniqueList duplicateList;
   duplicateList.append(1);
   duplicateList.append(2);
@@ -122,10 +160,10 @@ void test2() {
   uniqueList.append(5);
 
   duplicateList.deleteDuplication();
-  assert(duplicateList == uniqueList);
+  runner.expectEqual(duplicateList, uniqueList, "delete duplicates #2");
 }
 
-void test3() {
+void test3(TestRunner &runner) {
   UniqueList duplicateList;
   duplicateList.append(1);
   duplicateList.append(1);
@@ -138,10 +176,10 @@ void test3() {
   uniqueList.append(2);
 
   duplicateList.deleteDuplication();
-  assert(duplicateList == uniqueList);
+  runner.expectEqual(duplicateList, uniqueList, "delete duplicates #3");
 }
 
-void test4() {
+void test4(TestRunner &runner) {
   UniqueList duplicateList;
   duplicateList.append(1);
   duplicateList.append(1);
@@ -153,14 +191,15 @@ void test4() {
   uniqueList.append(1);
 
   duplicateList.deleteDuplication();
-  assert(duplicateList == uniqueList);
+  runner.expectEqual(duplicateList, uniqueList, "delete duplicates #4");
 }
 
 int main() {
-  test1();
-  test2();
-  test3();
-  test4();
-  std::cout << "All tests passed!\n";
+  TestRunner runner;
+  test1(runner);
+  test2(runner);
+  test3(runner);
+  test4(runner);
+  runner.summary();
   return 0;
 }

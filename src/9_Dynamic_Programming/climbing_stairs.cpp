@@ -31,9 +31,32 @@
  */
 
 #include <algorithm>
-#include <cassert>
 #include <iostream>
+#include <string>
 #include <vector>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(int got, int expected, const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << expected
+              << " got=" << got << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 // Simple (Recursive) Solution
 // Complexity: O(N^M) where M is size of allowedSteps
@@ -80,13 +103,16 @@ void test() {
                                  {3, {2}, 0},
                                  {7, {1, 3, 5}, 12},
                                  {10, {2, 5}, 2}};
+  TestRunner runner;
 
   for (const auto &test : tests) {
     int simple = simpleSolution(test.N, test.allowedSteps);
     int optimal = optimalSolution(test.N, test.allowedSteps);
 
-    assert(simple == optimal);
-    assert(optimal == test.expected);
+    runner.expectEqual(simple, optimal, "simple == optimal for N=" +
+                                        std::to_string(test.N));
+    runner.expectEqual(optimal, test.expected,
+                       "expected ways for N=" + std::to_string(test.N));
 
     std::cout << "Stairs: " << test.N << " | Allowed Steps: ";
     for (int s : test.allowedSteps)
@@ -94,7 +120,7 @@ void test() {
     std::cout << "| Ways: " << optimal << std::endl;
   }
 
-  std::cout << "All tests passed!" << std::endl;
+  runner.summary();
 }
 
 int main() {

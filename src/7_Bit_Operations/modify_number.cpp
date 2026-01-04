@@ -41,9 +41,32 @@
  */
 
 #include <bit> // for std::popcount (C++20)
-#include <cassert>
 #include <iostream>
+#include <string>
 #include <vector>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(int got, int expected, const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << expected
+              << " got=" << got << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 // Simple (Brute-force) Solution
 // Iterates through each bit (assuming 32-bit integers) of the XOR result.
@@ -89,16 +112,19 @@ void test() {
       {7, 7, 0},
       {29, 15, 2} // 29 (11101) XOR 15 (01111) = 18 (10010) -> 2 set bits
   };
+  TestRunner runner;
 
   for (const auto &tc : testCases) {
     int resSimple = simpleSolution(tc.number1, tc.number2);
     int resOptimal = optimalSolution(tc.number1, tc.number2);
     int resAlternative = alternativeSolution(tc.number1, tc.number2);
-    assert(resSimple == tc.expected);
-    assert(resOptimal == tc.expected);
-    assert(resAlternative == tc.expected);
+    std::string label = std::to_string(tc.number1) + "^" +
+                        std::to_string(tc.number2);
+    runner.expectEqual(resSimple, tc.expected, "simple " + label);
+    runner.expectEqual(resOptimal, tc.expected, "optimal " + label);
+    runner.expectEqual(resAlternative, tc.expected, "alternative " + label);
   }
-  std::cout << "All tests passed!\n";
+  runner.summary();
 }
 
 int main() {

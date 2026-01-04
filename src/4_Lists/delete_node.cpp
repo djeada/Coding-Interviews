@@ -28,8 +28,46 @@
  */
 
 #include "list.h"
-#include <cassert>
 #include <iostream>
+#include <sstream>
+#include <string>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(const List &got, const List &expected,
+                   const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << listToString(expected)
+              << " got=" << listToString(got) << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+
+private:
+  static std::string listToString(const List &list) {
+    std::ostringstream oss;
+    oss << "{";
+    for (unsigned int i = 0; i < list.size(); ++i) {
+      if (i > 0)
+        oss << ", ";
+      oss << list.get(i);
+    }
+    oss << "}";
+    return oss.str();
+  }
+};
+} // namespace
 
 class ListWithDeletion : public List {
 public:
@@ -60,7 +98,7 @@ public:
 
 // ------------------- Test Cases -------------------
 
-void test1() {
+void test1(TestRunner &runner) {
   ListWithDeletion list;
   list.append(1);
   list.append(2);
@@ -76,10 +114,10 @@ void test1() {
   expectedResult.append(4);
   expectedResult.append(5);
 
-  assert(list == expectedResult);
+  runner.expectEqual(list, expectedResult, "remove middle node");
 }
 
-void test2() {
+void test2(TestRunner &runner) {
   ListWithDeletion list;
   list.append(1);
   list.append(2);
@@ -95,10 +133,10 @@ void test2() {
   expectedResult.append(3);
   expectedResult.append(4);
 
-  assert(list == expectedResult);
+  runner.expectEqual(list, expectedResult, "remove tail node");
 }
 
-void test3() {
+void test3(TestRunner &runner) {
   ListWithDeletion list;
   list.append(1);
   list.append(2);
@@ -114,10 +152,10 @@ void test3() {
   expectedResult.append(4);
   expectedResult.append(5);
 
-  assert(list == expectedResult);
+  runner.expectEqual(list, expectedResult, "remove head node");
 }
 
-void test4() {
+void test4(TestRunner &runner) {
   ListWithDeletion list;
   list.append(1);
 
@@ -125,14 +163,16 @@ void test4() {
 
   List expectedResult;
 
-  assert(list == expectedResult);
+  runner.expectEqual(list, expectedResult, "remove sole node");
 }
 
 int main() {
-  test1();
-  test2();
-  test3();
-  test4();
+  TestRunner runner;
+  test1(runner);
+  test2(runner);
+  test3(runner);
+  test4(runner);
+  runner.summary();
 
   return 0;
 }

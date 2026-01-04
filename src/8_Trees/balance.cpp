@@ -37,9 +37,32 @@
 
 #include "binary_tree.h"
 #include <algorithm>
-#include <cassert>
 #include <cmath>
 #include <iostream>
+#include <string>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(bool got, bool expected, const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << std::boolalpha
+              << expected << " got=" << got << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 // TreeWithBalanceCheck extends the assumed BinaryTree from "binary_tree.h" with
 // balance-checking methods.
@@ -94,14 +117,15 @@ private:
 
 // Test cases to ensure both implementations produce the same results.
 void test() {
+  TestRunner runner;
   // Test Case 1: Balanced tree with nodes [4, 6, 2, 3, 1, 5, 7]
   {
     TreeWithBalanceCheck tree;
     int values[] = {4, 6, 2, 3, 1, 5, 7};
     for (int v : values)
       tree.add(v);
-    assert(tree.isBalancedSimple());
-    assert(tree.isBalancedOptimal());
+    runner.expectEqual(tree.isBalancedSimple(), true, "simple balanced #1");
+    runner.expectEqual(tree.isBalancedOptimal(), true, "optimal balanced #1");
   }
 
   // Test Case 2: Minimal balanced tree [2, 1, 3]
@@ -110,8 +134,8 @@ void test() {
     int values[] = {2, 1, 3};
     for (int v : values)
       tree.add(v);
-    assert(tree.isBalancedSimple());
-    assert(tree.isBalancedOptimal());
+    runner.expectEqual(tree.isBalancedSimple(), true, "simple balanced #2");
+    runner.expectEqual(tree.isBalancedOptimal(), true, "optimal balanced #2");
   }
 
   // Test Case 3: Unbalanced tree (ascending order) [1, 2, 3, 4, 5]
@@ -120,8 +144,9 @@ void test() {
     int values[] = {1, 2, 3, 4, 5};
     for (int v : values)
       tree.add(v);
-    assert(!tree.isBalancedSimple());
-    assert(!tree.isBalancedOptimal());
+    runner.expectEqual(tree.isBalancedSimple(), false, "simple unbalanced #1");
+    runner.expectEqual(tree.isBalancedOptimal(), false,
+                       "optimal unbalanced #1");
   }
 
   // Test Case 4: Unbalanced tree (descending order) [5, 4, 3, 2, 1]
@@ -130,11 +155,11 @@ void test() {
     int values[] = {5, 4, 3, 2, 1};
     for (int v : values)
       tree.add(v);
-    assert(!tree.isBalancedSimple());
-    assert(!tree.isBalancedOptimal());
+    runner.expectEqual(tree.isBalancedSimple(), false, "simple unbalanced #2");
+    runner.expectEqual(tree.isBalancedOptimal(), false,
+                       "optimal unbalanced #2");
   }
-
-  std::cout << "All tests passed!\n";
+  runner.summary();
 }
 
 int main() {

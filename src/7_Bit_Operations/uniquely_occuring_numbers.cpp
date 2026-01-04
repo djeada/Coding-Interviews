@@ -30,11 +30,32 @@
  * Output: [4, 6]  (order does not matter)
  */
 
-#include <cassert>
 #include <iostream>
 #include <string>
 #include <unordered_map>
 #include <vector>
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectTrue(bool condition, const std::string &label) {
+    ++total;
+    if (condition) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=true got=false\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 // Structure to store two numbers that occur only once in an array.
 struct NumbersOccurringOnce {
@@ -100,25 +121,29 @@ NumbersOccurringOnce optimalSolution(const std::vector<int> &numbers) {
 }
 
 // Test cases for correctness
-void test(const std::string &testName, const std::vector<int> &numbers,
+bool matchesUnorderedPair(const NumbersOccurringOnce &got,
+                          const NumbersOccurringOnce &expected) {
+  return (got.num1 == expected.num1 && got.num2 == expected.num2) ||
+         (got.num1 == expected.num2 && got.num2 == expected.num1);
+}
+
+void test(TestRunner &runner, const std::string &testName,
+          const std::vector<int> &numbers,
           const NumbersOccurringOnce &expected) {
   NumbersOccurringOnce simpleRes = simpleSolution(numbers);
   NumbersOccurringOnce optimalRes = optimalSolution(numbers);
 
   bool condition =
-      ((simpleRes.num1 == expected.num1 && simpleRes.num2 == expected.num2) ||
-       (simpleRes.num1 == expected.num2 && simpleRes.num2 == expected.num1)) &&
-      ((optimalRes.num1 == expected.num1 && optimalRes.num2 == expected.num2) ||
-       (optimalRes.num1 == expected.num2 && optimalRes.num2 == expected.num1));
-
-  assert(condition);
+      matchesUnorderedPair(simpleRes, expected) &&
+      matchesUnorderedPair(optimalRes, expected);
+  runner.expectTrue(condition, testName);
 }
 
 int main() {
-  test("Test1", {2, 4, 3, 6, 3, 2, 5, 5}, {4, 6});
-  test("Test2", {4, 6}, {4, 6});
-  test("Test3", {4, 6, 1, 1, 1, 1}, {4, 6});
-
-  std::cout << "All tests passed!\n";
+  TestRunner runner;
+  test(runner, "Test1", {2, 4, 3, 6, 3, 2, 5, 5}, {4, 6});
+  test(runner, "Test2", {4, 6}, {4, 6});
+  test(runner, "Test3", {4, 6, 1, 1, 1, 1}, {4, 6});
+  runner.summary();
   return 0;
 }
