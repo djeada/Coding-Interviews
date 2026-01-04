@@ -32,6 +32,74 @@
 #include <string>
 #include <vector>
 
+#include <algorithm>
+#include <queue>
+#include <vector>
+
+// 1) Full Sort
+// Time:  O(n log n)
+// Space: O(n)
+std::vector<int> findSmallestKNumbersSort(const std::vector<int>& input, int k) {
+  if (k <= 0) return {};
+
+  std::vector<int> result = input;
+  std::sort(result.begin(), result.end());
+
+  if (k < static_cast<int>(result.size())) {
+    result.resize(k);
+  }
+  return result;
+}
+
+// 2) Max Heap (size k)
+// Time:  O(n log k)
+// Space: O(k)
+std::vector<int> findSmallestKNumbersHeap(const std::vector<int>& input, int k) {
+  if (k <= 0) return {};
+  if (k >= static_cast<int>(input.size())) {
+    std::vector<int> result = input;
+    std::sort(result.begin(), result.end());
+    return result;
+  }
+
+  std::priority_queue<int> maxHeap;
+  for (int num : input) {
+    if (maxHeap.size() < static_cast<size_t>(k)) {
+      maxHeap.push(num);
+    } else if (num < maxHeap.top()) {
+      maxHeap.pop();
+      maxHeap.push(num);
+    }
+  }
+
+  std::vector<int> result;
+  while (!maxHeap.empty()) {
+    result.push_back(maxHeap.top());
+    maxHeap.pop();
+  }
+  std::sort(result.begin(), result.end());
+  return result;
+}
+
+// 3) nth_element
+// Avg Time: O(n), Worst: O(n^2)
+// Space:    O(n)
+std::vector<int> findSmallestKNumbersNthElement(const std::vector<int>& input,
+                                                int k) {
+  if (k <= 0) return {};
+  if (k >= static_cast<int>(input.size())) {
+    std::vector<int> result = input;
+    std::sort(result.begin(), result.end());
+    return result;
+  }
+
+  std::vector<int> result = input;
+  std::nth_element(result.begin(), result.begin() + k, result.end());
+  result.resize(k);
+  std::sort(result.begin(), result.end());
+  return result;
+}
+
 namespace {
 struct TestRunner {
   int total = 0;
@@ -68,65 +136,6 @@ private:
   }
 };
 } // namespace
-
-// Implementation 1: Simple Sort
-std::vector<int> findSmallestKNumbersSort(const std::vector<int> &input,
-                                          int k) {
-  if (k >= static_cast<int>(input.size())) {
-    std::vector<int> result = input;
-    std::sort(result.begin(), result.end());
-    return result;
-  }
-  std::vector<int> result = input;
-  std::sort(result.begin(), result.end());
-  result.resize(k);
-  return result;
-}
-
-// Implementation 2: Max Heap (Priority Queue) Approach
-std::vector<int> findSmallestKNumbersHeap(const std::vector<int> &input,
-                                          int k) {
-  if (k <= 0)
-    return {};
-  if (k >= static_cast<int>(input.size())) {
-    std::vector<int> result = input;
-    std::sort(result.begin(), result.end());
-    return result;
-  }
-  std::priority_queue<int> maxHeap;
-  for (const auto &num : input) {
-    if (maxHeap.size() < static_cast<size_t>(k)) {
-      maxHeap.push(num);
-    } else if (num < maxHeap.top()) {
-      maxHeap.pop();
-      maxHeap.push(num);
-    }
-  }
-  std::vector<int> result;
-  while (!maxHeap.empty()) {
-    result.push_back(maxHeap.top());
-    maxHeap.pop();
-  }
-  std::sort(result.begin(), result.end());
-  return result;
-}
-
-// Implementation 3: nth_element Approach
-std::vector<int> findSmallestKNumbersNthElement(const std::vector<int> &input,
-                                                int k) {
-  if (k <= 0)
-    return {};
-  if (k >= static_cast<int>(input.size())) {
-    std::vector<int> result = input;
-    std::sort(result.begin(), result.end());
-    return result;
-  }
-  std::vector<int> result = input;
-  std::nth_element(result.begin(), result.begin() + k, result.end());
-  result.resize(k);
-  std::sort(result.begin(), result.end());
-  return result;
-}
 
 void testFindSmallestKNumbers() {
   TestRunner runner;
