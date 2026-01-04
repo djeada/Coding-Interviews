@@ -9,22 +9,6 @@
  * an unordered_set to keep track of seen values. When a duplicate node is
  * encountered, it is removed from the list.
  *
- * Three conceptual approaches could be considered:
- *
- * 1. Simple Approach:
- *    - Traverse the list and copy unique values into a new list.
- *    - This method is straightforward but uses extra space.
- *
- * 2. Optimal (Efficient) Approach:
- *    - Use an unordered_set during a single pass to mark nodes seen and delete
- * duplicates in-place.
- *    - Achieves O(n) time with O(n) extra space for the set.
- *
- * 3. Alternative Approach:
- *    - Sort the list first and then remove adjacent duplicates.
- *    - Not used here due to the extra overhead of sorting and potential changes
- * to the original order.
- *
  * ASCII Illustration:
  *
  *      Before: 1 -> 2 -> 3 -> 4 -> 4 -> 5
