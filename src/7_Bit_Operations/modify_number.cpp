@@ -118,8 +118,8 @@ void test() {
     int resSimple = simpleSolution(tc.number1, tc.number2);
     int resOptimal = optimalSolution(tc.number1, tc.number2);
     int resAlternative = alternativeSolution(tc.number1, tc.number2);
-    std::string label = std::to_string(tc.number1) + "^" +
-                        std::to_string(tc.number2);
+    std::string label =
+        std::to_string(tc.number1) + "^" + std::to_string(tc.number2);
     runner.expectEqual(resSimple, tc.expected, "simple " + label);
     runner.expectEqual(resOptimal, tc.expected, "optimal " + label);
     runner.expectEqual(resAlternative, tc.expected, "alternative " + label);

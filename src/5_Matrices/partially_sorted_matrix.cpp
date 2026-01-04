@@ -152,33 +152,25 @@ void test() {
   TestRunner runner;
 
   // Test for a value that exists in the matrix.
-  runner.expectEqual(simpleSolution(matrix, 7), true,
-                     "simple contains 7");
-  runner.expectEqual(optimalSolution(matrix, 7), true,
-                     "optimal contains 7");
+  runner.expectEqual(simpleSolution(matrix, 7), true, "simple contains 7");
+  runner.expectEqual(optimalSolution(matrix, 7), true, "optimal contains 7");
   runner.expectEqual(alternativeSolution(matrix, 7), true,
                      "alternative contains 7");
 
   // Test for a value that does not exist.
-  runner.expectEqual(simpleSolution(matrix, 5), false,
-                     "simple missing 5");
-  runner.expectEqual(optimalSolution(matrix, 5), false,
-                     "optimal missing 5");
+  runner.expectEqual(simpleSolution(matrix, 5), false, "simple missing 5");
+  runner.expectEqual(optimalSolution(matrix, 5), false, "optimal missing 5");
   runner.expectEqual(alternativeSolution(matrix, 5), false,
                      "alternative missing 5");
 
   // Test boundaries.
-  runner.expectEqual(simpleSolution(matrix, 1), true,
-                     "simple contains 1");
-  runner.expectEqual(optimalSolution(matrix, 1), true,
-                     "optimal contains 1");
+  runner.expectEqual(simpleSolution(matrix, 1), true, "simple contains 1");
+  runner.expectEqual(optimalSolution(matrix, 1), true, "optimal contains 1");
   runner.expectEqual(alternativeSolution(matrix, 1), true,
                      "alternative contains 1");
 
-  runner.expectEqual(simpleSolution(matrix, 15), true,
-                     "simple contains 15");
-  runner.expectEqual(optimalSolution(matrix, 15), true,
-                     "optimal contains 15");
+  runner.expectEqual(simpleSolution(matrix, 15), true, "simple contains 15");
+  runner.expectEqual(optimalSolution(matrix, 15), true, "optimal contains 15");
   runner.expectEqual(alternativeSolution(matrix, 15), true,
                      "alternative contains 15");
   runner.summary();

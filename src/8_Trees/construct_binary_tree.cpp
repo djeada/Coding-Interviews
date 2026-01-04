@@ -37,8 +37,8 @@
 #include "binary_tree.h" // Assumed to exist and be implemented.
 #include <algorithm>
 #include <iostream>
-#include <string>
 #include <stdexcept>
+#include <string>
 #include <vector>
 
 namespace {
@@ -80,9 +80,9 @@ private:
     if (start == end)
       return root;
 
-    auto ind = std::find(inorder.begin() + start, inorder.begin() + end + 1,
-                         val) -
-               inorder.begin();
+    auto ind =
+        std::find(inorder.begin() + start, inorder.begin() + end + 1, val) -
+        inorder.begin();
 
     root->left = construct(inorder, preorder, start, ind - 1, preInd);
     root->right = construct(inorder, preorder, ind + 1, end, preInd);

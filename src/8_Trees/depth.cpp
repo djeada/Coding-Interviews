@@ -83,8 +83,7 @@ private:
 
 // Test function to verify that the computed depth matches the expected depth.
 void testTreeWithDepth(TestRunner &runner, const TreeWithDepth &tree,
-                       unsigned int expectedDepth,
-                       const std::string &label) {
+                       unsigned int expectedDepth, const std::string &label) {
   runner.expectEqual(tree.depth(), expectedDepth, label);
 }
 
@@ -102,8 +101,7 @@ int main() {
           tree.add(val);
         return tree;
       }(),
-      4,
-      "depth balanced");
+      4, "depth balanced");
 
   testTreeWithDepth(
       runner,
@@ -113,8 +111,7 @@ int main() {
           tree.add(val);
         return tree;
       }(),
-      5,
-      "depth left-skewed");
+      5, "depth left-skewed");
 
   testTreeWithDepth(
       runner,
@@ -124,8 +121,7 @@ int main() {
           tree.add(val);
         return tree;
       }(),
-      5,
-      "depth right-skewed");
+      5, "depth right-skewed");
 
   testTreeWithDepth(
       runner,
@@ -134,8 +130,7 @@ int main() {
         tree.add(1);
         return tree;
       }(),
-      1,
-      "depth single");
+      1, "depth single");
   runner.summary();
 
   return 0;

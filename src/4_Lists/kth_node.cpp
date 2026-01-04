@@ -59,8 +59,7 @@ struct TestRunner {
               << " got=" << got << "\n";
   }
 
-  void expectThrows(const std::function<void()> &fn,
-                    const std::string &label) {
+  void expectThrows(const std::function<void()> &fn, const std::string &label) {
     ++total;
     try {
       fn();

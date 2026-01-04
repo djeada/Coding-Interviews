@@ -33,7 +33,8 @@ struct TestRunner {
   int total = 0;
   int failed = 0;
 
-  void expectEqual(long long got, long long expected, const std::string &label) {
+  void expectEqual(long long got, long long expected,
+                   const std::string &label) {
     ++total;
     if (got == expected) {
       std::cout << "[PASS] " << label << "\n";
@@ -119,10 +120,10 @@ void test() {
     long long alternative = alternativeSolution(n);
 
     if (n <= 30)
-      runner.expectEqual(simple, optimal, "simple == optimal n=" +
-                                            std::to_string(n));
-    runner.expectEqual(optimal, alternative, "optimal == alternative n=" +
-                                            std::to_string(n));
+      runner.expectEqual(simple, optimal,
+                         "simple == optimal n=" + std::to_string(n));
+    runner.expectEqual(optimal, alternative,
+                       "optimal == alternative n=" + std::to_string(n));
 
     std::cout << "Fibonacci(" << n << ") = " << optimal << std::endl;
   }

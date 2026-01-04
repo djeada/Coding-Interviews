@@ -130,8 +130,7 @@ void test() {
                        "simple == optimal target=" +
                            std::to_string(test.target));
     runner.expectEqual(optimal, test.expected,
-                       "expected coins target=" +
-                           std::to_string(test.target));
+                       "expected coins target=" + std::to_string(test.target));
     std::cout << "Coins: ";
     for (int c : test.coins)
       std::cout << c << " ";

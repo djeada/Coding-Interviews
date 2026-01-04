@@ -32,8 +32,8 @@
 #include "binary_tree.h"
 #include <algorithm> // For std::swap
 #include <iostream>
-#include <stack>
 #include <sstream>
+#include <stack>
 #include <string>
 #include <vector>
 
@@ -43,8 +43,7 @@ struct TestRunner {
   int failed = 0;
 
   void expectEqual(const std::vector<int> &got,
-                   const std::vector<int> &expected,
-                   const std::string &label) {
+                   const std::vector<int> &expected, const std::string &label) {
     ++total;
     if (got == expected) {
       std::cout << "[PASS] " << label << "\n";
@@ -139,8 +138,7 @@ int main() {
   }
 
   runner.expectEqual(tree.collectZigZagOrder(),
-                     std::vector<int>{10, 12, 5, 11, 16},
-                     "zigzag order");
+                     std::vector<int>{10, 12, 5, 11, 16}, "zigzag order");
   runner.summary();
   tree.print();
 

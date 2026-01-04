@@ -50,8 +50,8 @@ struct TestRunner {
       return;
     }
     ++failed;
-    std::cout << "[FAIL] " << label << " expected=\"" << expected
-              << "\" got=\"" << got << "\"\n";
+    std::cout << "[FAIL] " << label << " expected=\"" << expected << "\" got=\""
+              << got << "\"\n";
   }
 
   void expectEqual(int got, int expected, const std::string &label) {

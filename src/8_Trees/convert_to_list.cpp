@@ -47,8 +47,7 @@ struct TestRunner {
   int failed = 0;
 
   void expectEqual(const std::vector<int> &got,
-                   const std::vector<int> &expected,
-                   const std::string &label) {
+                   const std::vector<int> &expected, const std::string &label) {
     ++total;
     if (got == expected) {
       std::cout << "[PASS] " << label << "\n";
@@ -143,44 +142,41 @@ void testTreeWithVector(TestRunner &runner, const TreeWithVector &tree,
 
 int main() {
   TestRunner runner;
-  testTreeWithVector(
-      runner,
-      [] {
-        TreeWithVector tree;
-        for (int val : {9, 8, 13, 4, 10, 16, 7, 15})
-          tree.add(val);
-        return tree; // Moved (since copy is deleted)
-      }(),
-      {4, 7, 8, 9, 10, 13, 15, 16}, {9, 8, 4, 7, 13, 10, 16, 15});
+  testTreeWithVector(runner,
+                     [] {
+                       TreeWithVector tree;
+                       for (int val : {9, 8, 13, 4, 10, 16, 7, 15})
+                         tree.add(val);
+                       return tree; // Moved (since copy is deleted)
+                     }(),
+                     {4, 7, 8, 9, 10, 13, 15, 16},
+                     {9, 8, 4, 7, 13, 10, 16, 15});
 
-  testTreeWithVector(
-      runner,
-      [] {
-        TreeWithVector tree;
-        for (int val : {5, 4, 3, 2, 1})
-          tree.add(val);
-        return tree;
-      }(),
-      {1, 2, 3, 4, 5}, {5, 4, 3, 2, 1});
+  testTreeWithVector(runner,
+                     [] {
+                       TreeWithVector tree;
+                       for (int val : {5, 4, 3, 2, 1})
+                         tree.add(val);
+                       return tree;
+                     }(),
+                     {1, 2, 3, 4, 5}, {5, 4, 3, 2, 1});
 
-  testTreeWithVector(
-      runner,
-      [] {
-        TreeWithVector tree;
-        for (int val : {1, 2, 3, 4, 5})
-          tree.add(val);
-        return tree;
-      }(),
-      {1, 2, 3, 4, 5}, {1, 2, 3, 4, 5});
+  testTreeWithVector(runner,
+                     [] {
+                       TreeWithVector tree;
+                       for (int val : {1, 2, 3, 4, 5})
+                         tree.add(val);
+                       return tree;
+                     }(),
+                     {1, 2, 3, 4, 5}, {1, 2, 3, 4, 5});
 
-  testTreeWithVector(
-      runner,
-      [] {
-        TreeWithVector tree;
-        tree.add(1);
-        return tree;
-      }(),
-      {1}, {1});
+  testTreeWithVector(runner,
+                     [] {
+                       TreeWithVector tree;
+                       tree.add(1);
+                       return tree;
+                     }(),
+                     {1}, {1});
   runner.summary();
 
   return 0;

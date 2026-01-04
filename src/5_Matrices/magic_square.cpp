@@ -208,8 +208,7 @@ void test() {
                      "simple non-magic");
 
   // Test Optimal Solution
-  runner.expectEqual(isMagicSquareOptimal(magicSquare), true,
-                     "optimal magic");
+  runner.expectEqual(isMagicSquareOptimal(magicSquare), true, "optimal magic");
   runner.expectEqual(isMagicSquareOptimal(nonMagicSquare), false,
                      "optimal non-magic");
 

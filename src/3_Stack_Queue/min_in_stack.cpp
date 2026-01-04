@@ -43,8 +43,8 @@ struct TestRunner {
   int failed = 0;
 
   template <typename T>
-  void expectEqual(const std::optional<T> &got, const std::optional<T> &expected,
-                   const std::string &label) {
+  void expectEqual(const std::optional<T> &got,
+                   const std::optional<T> &expected, const std::string &label) {
     ++total;
     if (got == expected) {
       std::cout << "[PASS] " << label << "\n";
@@ -140,8 +140,7 @@ void test() {
     runner.expectEqual(stack.min(), std::optional<int>(-2),
                        "min with negative");
     stack.pop();
-    runner.expectEqual(stack.min(), std::optional<int>(-1),
-                       "min restored");
+    runner.expectEqual(stack.min(), std::optional<int>(-1), "min restored");
     runner.expectEqual(stack.top(), std::optional<int>(7), "top restored");
   }
   runner.summary();

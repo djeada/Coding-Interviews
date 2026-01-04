@@ -133,9 +133,8 @@ void test(TestRunner &runner, const std::string &testName,
   NumbersOccurringOnce simpleRes = simpleSolution(numbers);
   NumbersOccurringOnce optimalRes = optimalSolution(numbers);
 
-  bool condition =
-      matchesUnorderedPair(simpleRes, expected) &&
-      matchesUnorderedPair(optimalRes, expected);
+  bool condition = matchesUnorderedPair(simpleRes, expected) &&
+                   matchesUnorderedPair(optimalRes, expected);
   runner.expectTrue(condition, testName);
 }
 

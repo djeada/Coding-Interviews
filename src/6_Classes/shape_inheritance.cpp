@@ -204,8 +204,7 @@ void testComposition(TestRunner &runner) {
   double rectangleArea = rectangleShape.area();
 
   runner.expectNear(circleArea, M_PI * 25, 1e-6, "composition circle area");
-  runner.expectNear(rectangleArea, 24.0, 1e-6,
-                    "composition rectangle area");
+  runner.expectNear(rectangleArea, 24.0, 1e-6, "composition rectangle area");
 }
 
 // ---------------- Test Runner ----------------

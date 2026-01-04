@@ -44,8 +44,8 @@
 #include "binary_tree.h"
 #include <functional>
 #include <iostream>
-#include <string>
 #include <stdexcept>
+#include <string>
 
 namespace {
 struct TestRunner {
@@ -63,8 +63,7 @@ struct TestRunner {
               << " got=" << got << "\n";
   }
 
-  void expectThrows(const std::function<void()> &fn,
-                    const std::string &label) {
+  void expectThrows(const std::function<void()> &fn, const std::string &label) {
     ++total;
     try {
       fn();
@@ -117,8 +116,7 @@ void runTests() {
     for (const auto &value : {20, 8, 22, 4, 12, 10, 14}) {
       tree.add(value);
     }
-    runner.expectEqual(tree.findLowestCommonAncestor(10, 14), 12,
-                       "LCA 10,14");
+    runner.expectEqual(tree.findLowestCommonAncestor(10, 14), 12, "LCA 10,14");
   }
 
   {
@@ -134,8 +132,7 @@ void runTests() {
     for (const auto &value : {20, 8, 22, 4, 12, 10, 14}) {
       tree.add(value);
     }
-    runner.expectEqual(tree.findLowestCommonAncestor(10, 22), 20,
-                       "LCA 10,22");
+    runner.expectEqual(tree.findLowestCommonAncestor(10, 22), 20, "LCA 10,22");
   }
 
   {

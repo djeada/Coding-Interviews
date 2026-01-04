@@ -101,14 +101,12 @@ void test() {
   TestRunner runner;
   runner.expectEqual(optimalSolution("kitten", "kitten"), 0,
                      "optimal kitten->kitten");
-  runner.expectEqual(optimalSolution("bob", "bub"), 1,
-                     "optimal bob->bub");
+  runner.expectEqual(optimalSolution("bob", "bub"), 1, "optimal bob->bub");
   runner.expectEqual(optimalSolution("ROBOT", "robot"), 5,
                      "optimal ROBOT->robot");
   runner.expectEqual(optimalSolution("church", "ChUrCh"), 3,
                      "optimal church->ChUrCh");
-  runner.expectEqual(optimalSolution("flaw", "lawn"), 2,
-                     "optimal flaw->lawn");
+  runner.expectEqual(optimalSolution("flaw", "lawn"), 2, "optimal flaw->lawn");
 
   // Testing simple solution on smaller inputs due to complexity
   runner.expectEqual(simpleSolution("abc", "yabd", 3, 4), 2,

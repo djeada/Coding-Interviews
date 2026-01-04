@@ -109,8 +109,8 @@ void test() {
     int simple = simpleSolution(test.N, test.allowedSteps);
     int optimal = optimalSolution(test.N, test.allowedSteps);
 
-    runner.expectEqual(simple, optimal, "simple == optimal for N=" +
-                                        std::to_string(test.N));
+    runner.expectEqual(simple, optimal,
+                       "simple == optimal for N=" + std::to_string(test.N));
     runner.expectEqual(optimal, test.expected,
                        "expected ways for N=" + std::to_string(test.N));
 

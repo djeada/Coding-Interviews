@@ -191,8 +191,7 @@ void test() {
   TestRunner runner;
   {
     std::vector<std::string> matrix = {"ABCE", "SFCS", "ADEE"};
-    runner.expectEqual(simpleSolution(matrix, "ABCCED"), true,
-                       "simple ABCCED");
+    runner.expectEqual(simpleSolution(matrix, "ABCCED"), true, "simple ABCCED");
     runner.expectEqual(optimalSolution(matrix, "ABCCED"), true,
                        "optimal ABCCED");
     runner.expectEqual(alternativeSolution(matrix, "ABCCED"), true,

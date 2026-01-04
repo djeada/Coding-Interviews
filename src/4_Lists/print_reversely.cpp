@@ -53,8 +53,7 @@ struct TestRunner {
   int failed = 0;
 
   void expectEqual(const std::vector<int> &got,
-                   const std::vector<int> &expected,
-                   const std::string &label) {
+                   const std::vector<int> &expected, const std::string &label) {
     ++total;
     if (got == expected) {
       std::cout << "[PASS] " << label << "\n";

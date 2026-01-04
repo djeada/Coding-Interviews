@@ -126,8 +126,7 @@ int main() {
           tree.add(val);
         return tree;
       }(),
-      7,
-      "largest BST full");
+      7, "largest BST full");
 
   testTreeWithSubtree(
       runner,
@@ -137,8 +136,7 @@ int main() {
           tree.add(val);
         return tree;
       }(),
-      6,
-      "largest BST case 2");
+      6, "largest BST case 2");
 
   testTreeWithSubtree(
       runner,
@@ -148,8 +146,7 @@ int main() {
           tree.add(val);
         return tree;
       }(),
-      6,
-      "largest BST case 3");
+      6, "largest BST case 3");
 
   testTreeWithSubtree(
       runner,
@@ -159,8 +156,7 @@ int main() {
           tree.add(val);
         return tree;
       }(),
-      5,
-      "largest BST skewed");
+      5, "largest BST skewed");
   runner.summary();
 
   return 0;

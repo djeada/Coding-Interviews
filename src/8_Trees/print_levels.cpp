@@ -40,8 +40,7 @@ struct TestRunner {
   int failed = 0;
 
   void expectEqual(const std::vector<int> &got,
-                   const std::vector<int> &expected,
-                   const std::string &label) {
+                   const std::vector<int> &expected, const std::string &label) {
     ++total;
     if (got == expected) {
       std::cout << "[PASS] " << label << "\n";
@@ -121,8 +120,7 @@ int main() {
   }
 
   runner.expectEqual(tree.collectLevelOrder(),
-                     std::vector<int>{10, 5, 12, 11, 16},
-                     "level order");
+                     std::vector<int>{10, 5, 12, 11, 16}, "level order");
   runner.summary();
   tree.print();
 
