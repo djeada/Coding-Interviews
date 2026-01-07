@@ -38,6 +38,25 @@
 #include <iostream>
 #include <string>
 
+// TreeWithDepth extends BinaryTree with a method to compute the tree's depth.
+class TreeWithDepth : public BinaryTree {
+public:
+  TreeWithDepth() : BinaryTree() {}
+
+  // Public method to get the depth of the tree.
+  unsigned int depth() const { return _depth(root.get()); }
+
+private:
+  // Private recursive helper function that computes the depth.
+  unsigned int _depth(const Node *node) const {
+    if (!node)
+      return 0;
+    unsigned int left = _depth(node->left.get());
+    unsigned int right = _depth(node->right.get());
+    return std::max(left, right) + 1;
+  }
+};
+
 namespace {
 struct TestRunner {
   int total = 0;
@@ -61,25 +80,6 @@ struct TestRunner {
   }
 };
 } // namespace
-
-// TreeWithDepth extends BinaryTree with a method to compute the tree's depth.
-class TreeWithDepth : public BinaryTree {
-public:
-  TreeWithDepth() : BinaryTree() {}
-
-  // Public method to get the depth of the tree.
-  unsigned int depth() const { return _depth(root.get()); }
-
-private:
-  // Private recursive helper function that computes the depth.
-  unsigned int _depth(const Node *node) const {
-    if (!node)
-      return 0;
-    unsigned int left = _depth(node->left.get());
-    unsigned int right = _depth(node->right.get());
-    return std::max(left, right) + 1;
-  }
-};
 
 // Test function to verify that the computed depth matches the expected depth.
 void testTreeWithDepth(TestRunner &runner, const TreeWithDepth &tree,

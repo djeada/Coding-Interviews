@@ -41,29 +41,6 @@
 #include <iostream>
 #include <string>
 
-namespace {
-struct TestRunner {
-  int total = 0;
-  int failed = 0;
-
-  void expectEqual(bool got, bool expected, const std::string &label) {
-    ++total;
-    if (got == expected) {
-      std::cout << "[PASS] " << label << "\n";
-      return;
-    }
-    ++failed;
-    std::cout << "[FAIL] " << label << " expected=" << std::boolalpha
-              << expected << " got=" << got << "\n";
-  }
-
-  void summary() const {
-    std::cout << "Tests: " << total - failed << " passed, " << failed
-              << " failed, " << total << " total\n";
-  }
-};
-} // namespace
-
 // TreeWithBalanceCheck extends the assumed BinaryTree from "binary_tree.h" with
 // balance-checking methods.
 class TreeWithBalanceCheck : public BinaryTree {
@@ -114,6 +91,29 @@ private:
     return true;
   }
 };
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(bool got, bool expected, const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << std::boolalpha
+              << expected << " got=" << got << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 // Test cases to ensure both implementations produce the same results.
 void test() {

@@ -46,28 +46,6 @@
 #include <memory>
 #include <string>
 
-namespace {
-struct TestRunner {
-  int total = 0;
-  int failed = 0;
-
-  void expectTrue(bool condition, const std::string &label) {
-    ++total;
-    if (condition) {
-      std::cout << "[PASS] " << label << "\n";
-      return;
-    }
-    ++failed;
-    std::cout << "[FAIL] " << label << " expected=true got=false\n";
-  }
-
-  void summary() const {
-    std::cout << "Tests: " << total - failed << " passed, " << failed
-              << " failed, " << total << " total\n";
-  }
-};
-} // namespace
-
 // ------------------- Diamond Inheritance with Virtual Inheritance
 // -------------------
 
@@ -128,6 +106,28 @@ public:
 private:
   int extraValue;
 };
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectTrue(bool condition, const std::string &label) {
+    ++total;
+    if (condition) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=true got=false\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 void testDiamondInheritance(TestRunner &runner) {
   FinalDerived fd;

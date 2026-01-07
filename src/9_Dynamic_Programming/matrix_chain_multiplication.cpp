@@ -49,29 +49,6 @@
 #include <string>
 #include <vector>
 
-namespace {
-struct TestRunner {
-  int total = 0;
-  int failed = 0;
-
-  void expectEqual(int got, int expected, const std::string &label) {
-    ++total;
-    if (got == expected) {
-      std::cout << "[PASS] " << label << "\n";
-      return;
-    }
-    ++failed;
-    std::cout << "[FAIL] " << label << " expected=" << expected
-              << " got=" << got << "\n";
-  }
-
-  void summary() const {
-    std::cout << "Tests: " << total - failed << " passed, " << failed
-              << " failed, " << total << " total\n";
-  }
-};
-} // namespace
-
 // ----------------------- Simple (Brute-force) Recursive Solution
 // -----------------------
 int matrixChainOrderRecursive(const std::vector<int> &dims, int i, int j) {
@@ -140,6 +117,29 @@ int alternativeSolution(const std::vector<int> &dims) {
   std::vector<std::vector<int>> memo(n + 1, std::vector<int>(n + 1, -1));
   return matrixChainOrderMemo(dims, 1, n, memo);
 }
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(int got, int expected, const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << expected
+              << " got=" << got << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 // ----------------------- Test cases for correctness -----------------------
 void test() {

@@ -34,29 +34,6 @@
 #include <string>
 #include <vector>
 
-namespace {
-struct TestRunner {
-  int total = 0;
-  int failed = 0;
-
-  void expectEqual(bool got, bool expected, const std::string &label) {
-    ++total;
-    if (got == expected) {
-      std::cout << "[PASS] " << label << "\n";
-      return;
-    }
-    ++failed;
-    std::cout << "[FAIL] " << label << " expected=" << std::boolalpha
-              << expected << " got=" << got << "\n";
-  }
-
-  void summary() const {
-    std::cout << "Tests: " << total - failed << " passed, " << failed
-              << " failed, " << total << " total\n";
-  }
-};
-} // namespace
-
 // ----------------------- Simple (Brute-force) Solution -----------------------
 bool isMagicSquareSimple(const std::vector<std::vector<int>> &matrix) {
   int n = matrix.size();
@@ -193,6 +170,29 @@ bool isMagicSquareAlternative(const std::vector<std::vector<int>> &matrix) {
 
   return true;
 }
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(bool got, bool expected, const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << std::boolalpha
+              << expected << " got=" << got << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 // ----------------------- Test cases for correctness -----------------------
 void test() {

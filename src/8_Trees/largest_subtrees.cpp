@@ -41,29 +41,6 @@
 #include <limits>
 #include <string>
 
-namespace {
-struct TestRunner {
-  int total = 0;
-  int failed = 0;
-
-  void expectEqual(int got, int expected, const std::string &label) {
-    ++total;
-    if (got == expected) {
-      std::cout << "[PASS] " << label << "\n";
-      return;
-    }
-    ++failed;
-    std::cout << "[FAIL] " << label << " expected=" << expected
-              << " got=" << got << "\n";
-  }
-
-  void summary() const {
-    std::cout << "Tests: " << total - failed << " passed, " << failed
-              << " failed, " << total << " total\n";
-  }
-};
-} // namespace
-
 class TreeWithSubtree : public BinaryTree {
 public:
   TreeWithSubtree() : BinaryTree() {}
@@ -104,6 +81,29 @@ private:
     return false;
   }
 };
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(int got, int expected, const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << expected
+              << " got=" << got << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 // Test function to ensure that the computed largest BST subtree size matches
 // the expected size.

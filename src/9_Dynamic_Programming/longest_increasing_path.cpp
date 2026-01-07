@@ -56,29 +56,6 @@
 #include <string>
 #include <vector>
 
-namespace {
-struct TestRunner {
-  int total = 0;
-  int failed = 0;
-
-  void expectEqual(int got, int expected, const std::string &label) {
-    ++total;
-    if (got == expected) {
-      std::cout << "[PASS] " << label << "\n";
-      return;
-    }
-    ++failed;
-    std::cout << "[FAIL] " << label << " expected=" << expected
-              << " got=" << got << "\n";
-  }
-
-  void summary() const {
-    std::cout << "Tests: " << total - failed << " passed, " << failed
-              << " failed, " << total << " total\n";
-  }
-};
-} // namespace
-
 // ----------------------- Simple (Brute-force DFS) Solution
 // -----------------------
 int dfsSimple(const std::vector<std::vector<int>> &matrix, int i, int j,
@@ -182,6 +159,29 @@ int alternativeSolution(const std::vector<std::vector<int>> &matrix) {
   }
   return level;
 }
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(int got, int expected, const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << expected
+              << " got=" << got << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 // ----------------------- Test cases for correctness -----------------------
 void test() {

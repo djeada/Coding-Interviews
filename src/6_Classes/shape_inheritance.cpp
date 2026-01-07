@@ -61,30 +61,6 @@
 #include <memory>
 #include <string>
 
-namespace {
-struct TestRunner {
-  int total = 0;
-  int failed = 0;
-
-  void expectNear(double got, double expected, double tol,
-                  const std::string &label) {
-    ++total;
-    if (std::abs(got - expected) <= tol) {
-      std::cout << "[PASS] " << label << "\n";
-      return;
-    }
-    ++failed;
-    std::cout << "[FAIL] " << label << " expected=" << expected
-              << " got=" << got << "\n";
-  }
-
-  void summary() const {
-    std::cout << "Tests: " << total - failed << " passed, " << failed
-              << " failed, " << total << " total\n";
-  }
-};
-} // namespace
-
 // --------------------- Simple (Runtime Polymorphism) Solution
 // ---------------------
 class Shape {
@@ -194,6 +170,30 @@ public:
 private:
   std::unique_ptr<AreaStrategy> strategy_;
 };
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectNear(double got, double expected, double tol,
+                  const std::string &label) {
+    ++total;
+    if (std::abs(got - expected) <= tol) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << expected
+              << " got=" << got << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 void testComposition(TestRunner &runner) {
   ShapeComposition circleShape(std::make_unique<CircleAreaStrategy>(5.0));

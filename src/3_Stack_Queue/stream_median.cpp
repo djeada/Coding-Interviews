@@ -47,37 +47,6 @@
 #include <string>
 #include <vector>
 
-namespace {
-struct TestRunner {
-  int total = 0;
-  int failed = 0;
-
-  void expectNear(double got, double expected, double tol,
-                  const std::string &label) {
-    ++total;
-    if (std::fabs(got - expected) <= tol) {
-      std::cout << "[PASS] " << label << "\n";
-      return;
-    }
-    ++failed;
-    std::cout << "[FAIL] " << label << " expected=" << toString(expected)
-              << " got=" << toString(got) << "\n";
-  }
-
-  void summary() const {
-    std::cout << "Tests: " << total - failed << " passed, " << failed
-              << " failed, " << total << " total\n";
-  }
-
-private:
-  static std::string toString(double value) {
-    std::ostringstream oss;
-    oss << std::fixed << std::setprecision(6) << value;
-    return oss.str();
-  }
-};
-} // namespace
-
 // Simple (Brute-force) Solution
 // Stores numbers in a vector and sorts on each insertion.
 // Complexity: O(n log n) per insertion.
@@ -181,6 +150,37 @@ private:
   std::multiset<double> data;
   std::multiset<double>::iterator medianIt = data.end();
 };
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectNear(double got, double expected, double tol,
+                  const std::string &label) {
+    ++total;
+    if (std::fabs(got - expected) <= tol) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << toString(expected)
+              << " got=" << toString(got) << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+
+private:
+  static std::string toString(double value) {
+    std::ostringstream oss;
+    oss << std::fixed << std::setprecision(6) << value;
+    return oss.str();
+  }
+};
+} // namespace
 
 // Test cases for correctness
 void test() {

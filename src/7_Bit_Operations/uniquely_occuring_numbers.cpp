@@ -35,28 +35,6 @@
 #include <unordered_map>
 #include <vector>
 
-namespace {
-struct TestRunner {
-  int total = 0;
-  int failed = 0;
-
-  void expectTrue(bool condition, const std::string &label) {
-    ++total;
-    if (condition) {
-      std::cout << "[PASS] " << label << "\n";
-      return;
-    }
-    ++failed;
-    std::cout << "[FAIL] " << label << " expected=true got=false\n";
-  }
-
-  void summary() const {
-    std::cout << "Tests: " << total - failed << " passed, " << failed
-              << " failed, " << total << " total\n";
-  }
-};
-} // namespace
-
 // Structure to store two numbers that occur only once in an array.
 struct NumbersOccurringOnce {
   int num1;
@@ -119,6 +97,28 @@ NumbersOccurringOnce optimalSolution(const std::vector<int> &numbers) {
   }
   return result;
 }
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectTrue(bool condition, const std::string &label) {
+    ++total;
+    if (condition) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=true got=false\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 // Test cases for correctness
 bool matchesUnorderedPair(const NumbersOccurringOnce &got,

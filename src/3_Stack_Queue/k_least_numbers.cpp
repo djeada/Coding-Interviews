@@ -39,8 +39,10 @@
 // 1) Full Sort
 // Time:  O(n log n)
 // Space: O(n)
-std::vector<int> findSmallestKNumbersSort(const std::vector<int>& input, int k) {
-  if (k <= 0) return {};
+std::vector<int> findSmallestKNumbersSort(const std::vector<int> &input,
+                                          int k) {
+  if (k <= 0)
+    return {};
 
   std::vector<int> result = input;
   std::sort(result.begin(), result.end());
@@ -54,8 +56,10 @@ std::vector<int> findSmallestKNumbersSort(const std::vector<int>& input, int k) 
 // 2) Max Heap (size k)
 // Time:  O(n log k)
 // Space: O(k)
-std::vector<int> findSmallestKNumbersHeap(const std::vector<int>& input, int k) {
-  if (k <= 0) return {};
+std::vector<int> findSmallestKNumbersHeap(const std::vector<int> &input,
+                                          int k) {
+  if (k <= 0)
+    return {};
   if (k >= static_cast<int>(input.size())) {
     std::vector<int> result = input;
     std::sort(result.begin(), result.end());
@@ -84,9 +88,10 @@ std::vector<int> findSmallestKNumbersHeap(const std::vector<int>& input, int k) 
 // 3) nth_element
 // Avg Time: O(n), Worst: O(n^2)
 // Space:    O(n)
-std::vector<int> findSmallestKNumbersNthElement(const std::vector<int>& input,
+std::vector<int> findSmallestKNumbersNthElement(const std::vector<int> &input,
                                                 int k) {
-  if (k <= 0) return {};
+  if (k <= 0)
+    return {};
   if (k >= static_cast<int>(input.size())) {
     std::vector<int> result = input;
     std::sort(result.begin(), result.end());

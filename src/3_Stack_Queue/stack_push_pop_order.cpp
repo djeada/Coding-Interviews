@@ -8,11 +8,11 @@
  *
  * ASCII Illustration:
  *
- *     Push Order:  1  2  3  4  5
- *                    |  |  |  |  |
- *                   [Stack Simulation]
- *                    |  |  |  |  |
- *     Example Valid Pop Order: 4 5 3 2 1
+ *     Push Order:              1  2  3  4  5
+ *                              |  |  |  |  |
+ *                             [Stack Simulation]
+ *                              |   |  |  |  |
+ *     Example Valid Pop Order: 4   5  3  2  1
  *
  * Example:
  *   Push Order: [1, 2, 3, 4, 5]
@@ -30,29 +30,6 @@
 #include <stack>
 #include <string>
 #include <vector>
-
-namespace {
-struct TestRunner {
-  int total = 0;
-  int failed = 0;
-
-  void expectEqual(bool got, bool expected, const std::string &label) {
-    ++total;
-    if (got == expected) {
-      std::cout << "[PASS] " << label << "\n";
-      return;
-    }
-    ++failed;
-    std::cout << "[FAIL] " << label << " expected=" << std::boolalpha
-              << expected << " got=" << got << "\n";
-  }
-
-  void summary() const {
-    std::cout << "Tests: " << total - failed << " passed, " << failed
-              << " failed, " << total << " total\n";
-  }
-};
-} // namespace
 
 // Simulation Solution: Efficient O(n) approach.
 bool isValidPopOrderSimulation(const std::vector<int> &push_order,
@@ -129,6 +106,29 @@ bool isValidPopOrderRecursive(const std::vector<int> &push_order,
   }
   return false;
 }
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(bool got, bool expected, const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << std::boolalpha
+              << expected << " got=" << got << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 // Test cases to verify both solutions.
 void test() {

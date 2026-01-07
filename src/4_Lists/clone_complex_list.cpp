@@ -41,28 +41,6 @@
 #include <string>
 #include <unordered_map>
 
-namespace {
-struct TestRunner {
-  int total = 0;
-  int failed = 0;
-
-  void expectTrue(bool condition, const std::string &label) {
-    ++total;
-    if (condition) {
-      std::cout << "[PASS] " << label << "\n";
-      return;
-    }
-    ++failed;
-    std::cout << "[FAIL] " << label << " expected=true got=false\n";
-  }
-
-  void summary() const {
-    std::cout << "Tests: " << total - failed << " passed, " << failed
-              << " failed, " << total << " total\n";
-  }
-};
-} // namespace
-
 // ComplexList inherits from List (defined in list.h) and adds a sibling pointer
 // to each node.
 class ComplexList : public List {
@@ -165,6 +143,28 @@ public:
     return node1 == node2;
   }
 };
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectTrue(bool condition, const std::string &label) {
+    ++total;
+    if (condition) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=true got=false\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 // ----- Test Cases -----
 

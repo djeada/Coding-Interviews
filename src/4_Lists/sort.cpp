@@ -4,43 +4,6 @@
 #include <sstream>
 #include <string>
 
-namespace {
-struct TestRunner {
-  int total = 0;
-  int failed = 0;
-
-  void expectEqual(const List &got, const List &expected,
-                   const std::string &label) {
-    ++total;
-    if (got == expected) {
-      std::cout << "[PASS] " << label << "\n";
-      return;
-    }
-    ++failed;
-    std::cout << "[FAIL] " << label << " expected=" << listToString(expected)
-              << " got=" << listToString(got) << "\n";
-  }
-
-  void summary() const {
-    std::cout << "Tests: " << total - failed << " passed, " << failed
-              << " failed, " << total << " total\n";
-  }
-
-private:
-  static std::string listToString(const List &list) {
-    std::ostringstream oss;
-    oss << "{";
-    for (unsigned int i = 0; i < list.size(); ++i) {
-      if (i > 0)
-        oss << ", ";
-      oss << list.get(i);
-    }
-    oss << "}";
-    return oss.str();
-  }
-};
-} // namespace
-
 class ListWithSorting : public List {
 public:
   ListWithSorting() : List() {}
@@ -93,6 +56,43 @@ public:
     head = std::move(dummy->next);
   }
 };
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(const List &got, const List &expected,
+                   const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << listToString(expected)
+              << " got=" << listToString(got) << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+
+private:
+  static std::string listToString(const List &list) {
+    std::ostringstream oss;
+    oss << "{";
+    for (unsigned int i = 0; i < list.size(); ++i) {
+      if (i > 0)
+        oss << ", ";
+      oss << list.get(i);
+    }
+    oss << "}";
+    return oss.str();
+  }
+};
+} // namespace
 
 void test1(TestRunner &runner) {
   ListWithSorting list;

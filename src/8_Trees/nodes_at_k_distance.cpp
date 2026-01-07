@@ -38,6 +38,37 @@
 #include <string>
 #include <vector>
 
+class TreeWithKDistanceNodes : public BinaryTree {
+public:
+  TreeWithKDistanceNodes() : BinaryTree() {}
+
+  // Returns a vector containing the values of all nodes at distance k from the
+  // root.
+  std::vector<int> findNodesAtDistance(unsigned int k) const {
+    std::vector<int> result;
+    findNodesAtDistanceFromNode(root.get(), k, result);
+    return result;
+  }
+
+private:
+  // Recursive helper function to collect nodes at a given distance from the
+  // current node.
+  void findNodesAtDistanceFromNode(const Node *node, int distance,
+                                   std::vector<int> &result) const {
+    if (!node || distance < 0) {
+      return;
+    }
+
+    if (distance == 0) {
+      result.push_back(node->value);
+      return;
+    }
+
+    findNodesAtDistanceFromNode(node->left.get(), distance - 1, result);
+    findNodesAtDistanceFromNode(node->right.get(), distance - 1, result);
+  }
+};
+
 namespace {
 struct TestRunner {
   int total = 0;
@@ -74,37 +105,6 @@ private:
   }
 };
 } // namespace
-
-class TreeWithKDistanceNodes : public BinaryTree {
-public:
-  TreeWithKDistanceNodes() : BinaryTree() {}
-
-  // Returns a vector containing the values of all nodes at distance k from the
-  // root.
-  std::vector<int> findNodesAtDistance(unsigned int k) const {
-    std::vector<int> result;
-    findNodesAtDistanceFromNode(root.get(), k, result);
-    return result;
-  }
-
-private:
-  // Recursive helper function to collect nodes at a given distance from the
-  // current node.
-  void findNodesAtDistanceFromNode(const Node *node, int distance,
-                                   std::vector<int> &result) const {
-    if (!node || distance < 0) {
-      return;
-    }
-
-    if (distance == 0) {
-      result.push_back(node->value);
-      return;
-    }
-
-    findNodesAtDistanceFromNode(node->left.get(), distance - 1, result);
-    findNodesAtDistanceFromNode(node->right.get(), distance - 1, result);
-  }
-};
 
 void runTests() {
   TestRunner runner;

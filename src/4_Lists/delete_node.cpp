@@ -32,6 +32,33 @@
 #include <sstream>
 #include <string>
 
+class ListWithDeletion : public List {
+public:
+  // Remove the first occurrence of the node containing the specified value.
+  void remove(int value) {
+    Node *prev = nullptr;
+    auto current = head.get();
+
+    // Traverse the list until the target value is found.
+    while (current && current->data != value) {
+      prev = current;
+      current = current->next.get();
+    }
+
+    // If the node with the target value is found, remove it.
+    if (current && current->data == value) {
+      if (prev) {
+        // Node is not the head: update previous node's next pointer.
+        prev->next = std::move(current->next);
+      } else {
+        // Node is the head: update the head pointer.
+        head = std::move(current->next);
+      }
+      --count;
+    }
+  }
+};
+
 namespace {
 struct TestRunner {
   int total = 0;
@@ -68,33 +95,6 @@ private:
   }
 };
 } // namespace
-
-class ListWithDeletion : public List {
-public:
-  // Remove the first occurrence of the node containing the specified value.
-  void remove(int value) {
-    Node *prev = nullptr;
-    auto current = head.get();
-
-    // Traverse the list until the target value is found.
-    while (current && current->data != value) {
-      prev = current;
-      current = current->next.get();
-    }
-
-    // If the node with the target value is found, remove it.
-    if (current && current->data == value) {
-      if (prev) {
-        // Node is not the head: update previous node's next pointer.
-        prev->next = std::move(current->next);
-      } else {
-        // Node is the head: update the head pointer.
-        head = std::move(current->next);
-      }
-      --count;
-    }
-  }
-};
 
 // ------------------- Test Cases -------------------
 

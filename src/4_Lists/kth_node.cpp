@@ -43,42 +43,6 @@
 #include <string>
 #include <vector>
 
-namespace {
-struct TestRunner {
-  int total = 0;
-  int failed = 0;
-
-  void expectEqual(int got, int expected, const std::string &label) {
-    ++total;
-    if (got == expected) {
-      std::cout << "[PASS] " << label << "\n";
-      return;
-    }
-    ++failed;
-    std::cout << "[FAIL] " << label << " expected=" << expected
-              << " got=" << got << "\n";
-  }
-
-  void expectThrows(const std::function<void()> &fn, const std::string &label) {
-    ++total;
-    try {
-      fn();
-      ++failed;
-      std::cout << "[FAIL] " << label << " expected=throw got=no throw\n";
-    } catch (const std::exception &ex) {
-      std::cout << "[PASS] " << label << " threw=\"" << ex.what() << "\"\n";
-    } catch (...) {
-      std::cout << "[PASS] " << label << " threw=non-std exception\n";
-    }
-  }
-
-  void summary() const {
-    std::cout << "Tests: " << total - failed << " passed, " << failed
-              << " failed, " << total << " total\n";
-  }
-};
-} // namespace
-
 // Inherits from the pre-defined List class.
 class ListWithFind : public List {
 public:
@@ -136,6 +100,42 @@ public:
     return result;
   }
 };
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(int got, int expected, const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << expected
+              << " got=" << got << "\n";
+  }
+
+  void expectThrows(const std::function<void()> &fn, const std::string &label) {
+    ++total;
+    try {
+      fn();
+      ++failed;
+      std::cout << "[FAIL] " << label << " expected=throw got=no throw\n";
+    } catch (const std::exception &ex) {
+      std::cout << "[PASS] " << label << " threw=\"" << ex.what() << "\"\n";
+    } catch (...) {
+      std::cout << "[PASS] " << label << " threw=non-std exception\n";
+    }
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 // ---------------- Test Cases ----------------
 void test1(TestRunner &runner) {

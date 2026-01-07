@@ -36,6 +36,28 @@
 #include <sstream>
 #include <string>
 
+class ListWithReversion : public List {
+public:
+  ListWithReversion() : List() {}
+
+  // Reverse the list by re-linking the unique_ptr nodes.
+  void reverse() {
+    std::unique_ptr<Node> new_head = nullptr;
+    // Process nodes until the original list is empty.
+    while (head) {
+      // Detach the current head.
+      auto temp = std::move(head->next);
+      // Insert the detached node at the front of the new list.
+      head->next = std::move(new_head);
+      new_head = std::move(head);
+      // Continue with the remainder of the list.
+      head = std::move(temp);
+    }
+    // Update head to the new reversed list.
+    head = std::move(new_head);
+  }
+};
+
 namespace {
 struct TestRunner {
   int total = 0;
@@ -72,28 +94,6 @@ private:
   }
 };
 } // namespace
-
-class ListWithReversion : public List {
-public:
-  ListWithReversion() : List() {}
-
-  // Reverse the list by re-linking the unique_ptr nodes.
-  void reverse() {
-    std::unique_ptr<Node> new_head = nullptr;
-    // Process nodes until the original list is empty.
-    while (head) {
-      // Detach the current head.
-      auto temp = std::move(head->next);
-      // Insert the detached node at the front of the new list.
-      head->next = std::move(new_head);
-      new_head = std::move(head);
-      // Continue with the remainder of the list.
-      head = std::move(temp);
-    }
-    // Update head to the new reversed list.
-    head = std::move(new_head);
-  }
-};
 
 // ------------------- Test Cases -------------------
 

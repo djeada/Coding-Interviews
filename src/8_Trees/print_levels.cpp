@@ -34,43 +34,6 @@
 #include <string>
 #include <vector>
 
-namespace {
-struct TestRunner {
-  int total = 0;
-  int failed = 0;
-
-  void expectEqual(const std::vector<int> &got,
-                   const std::vector<int> &expected, const std::string &label) {
-    ++total;
-    if (got == expected) {
-      std::cout << "[PASS] " << label << "\n";
-      return;
-    }
-    ++failed;
-    std::cout << "[FAIL] " << label << " expected=" << toString(expected)
-              << " got=" << toString(got) << "\n";
-  }
-
-  void summary() const {
-    std::cout << "Tests: " << total - failed << " passed, " << failed
-              << " failed, " << total << " total\n";
-  }
-
-private:
-  static std::string toString(const std::vector<int> &values) {
-    std::ostringstream oss;
-    oss << "{";
-    for (size_t i = 0; i < values.size(); ++i) {
-      if (i > 0)
-        oss << ", ";
-      oss << values[i];
-    }
-    oss << "}";
-    return oss.str();
-  }
-};
-} // namespace
-
 class TreeWithBreadthFirstPrint : public BinaryTree {
 public:
   TreeWithBreadthFirstPrint() : BinaryTree() {}
@@ -111,6 +74,43 @@ public:
     return result;
   }
 };
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(const std::vector<int> &got,
+                   const std::vector<int> &expected, const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << toString(expected)
+              << " got=" << toString(got) << "\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+
+private:
+  static std::string toString(const std::vector<int> &values) {
+    std::ostringstream oss;
+    oss << "{";
+    for (size_t i = 0; i < values.size(); ++i) {
+      if (i > 0)
+        oss << ", ";
+      oss << values[i];
+    }
+    oss << "}";
+    return oss.str();
+  }
+};
+} // namespace
 
 int main() {
   TestRunner runner;

@@ -38,6 +38,38 @@
 #include <iostream>
 #include <string>
 
+class Human {
+private:
+  int age;
+  std::string occupation;
+
+public:
+  std::string name;
+
+  Human(int humanAge, const std::string &humanName,
+        const std::string &humanOccupation)
+      : age(humanAge), name(humanName), occupation(humanOccupation) {}
+
+  void DoSomething() const {
+    std::cout << name << " of age " << age << " is doing something.\n";
+  }
+
+  void SetOccupation(const std::string &newOccupation) {
+    occupation = newOccupation;
+  }
+
+  void DisplayOccupation() const {
+    std::cout << name << " works as a " << occupation << ".\n";
+  }
+
+  int GetAge() const { return age; }
+  const std::string &GetOccupation() const { return occupation; }
+
+  static void DisplayAge(const Human &person) {
+    std::cout << person.name << " is " << person.age << " years old.\n";
+  }
+};
+
 namespace {
 struct TestRunner {
   int total = 0;
@@ -72,38 +104,6 @@ struct TestRunner {
   }
 };
 } // namespace
-
-class Human {
-private:
-  int age;
-  std::string occupation;
-
-public:
-  std::string name;
-
-  Human(int humanAge, const std::string &humanName,
-        const std::string &humanOccupation)
-      : age(humanAge), name(humanName), occupation(humanOccupation) {}
-
-  void DoSomething() const {
-    std::cout << name << " of age " << age << " is doing something.\n";
-  }
-
-  void SetOccupation(const std::string &newOccupation) {
-    occupation = newOccupation;
-  }
-
-  void DisplayOccupation() const {
-    std::cout << name << " works as a " << occupation << ".\n";
-  }
-
-  int GetAge() const { return age; }
-  const std::string &GetOccupation() const { return occupation; }
-
-  static void DisplayAge(const Human &person) {
-    std::cout << person.name << " is " << person.age << " years old.\n";
-  }
-};
 
 int main() {
   TestRunner runner;

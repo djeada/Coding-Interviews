@@ -33,6 +33,42 @@
 #include <string>
 #include <unordered_set>
 
+// UniqueList is derived from List and provides deletion of duplicate nodes.
+class UniqueList : public List {
+public:
+  UniqueList() : List() {}
+
+  // Delete duplicate nodes in the list.
+  void deleteDuplication() {
+    if (empty())
+      return;
+
+    std::unordered_set<int> visited;
+    Node *current = head.get();
+    Node *previous = nullptr;
+
+    while (current) {
+      if (visited.find(current->data) != visited.end()) {
+        // Duplicate found: remove the node.
+        if (!previous) {
+          // If current is at head (shouldn't happen after first unique value),
+          // update head.
+          head = std::move(current->next);
+          current = head.get();
+        } else {
+          previous->next = std::move(current->next);
+          current = previous->next.get();
+        }
+      } else {
+        // First occurrence: mark as visited and move forward.
+        visited.insert(current->data);
+        previous = current;
+        current = current->next.get();
+      }
+    }
+  }
+};
+
 namespace {
 struct TestRunner {
   int total = 0;
@@ -69,42 +105,6 @@ private:
   }
 };
 } // namespace
-
-// UniqueList is derived from List and provides deletion of duplicate nodes.
-class UniqueList : public List {
-public:
-  UniqueList() : List() {}
-
-  // Delete duplicate nodes in the list.
-  void deleteDuplication() {
-    if (empty())
-      return;
-
-    std::unordered_set<int> visited;
-    Node *current = head.get();
-    Node *previous = nullptr;
-
-    while (current) {
-      if (visited.find(current->data) != visited.end()) {
-        // Duplicate found: remove the node.
-        if (!previous) {
-          // If current is at head (shouldn't happen after first unique value),
-          // update head.
-          head = std::move(current->next);
-          current = head.get();
-        } else {
-          previous->next = std::move(current->next);
-          current = previous->next.get();
-        }
-      } else {
-        // First occurrence: mark as visited and move forward.
-        visited.insert(current->data);
-        previous = current;
-        current = current->next.get();
-      }
-    }
-  }
-};
 
 // ------------------- Test Cases -------------------
 

@@ -37,32 +37,6 @@
 #include <utility>
 #include <vector>
 
-namespace {
-struct TestRunner {
-  int total = 0;
-  int failed = 0;
-
-  void expectEqual(const std::pair<int, int> &got,
-                   const std::pair<int, int> &expected,
-                   const std::string &label) {
-    ++total;
-    if (got == expected) {
-      std::cout << "[PASS] " << label << "\n";
-      return;
-    }
-    ++failed;
-    std::cout << "[FAIL] " << label << " expected={" << expected.first << ", "
-              << expected.second << "} got={" << got.first << ", " << got.second
-              << "}\n";
-  }
-
-  void summary() const {
-    std::cout << "Tests: " << total - failed << " passed, " << failed
-              << " failed, " << total << " total\n";
-  }
-};
-} // namespace
-
 // Simple (Brute-force) Solution using Sum and Product
 std::pair<int, int> findMissingNumbersMethod1(const std::vector<int> &numbers) {
   std::pair<int, int> missing;
@@ -136,6 +110,32 @@ std::pair<int, int> findMissingNumbersMethod2(const std::vector<int> &numbers) {
     std::swap(missing.first, missing.second);
   return missing;
 }
+
+namespace {
+struct TestRunner {
+  int total = 0;
+  int failed = 0;
+
+  void expectEqual(const std::pair<int, int> &got,
+                   const std::pair<int, int> &expected,
+                   const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected={" << expected.first << ", "
+              << expected.second << "} got={" << got.first << ", " << got.second
+              << "}\n";
+  }
+
+  void summary() const {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  }
+};
+} // namespace
 
 // Test cases for correctness
 void test() {

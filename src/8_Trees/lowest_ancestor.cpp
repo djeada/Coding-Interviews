@@ -47,6 +47,31 @@
 #include <stdexcept>
 #include <string>
 
+class TreeWithLowestCommonAncestor : public BinaryTree {
+public:
+  TreeWithLowestCommonAncestor() : BinaryTree() {}
+
+  // Finds the lowest common ancestor (LCA) of two nodes with the given values.
+  int findLowestCommonAncestor(int value1, int value2) const {
+    if (!root || !contains(value1) || !contains(value2)) {
+      throw std::invalid_argument("Values are not present in the tree.");
+    }
+    return findLCA(root.get(), value1, value2);
+  }
+
+private:
+  // Recursive helper function that finds the LCA by leveraging BST properties.
+  int findLCA(const Node *node, int value1, int value2) const {
+    if (node->left && node->value > value1 && node->value > value2) {
+      return findLCA(node->left.get(), value1, value2);
+    }
+    if (node->right && node->value < value1 && node->value < value2) {
+      return findLCA(node->right.get(), value1, value2);
+    }
+    return node->value;
+  }
+};
+
 namespace {
 struct TestRunner {
   int total = 0;
@@ -82,31 +107,6 @@ struct TestRunner {
   }
 };
 } // namespace
-
-class TreeWithLowestCommonAncestor : public BinaryTree {
-public:
-  TreeWithLowestCommonAncestor() : BinaryTree() {}
-
-  // Finds the lowest common ancestor (LCA) of two nodes with the given values.
-  int findLowestCommonAncestor(int value1, int value2) const {
-    if (!root || !contains(value1) || !contains(value2)) {
-      throw std::invalid_argument("Values are not present in the tree.");
-    }
-    return findLCA(root.get(), value1, value2);
-  }
-
-private:
-  // Recursive helper function that finds the LCA by leveraging BST properties.
-  int findLCA(const Node *node, int value1, int value2) const {
-    if (node->left && node->value > value1 && node->value > value2) {
-      return findLCA(node->left.get(), value1, value2);
-    }
-    if (node->right && node->value < value1 && node->value < value2) {
-      return findLCA(node->right.get(), value1, value2);
-    }
-    return node->value;
-  }
-};
 
 // Test function to verify the correctness of the LCA implementation.
 void runTests() {
