@@ -87,18 +87,6 @@ private:
   double width, height;
 };
 
-void testRuntimePolymorphism(TestRunner &runner) {
-  std::unique_ptr<Shape> circle = std::make_unique<Circle>(5.0);
-  std::unique_ptr<Shape> rectangle = std::make_unique<Rectangle>(4.0, 6.0);
-
-  double circleArea = circle->area();
-  double rectangleArea = rectangle->area();
-
-  // Allow for small floating point error.
-  runner.expectNear(circleArea, M_PI * 25, 1e-6, "runtime circle area");
-  runner.expectNear(rectangleArea, 24.0, 1e-6, "runtime rectangle area");
-}
-
 // ---------------- Optimal (Compile-time Polymorphism using CRTP) Solution
 // ----------------
 template <typename Derived> class ShapeCRTP {
@@ -123,17 +111,6 @@ public:
 private:
   double width, height;
 };
-
-void testCompileTimePolymorphism(TestRunner &runner) {
-  CircleCRTP circle(5.0);
-  RectangleCRTP rectangle(4.0, 6.0);
-
-  double circleArea = circle.area();
-  double rectangleArea = rectangle.area();
-
-  runner.expectNear(circleArea, M_PI * 25, 1e-6, "crtp circle area");
-  runner.expectNear(rectangleArea, 24.0, 1e-6, "crtp rectangle area");
-}
 
 // ---------------- Alternative (Using Composition) Solution ----------------
 class AreaStrategy {
@@ -194,6 +171,29 @@ struct TestRunner {
   }
 };
 } // namespace
+
+void testRuntimePolymorphism(TestRunner &runner) {
+  std::unique_ptr<Shape> circle = std::make_unique<Circle>(5.0);
+  std::unique_ptr<Shape> rectangle = std::make_unique<Rectangle>(4.0, 6.0);
+
+  double circleArea = circle->area();
+  double rectangleArea = rectangle->area();
+
+  // Allow for small floating point error.
+  runner.expectNear(circleArea, M_PI * 25, 1e-6, "runtime circle area");
+  runner.expectNear(rectangleArea, 24.0, 1e-6, "runtime rectangle area");
+}
+
+void testCompileTimePolymorphism(TestRunner &runner) {
+  CircleCRTP circle(5.0);
+  RectangleCRTP rectangle(4.0, 6.0);
+
+  double circleArea = circle.area();
+  double rectangleArea = rectangle.area();
+
+  runner.expectNear(circleArea, M_PI * 25, 1e-6, "crtp circle area");
+  runner.expectNear(rectangleArea, 24.0, 1e-6, "crtp rectangle area");
+}
 
 void testComposition(TestRunner &runner) {
   ShapeComposition circleShape(std::make_unique<CircleAreaStrategy>(5.0));
