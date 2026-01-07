@@ -14,6 +14,10 @@
  *                   ^
  *              min_value (current minimum)
  *
+ * encoded value = 2 * value - min
+ * some data on the underlying stack will be "fake" / encoded
+ * when reading we need decode
+ *
  * Example Input/Output:
  *
  *   Sequence of operations:
@@ -38,54 +42,57 @@
 // Template class for a stack that tracks the minimum element in O(1) time.
 template <typename T> class StackWithMin {
 public:
-  StackWithMin() = default;
-  ~StackWithMin() = default;
-
-  void push(const T &value) {
-    if (data_.empty()) {
-      data_.push(value);
-      min_value_ = value;
-    } else if (value >= *min_value_) {
-      data_.push(value);
-    } else {
-      // Encode the new minimum value.
-      data_.push(2 * value - *min_value_);
-      min_value_ = value;
+  void push(T value) {
+    if (empty()) {
+      data.push(value);
+      _min = value;
+    }
+    else if (value < *_min) {
+      data.push(2 * value - *_min);
+      _min = value;
+    }
+    else {
+      data.push(value);
     }
   }
 
   void pop() {
-    if (data_.empty()) {
+    if (empty()) {
       return;
     }
-    T top_val = data_.top();
-    if (top_val < *min_value_) {
-      // Restore the previous minimum.
-      min_value_ = 2 * *min_value_ - top_val;
+    T front = data.top();
+    if (front < *_min) {
+      _min = 2 * *_min - front;
     }
-    data_.pop();
-    if (data_.empty()) {
-      min_value_.reset();
+    data.pop();
+    if (empty()) {
+      _min.reset();
     }
   }
 
-  std::optional<T> top() const {
-    if (data_.empty()) {
+  std::optional<T> top() {
+    if (empty()) {
       return std::nullopt;
     }
-    T top_val = data_.top();
-    return (top_val < *min_value_) ? *min_value_ : top_val;
+    T front = data.top();
+    return (front < *_min) ? _min : front;
   }
 
-  std::optional<T> min() const { return min_value_; }
+  std::optional<T> min() {
+    return _min;
+  }
 
-  bool empty() const { return data_.empty(); }
+  bool empty() {
+    return data.empty();
+  }
 
-  size_t size() const { return data_.size(); }
+  size_t size() {
+    return data.size();
+  }
 
 private:
-  std::stack<T> data_;
-  std::optional<T> min_value_;
+  std::stack<T> data;
+  std::optional<T> _min;
 };
 
 namespace {
@@ -291,6 +298,7 @@ void test() {
                          (expected <= 50 ? std::optional<int>(expected) : std::optional<int>{}),
                          "min after popping in long sequence tail");
     }
+    stack.pop();
 
     // After all popped, empty
     runner.expectEqual(stack.min(), std::optional<int>{}, "min empty at end of long sequence");
