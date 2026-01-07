@@ -46,12 +46,10 @@ public:
     if (empty()) {
       data.push(value);
       _min = value;
-    }
-    else if (value < *_min) {
+    } else if (value < *_min) {
       data.push(2 * value - *_min);
       _min = value;
-    }
-    else {
+    } else {
       data.push(value);
     }
   }
@@ -78,17 +76,11 @@ public:
     return (front < *_min) ? _min : front;
   }
 
-  std::optional<T> min() {
-    return _min;
-  }
+  std::optional<T> min() { return _min; }
 
-  bool empty() {
-    return data.empty();
-  }
+  bool empty() { return data.empty(); }
 
-  size_t size() {
-    return data.size();
-  }
+  size_t size() { return data.size(); }
 
 private:
   std::stack<T> data;
@@ -140,8 +132,10 @@ void test() {
 
     // If pop() is supposed to be safe on empty, this should not crash.
     stack.pop();
-    runner.expectEqual(stack.min(), std::optional<int>{}, "min still empty after pop on empty");
-    runner.expectEqual(stack.top(), std::optional<int>{}, "top still empty after pop on empty");
+    runner.expectEqual(stack.min(), std::optional<int>{},
+                       "min still empty after pop on empty");
+    runner.expectEqual(stack.top(), std::optional<int>{},
+                       "top still empty after pop on empty");
   }
 
   // 2) Basic push/pop + popping all the way to empty
@@ -158,12 +152,16 @@ void test() {
     runner.expectEqual(stack.top(), std::optional<int>(5), "top after pop");
 
     stack.pop(); // removes 5
-    runner.expectEqual(stack.min(), std::optional<int>(10), "min after pop to single");
-    runner.expectEqual(stack.top(), std::optional<int>(10), "top after pop to single");
+    runner.expectEqual(stack.min(), std::optional<int>(10),
+                       "min after pop to single");
+    runner.expectEqual(stack.top(), std::optional<int>(10),
+                       "top after pop to single");
 
     stack.pop(); // removes 10 -> empty
-    runner.expectEqual(stack.min(), std::optional<int>{}, "min after popping to empty");
-    runner.expectEqual(stack.top(), std::optional<int>{}, "top after popping to empty");
+    runner.expectEqual(stack.min(), std::optional<int>{},
+                       "min after popping to empty");
+    runner.expectEqual(stack.top(), std::optional<int>{},
+                       "top after popping to empty");
   }
 
   // 3) Negative values + restore
@@ -172,7 +170,8 @@ void test() {
     stack.push(-1);
     stack.push(7);
     stack.push(-2);
-    runner.expectEqual(stack.min(), std::optional<int>(-2), "min with negative");
+    runner.expectEqual(stack.min(), std::optional<int>(-2),
+                       "min with negative");
 
     stack.pop();
     runner.expectEqual(stack.min(), std::optional<int>(-1), "min restored");
@@ -187,20 +186,28 @@ void test() {
     stack.push(1);
     stack.push(2);
 
-    runner.expectEqual(stack.min(), std::optional<int>(1), "min with duplicates");
-    runner.expectEqual(stack.top(), std::optional<int>(2), "top with duplicates");
+    runner.expectEqual(stack.min(), std::optional<int>(1),
+                       "min with duplicates");
+    runner.expectEqual(stack.top(), std::optional<int>(2),
+                       "top with duplicates");
 
     stack.pop(); // pop 2
-    runner.expectEqual(stack.min(), std::optional<int>(1), "min after popping non-min");
-    runner.expectEqual(stack.top(), std::optional<int>(1), "top after popping non-min");
+    runner.expectEqual(stack.min(), std::optional<int>(1),
+                       "min after popping non-min");
+    runner.expectEqual(stack.top(), std::optional<int>(1),
+                       "top after popping non-min");
 
     stack.pop(); // pop 1 (still another 1 remains)
-    runner.expectEqual(stack.min(), std::optional<int>(1), "min remains after popping one duplicate min");
-    runner.expectEqual(stack.top(), std::optional<int>(1), "top now duplicate min");
+    runner.expectEqual(stack.min(), std::optional<int>(1),
+                       "min remains after popping one duplicate min");
+    runner.expectEqual(stack.top(), std::optional<int>(1),
+                       "top now duplicate min");
 
     stack.pop(); // pop last 1, min should restore to 3
-    runner.expectEqual(stack.min(), std::optional<int>(3), "min restores after all duplicate mins removed");
-    runner.expectEqual(stack.top(), std::optional<int>(3), "top restores after all duplicate mins removed");
+    runner.expectEqual(stack.min(), std::optional<int>(3),
+                       "min restores after all duplicate mins removed");
+    runner.expectEqual(stack.top(), std::optional<int>(3),
+                       "top restores after all duplicate mins removed");
   }
 
   // 5) All equal values
@@ -210,15 +217,20 @@ void test() {
     stack.push(4);
     stack.push(4);
 
-    runner.expectEqual(stack.min(), std::optional<int>(4), "min with all equal");
-    runner.expectEqual(stack.top(), std::optional<int>(4), "top with all equal");
+    runner.expectEqual(stack.min(), std::optional<int>(4),
+                       "min with all equal");
+    runner.expectEqual(stack.top(), std::optional<int>(4),
+                       "top with all equal");
 
     stack.pop();
-    runner.expectEqual(stack.min(), std::optional<int>(4), "min after pop with all equal");
+    runner.expectEqual(stack.min(), std::optional<int>(4),
+                       "min after pop with all equal");
     stack.pop();
-    runner.expectEqual(stack.min(), std::optional<int>(4), "min after second pop with all equal");
+    runner.expectEqual(stack.min(), std::optional<int>(4),
+                       "min after second pop with all equal");
     stack.pop();
-    runner.expectEqual(stack.min(), std::optional<int>{}, "min after popping all equal to empty");
+    runner.expectEqual(stack.min(), std::optional<int>{},
+                       "min after popping all equal to empty");
   }
 
   // 6) Monotonic increasing: min should stay first element until empty
@@ -229,34 +241,44 @@ void test() {
     stack.push(3);
     stack.push(4);
 
-    runner.expectEqual(stack.min(), std::optional<int>(1), "min in increasing sequence");
+    runner.expectEqual(stack.min(), std::optional<int>(1),
+                       "min in increasing sequence");
     stack.pop(); // 4
-    runner.expectEqual(stack.min(), std::optional<int>(1), "min after pop in increasing sequence");
+    runner.expectEqual(stack.min(), std::optional<int>(1),
+                       "min after pop in increasing sequence");
     stack.pop(); // 3
-    runner.expectEqual(stack.min(), std::optional<int>(1), "min after second pop in increasing sequence");
+    runner.expectEqual(stack.min(), std::optional<int>(1),
+                       "min after second pop in increasing sequence");
   }
 
   // 7) Monotonic decreasing: min updates each push, restores each pop
   {
     StackWithMin<int> stack;
     stack.push(4);
-    runner.expectEqual(stack.min(), std::optional<int>(4), "min after push 4 (decreasing)");
+    runner.expectEqual(stack.min(), std::optional<int>(4),
+                       "min after push 4 (decreasing)");
 
     stack.push(3);
-    runner.expectEqual(stack.min(), std::optional<int>(3), "min after push 3 (decreasing)");
+    runner.expectEqual(stack.min(), std::optional<int>(3),
+                       "min after push 3 (decreasing)");
 
     stack.push(2);
-    runner.expectEqual(stack.min(), std::optional<int>(2), "min after push 2 (decreasing)");
+    runner.expectEqual(stack.min(), std::optional<int>(2),
+                       "min after push 2 (decreasing)");
 
     stack.push(1);
-    runner.expectEqual(stack.min(), std::optional<int>(1), "min after push 1 (decreasing)");
+    runner.expectEqual(stack.min(), std::optional<int>(1),
+                       "min after push 1 (decreasing)");
 
     stack.pop(); // 1
-    runner.expectEqual(stack.min(), std::optional<int>(2), "min restores to 2 after popping 1");
+    runner.expectEqual(stack.min(), std::optional<int>(2),
+                       "min restores to 2 after popping 1");
     stack.pop(); // 2
-    runner.expectEqual(stack.min(), std::optional<int>(3), "min restores to 3 after popping 2");
+    runner.expectEqual(stack.min(), std::optional<int>(3),
+                       "min restores to 3 after popping 2");
     stack.pop(); // 3
-    runner.expectEqual(stack.min(), std::optional<int>(4), "min restores to 4 after popping 3");
+    runner.expectEqual(stack.min(), std::optional<int>(4),
+                       "min restores to 4 after popping 3");
   }
 
   // 8) Longer deterministic sequence: validate min after every push and pop
@@ -269,40 +291,48 @@ void test() {
     for (int i = 50; i >= 26; --i) {
       stack.push(i);
       expectedMin = std::min(expectedMin, i);
-      runner.expectEqual(stack.min(), std::optional<int>(expectedMin), "min after push in long sequence (part 1)");
+      runner.expectEqual(stack.min(), std::optional<int>(expectedMin),
+                         "min after push in long sequence (part 1)");
     }
 
     stack.push(0);
     expectedMin = 0;
-    runner.expectEqual(stack.min(), std::optional<int>(0), "min after pushing 0 in long sequence");
+    runner.expectEqual(stack.min(), std::optional<int>(0),
+                       "min after pushing 0 in long sequence");
 
     for (int i = 25; i >= 1; --i) {
       stack.push(i);
-      runner.expectEqual(stack.min(), std::optional<int>(0), "min stays 0 in long sequence (part 2)");
+      runner.expectEqual(stack.min(), std::optional<int>(0),
+                         "min stays 0 in long sequence (part 2)");
     }
 
     // Now pop everything above 0; min should stay 0 until 0 is popped.
     for (int i = 1; i <= 25; ++i) {
       stack.pop();
-      runner.expectEqual(stack.min(), std::optional<int>(0), "min stays 0 while popping down to 0");
+      runner.expectEqual(stack.min(), std::optional<int>(0),
+                         "min stays 0 while popping down to 0");
     }
 
     // Pop 0; min should restore to 26 (the smallest remaining from 26..50)
     stack.pop();
-    runner.expectEqual(stack.min(), std::optional<int>(26), "min restores after popping 0");
+    runner.expectEqual(stack.min(), std::optional<int>(26),
+                       "min restores after popping 0");
 
     // Pop remaining; min should climb upward as we remove 26,27,...
     for (int expected = 27; expected <= 50; ++expected) {
       stack.pop();
       runner.expectEqual(stack.min(),
-                         (expected <= 50 ? std::optional<int>(expected) : std::optional<int>{}),
+                         (expected <= 50 ? std::optional<int>(expected)
+                                         : std::optional<int>{}),
                          "min after popping in long sequence tail");
     }
     stack.pop();
 
     // After all popped, empty
-    runner.expectEqual(stack.min(), std::optional<int>{}, "min empty at end of long sequence");
-    runner.expectEqual(stack.top(), std::optional<int>{}, "top empty at end of long sequence");
+    runner.expectEqual(stack.min(), std::optional<int>{},
+                       "min empty at end of long sequence");
+    runner.expectEqual(stack.top(), std::optional<int>{},
+                       "top empty at end of long sequence");
   }
 
   runner.summary();
