@@ -48,8 +48,17 @@
 #include <vector>
 
 // Simple (Brute-force) Solution
-// Stores numbers in a vector and sorts on each insertion.
-// Complexity: O(n log n) per insertion.
+//
+// Stores all numbers in a vector and sorts it after each insertion.
+//
+// Time Complexity:
+// - insert(): O(n log n) due to sorting after every insertion.
+// - getMedian(): O(1).
+//
+// Space Complexity:
+// - O(n) to store all elements.
+//
+// This approach is simple but inefficient for large data streams.
 class SimpleMedianCalculator {
 public:
   void insert(double num) {
@@ -73,8 +82,19 @@ private:
 };
 
 // Optimal (Efficient) Solution
-// Uses two heaps: a max-heap for the lower half and a min-heap for the upper
-// half. Complexity: O(log n) per insertion, O(1) median retrieval.
+//
+// Uses two heaps:
+// - Max-heap for the lower half of numbers
+// - Min-heap for the upper half
+//
+// Time Complexity:
+// - insert(): O(log n) due to heap insertion and rebalancing.
+// - getMedian(): O(1).
+//
+// Space Complexity:
+// - O(n) to store all elements across both heaps.
+//
+// This is the optimal solution for maintaining the median of a data stream.
 class OptimalMedianCalculator {
 public:
   void insert(double num) {
@@ -84,7 +104,7 @@ public:
       maxHeap.push(num);
     }
 
-    // Balance the heaps to ensure the size difference is not more than 1.
+    // Balance the heaps so their sizes differ by at most 1.
     if (minHeap.size() > maxHeap.size() + 1) {
       maxHeap.push(minHeap.top());
       minHeap.pop();
@@ -107,12 +127,24 @@ public:
 private:
   std::priority_queue<double, std::vector<double>, std::greater<double>>
       minHeap;
-  std::priority_queue<double> maxHeap; // Default is max-heap.
+  std::priority_queue<double> maxHeap;
 };
 
+
 // Alternative (Educational) Solution
-// Uses a multiset to maintain sorted order with logarithmic insertions
-// and an iterator to track the median position.
+//
+// Uses a multiset to maintain sorted order and an iterator pointing
+// to the current median.
+//
+// Time Complexity:
+// - insert(): O(log n) due to multiset insertion.
+// - getMedian(): O(1).
+//
+// Space Complexity:
+// - O(n) to store all elements.
+//
+// This solution is elegant and easy to reason about, but typically
+// slower in practice than the heap-based approach due to tree overhead.
 class AlternativeMedianCalculator {
 public:
   void insert(double num) {
@@ -123,11 +155,11 @@ public:
       data.insert(num);
       // Adjust the median iterator based on the inserted value.
       if (num < *medianIt) {
-        if (data.size() % 2 == 0) { // even -> odd: move iterator left.
+        if (data.size() % 2 == 0) { // even -> odd
           --medianIt;
         }
       } else {
-        if (data.size() % 2 == 1) { // odd -> even: move iterator right.
+        if (data.size() % 2 == 1) { // odd -> even
           ++medianIt;
         }
       }
