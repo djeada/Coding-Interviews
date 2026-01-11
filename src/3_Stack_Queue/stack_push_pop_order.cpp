@@ -60,6 +60,15 @@ bool isValidPopOrderSimulation(const std::vector<int> &push_order,
 // Alternative Recursive (Educational) Solution:
 // Recursively generate all valid pop orders from push_order and check if target
 // exists.
+// Time Complexity:
+// - Generating all valid stack pop permutations takes O(Cn) where Cn is the
+//   nth Catalan number (approximately O(4^n / n^(3/2))).
+// - Comparing each generated sequence with pop_order costs O(n).
+// - Overall time complexity: O(Cn * n), which is exponential.
+//
+// Space Complexity:
+// - O(Cn * n) to store all valid pop orders.
+// - O(n) additional space for recursion stack and auxiliary stack.
 void generatePopOrders(const std::vector<int> &push_order, size_t push_index,
                        std::stack<int> &s, std::vector<int> &current,
                        std::vector<std::vector<int>> &all_orders) {
