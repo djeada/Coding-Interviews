@@ -130,7 +130,6 @@ private:
   std::priority_queue<double> maxHeap;
 };
 
-
 // Alternative (Educational) Solution
 //
 // Uses a multiset to maintain sorted order and an iterator pointing
