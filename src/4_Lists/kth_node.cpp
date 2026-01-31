@@ -88,7 +88,7 @@ public:
     if (!node)
       return 0;
     int index = findKthToTailAlternativeHelper(node->next.get(), k, result) + 1;
-    if (index - 1 == k)
+    if (index - 1 == static_cast<int>(k))
       result = node->data;
     return index;
   }
@@ -101,12 +101,11 @@ public:
   }
 };
 
-namespace {
-struct TestRunner {
+int main() {
   int total = 0;
   int failed = 0;
 
-  void expectEqual(int got, int expected, const std::string &label) {
+  auto expectEqual = [&](int got, int expected, const std::string &label) {
     ++total;
     if (got == expected) {
       std::cout << "[PASS] " << label << "\n";
@@ -115,9 +114,10 @@ struct TestRunner {
     ++failed;
     std::cout << "[FAIL] " << label << " expected=" << expected
               << " got=" << got << "\n";
-  }
+  };
 
-  void expectThrows(const std::function<void()> &fn, const std::string &label) {
+  auto expectThrows = [&](const std::function<void()> &fn,
+                          const std::string &label) {
     ++total;
     try {
       fn();
@@ -128,87 +128,75 @@ struct TestRunner {
     } catch (...) {
       std::cout << "[PASS] " << label << " threw=non-std exception\n";
     }
-  }
+  };
 
-  void summary() const {
+  auto summary = [&]() {
     std::cout << "Tests: " << total - failed << " passed, " << failed
               << " failed, " << total << " total\n";
+  };
+
+  {
+    ListWithFind list;
+    list.append(1);
+    list.append(2);
+    list.append(3);
+    list.append(4);
+    list.append(5);
+
+    int k = 0;
+    int expected = 5;
+    expectEqual(list.findKthToTailSimple(k), expected, "simple k=0");
+    expectEqual(list.findKthToTailOptimal(k), expected, "optimal k=0");
+    expectEqual(list.findKthToTailAlternative(k), expected, "alternative k=0");
   }
-};
-} // namespace
 
-// ---------------- Test Cases ----------------
-void test1(TestRunner &runner) {
-  ListWithFind list;
-  list.append(1);
-  list.append(2);
-  list.append(3);
-  list.append(4);
-  list.append(5);
+  {
+    ListWithFind list;
+    list.append(1);
+    list.append(2);
+    list.append(3);
+    list.append(4);
+    list.append(5);
 
-  int k = 0;
-  int expected = 5;
-  runner.expectEqual(list.findKthToTailSimple(k), expected, "simple k=0");
-  runner.expectEqual(list.findKthToTailOptimal(k), expected, "optimal k=0");
-  runner.expectEqual(list.findKthToTailAlternative(k), expected,
-                     "alternative k=0");
-}
+    int k = 4;
+    int expected = 1;
+    expectEqual(list.findKthToTailSimple(k), expected, "simple k=4");
+    expectEqual(list.findKthToTailOptimal(k), expected, "optimal k=4");
+    expectEqual(list.findKthToTailAlternative(k), expected, "alternative k=4");
+  }
 
-void test2(TestRunner &runner) {
-  ListWithFind list;
-  list.append(1);
-  list.append(2);
-  list.append(3);
-  list.append(4);
-  list.append(5);
+  {
+    ListWithFind list;
+    list.append(1);
+    list.append(2);
+    list.append(3);
+    list.append(4);
+    list.append(5);
 
-  int k = 4;
-  int expected = 1;
-  runner.expectEqual(list.findKthToTailSimple(k), expected, "simple k=4");
-  runner.expectEqual(list.findKthToTailOptimal(k), expected, "optimal k=4");
-  runner.expectEqual(list.findKthToTailAlternative(k), expected,
-                     "alternative k=4");
-}
+    int k = 1;
+    int expected = 4;
+    expectEqual(list.findKthToTailSimple(k), expected, "simple k=1");
+    expectEqual(list.findKthToTailOptimal(k), expected, "optimal k=1");
+    expectEqual(list.findKthToTailAlternative(k), expected, "alternative k=1");
+  }
 
-void test3(TestRunner &runner) {
-  ListWithFind list;
-  list.append(1);
-  list.append(2);
-  list.append(3);
-  list.append(4);
-  list.append(5);
+  {
+    ListWithFind list;
+    list.append(1);
+    list.append(2);
+    list.append(3);
+    list.append(4);
+    list.append(5);
 
-  int k = 1;
-  int expected = 4;
-  runner.expectEqual(list.findKthToTailSimple(k), expected, "simple k=1");
-  runner.expectEqual(list.findKthToTailOptimal(k), expected, "optimal k=1");
-  runner.expectEqual(list.findKthToTailAlternative(k), expected,
-                     "alternative k=1");
-}
+    int k = 10;
+    expectThrows([&]() { list.findKthToTailSimple(k); },
+                 "simple k=10 throws");
+    expectThrows([&]() { list.findKthToTailOptimal(k); },
+                 "optimal k=10 throws");
+    expectThrows([&]() { list.findKthToTailAlternative(k); },
+                 "alternative k=10 throws");
+  }
 
-void test4(TestRunner &runner) {
-  ListWithFind list;
-  list.append(1);
-  list.append(2);
-  list.append(3);
-  list.append(4);
-  list.append(5);
-
-  int k = 10;
-  runner.expectThrows([&]() { list.findKthToTailSimple(k); },
-                      "simple k=10 throws");
-  runner.expectThrows([&]() { list.findKthToTailOptimal(k); },
-                      "optimal k=10 throws");
-  runner.expectThrows([&]() { list.findKthToTailAlternative(k); },
-                      "alternative k=10 throws");
-}
-
-int main() {
-  TestRunner runner;
-  test1(runner);
-  test2(runner);
-  test3(runner);
-  test4(runner);
-  runner.summary();
+  summary();
   return 0;
 }

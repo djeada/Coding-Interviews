@@ -55,9 +55,11 @@ public:
           // update head.
           head = std::move(current->next);
           current = head.get();
+          --count;
         } else {
           previous->next = std::move(current->next);
           current = previous->next.get();
+          --count;
         }
       } else {
         // First occurrence: mark as visited and move forward.
@@ -69,13 +71,26 @@ public:
   }
 };
 
-namespace {
-struct TestRunner {
+int main() {
   int total = 0;
   int failed = 0;
 
-  void expectEqual(const List &got, const List &expected,
-                   const std::string &label) {
+  auto listToString = [](const List &list) {
+    std::ostringstream oss;
+    oss << "{";
+    bool first = true;
+    for (int value : list) {
+      if (!first)
+        oss << ", ";
+      oss << value;
+      first = false;
+    }
+    oss << "}";
+    return oss.str();
+  };
+
+  auto expectEqual = [&](const List &got, const List &expected,
+                         const std::string &label) {
     ++total;
     if (got == expected) {
       std::cout << "[PASS] " << label << "\n";
@@ -84,106 +99,83 @@ struct TestRunner {
     ++failed;
     std::cout << "[FAIL] " << label << " expected=" << listToString(expected)
               << " got=" << listToString(got) << "\n";
-  }
+  };
 
-  void summary() const {
+  auto summary = [&]() {
     std::cout << "Tests: " << total - failed << " passed, " << failed
               << " failed, " << total << " total\n";
+  };
+
+  {
+    UniqueList duplicateList;
+    duplicateList.append(1);
+    duplicateList.append(2);
+    duplicateList.append(3);
+    duplicateList.append(4);
+    duplicateList.append(4);
+    duplicateList.append(5);
+
+    UniqueList uniqueList;
+    uniqueList.append(1);
+    uniqueList.append(2);
+    uniqueList.append(3);
+    uniqueList.append(4);
+    uniqueList.append(5);
+
+    duplicateList.deleteDuplication();
+    expectEqual(duplicateList, uniqueList, "delete duplicates #1");
   }
 
-private:
-  static std::string listToString(const List &list) {
-    std::ostringstream oss;
-    oss << "{";
-    for (unsigned int i = 0; i < list.size(); ++i) {
-      if (i > 0)
-        oss << ", ";
-      oss << list.get(i);
-    }
-    oss << "}";
-    return oss.str();
+  {
+    UniqueList duplicateList;
+    duplicateList.append(1);
+    duplicateList.append(2);
+    duplicateList.append(3);
+    duplicateList.append(4);
+    duplicateList.append(5);
+
+    UniqueList uniqueList;
+    uniqueList.append(1);
+    uniqueList.append(2);
+    uniqueList.append(3);
+    uniqueList.append(4);
+    uniqueList.append(5);
+
+    duplicateList.deleteDuplication();
+    expectEqual(duplicateList, uniqueList, "delete duplicates #2");
   }
-};
-} // namespace
 
-// ------------------- Test Cases -------------------
+  {
+    UniqueList duplicateList;
+    duplicateList.append(1);
+    duplicateList.append(1);
+    duplicateList.append(1);
+    duplicateList.append(1);
+    duplicateList.append(2);
 
-void test1(TestRunner &runner) {
-  UniqueList duplicateList;
-  duplicateList.append(1);
-  duplicateList.append(2);
-  duplicateList.append(3);
-  duplicateList.append(4);
-  duplicateList.append(4);
-  duplicateList.append(5);
+    UniqueList uniqueList;
+    uniqueList.append(1);
+    uniqueList.append(2);
 
-  UniqueList uniqueList;
-  uniqueList.append(1);
-  uniqueList.append(2);
-  uniqueList.append(3);
-  uniqueList.append(4);
-  uniqueList.append(5);
+    duplicateList.deleteDuplication();
+    expectEqual(duplicateList, uniqueList, "delete duplicates #3");
+  }
 
-  duplicateList.deleteDuplication();
-  runner.expectEqual(duplicateList, uniqueList, "delete duplicates #1");
-}
+  {
+    UniqueList duplicateList;
+    duplicateList.append(1);
+    duplicateList.append(1);
+    duplicateList.append(1);
+    duplicateList.append(1);
+    duplicateList.append(1);
 
-void test2(TestRunner &runner) {
-  UniqueList duplicateList;
-  duplicateList.append(1);
-  duplicateList.append(2);
-  duplicateList.append(3);
-  duplicateList.append(4);
-  duplicateList.append(5);
+    UniqueList uniqueList;
+    uniqueList.append(1);
 
-  UniqueList uniqueList;
-  uniqueList.append(1);
-  uniqueList.append(2);
-  uniqueList.append(3);
-  uniqueList.append(4);
-  uniqueList.append(5);
+    duplicateList.deleteDuplication();
+    expectEqual(duplicateList, uniqueList, "delete duplicates #4");
+  }
 
-  duplicateList.deleteDuplication();
-  runner.expectEqual(duplicateList, uniqueList, "delete duplicates #2");
-}
-
-void test3(TestRunner &runner) {
-  UniqueList duplicateList;
-  duplicateList.append(1);
-  duplicateList.append(1);
-  duplicateList.append(1);
-  duplicateList.append(1);
-  duplicateList.append(2);
-
-  UniqueList uniqueList;
-  uniqueList.append(1);
-  uniqueList.append(2);
-
-  duplicateList.deleteDuplication();
-  runner.expectEqual(duplicateList, uniqueList, "delete duplicates #3");
-}
-
-void test4(TestRunner &runner) {
-  UniqueList duplicateList;
-  duplicateList.append(1);
-  duplicateList.append(1);
-  duplicateList.append(1);
-  duplicateList.append(1);
-  duplicateList.append(1);
-
-  UniqueList uniqueList;
-  uniqueList.append(1);
-
-  duplicateList.deleteDuplication();
-  runner.expectEqual(duplicateList, uniqueList, "delete duplicates #4");
-}
-
-int main() {
-  TestRunner runner;
-  test1(runner);
-  test2(runner);
-  test3(runner);
-  test4(runner);
-  runner.summary();
+  summary();
   return 0;
 }

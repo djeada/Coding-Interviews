@@ -95,30 +95,11 @@ public:
   }
 };
 
-namespace {
-struct TestRunner {
+int main() {
   int total = 0;
   int failed = 0;
 
-  void expectEqual(const std::vector<int> &got,
-                   const std::vector<int> &expected, const std::string &label) {
-    ++total;
-    if (got == expected) {
-      std::cout << "[PASS] " << label << "\n";
-      return;
-    }
-    ++failed;
-    std::cout << "[FAIL] " << label << " expected=" << toString(expected)
-              << " got=" << toString(got) << "\n";
-  }
-
-  void summary() const {
-    std::cout << "Tests: " << total - failed << " passed, " << failed
-              << " failed, " << total << " total\n";
-  }
-
-private:
-  static std::string toString(const std::vector<int> &values) {
+  auto toString = [](const std::vector<int> &values) {
     std::ostringstream oss;
     oss << "{";
     for (size_t i = 0; i < values.size(); ++i) {
@@ -128,22 +109,34 @@ private:
     }
     oss << "}";
     return oss.str();
-  }
-};
-} // namespace
+  };
 
-// Simple test function using assertions
-void testTreeWithVector(TestRunner &runner, const TreeWithVector &tree,
-                        const std::vector<int> &inorderExpected,
-                        const std::vector<int> &preorderExpected) {
-  runner.expectEqual(tree.inorder(), inorderExpected, "inorder traversal");
-  runner.expectEqual(tree.preorder(), preorderExpected, "preorder traversal");
-}
+  auto expectEqual = [&](const std::vector<int> &got,
+                         const std::vector<int> &expected,
+                         const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << toString(expected)
+              << " got=" << toString(got) << "\n";
+  };
 
-int main() {
-  TestRunner runner;
-  testTreeWithVector(runner,
-                     [] {
+  auto summary = [&]() {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  };
+
+  auto testTreeWithVector = [&](const TreeWithVector &tree,
+                                const std::vector<int> &inorderExpected,
+                                const std::vector<int> &preorderExpected) {
+    expectEqual(tree.inorder(), inorderExpected, "inorder traversal");
+    expectEqual(tree.preorder(), preorderExpected, "preorder traversal");
+  };
+
+  testTreeWithVector([] {
                        TreeWithVector tree;
                        for (int val : {9, 8, 13, 4, 10, 16, 7, 15})
                          tree.add(val);
@@ -152,8 +145,7 @@ int main() {
                      {4, 7, 8, 9, 10, 13, 15, 16},
                      {9, 8, 4, 7, 13, 10, 16, 15});
 
-  testTreeWithVector(runner,
-                     [] {
+  testTreeWithVector([] {
                        TreeWithVector tree;
                        for (int val : {5, 4, 3, 2, 1})
                          tree.add(val);
@@ -161,8 +153,7 @@ int main() {
                      }(),
                      {1, 2, 3, 4, 5}, {5, 4, 3, 2, 1});
 
-  testTreeWithVector(runner,
-                     [] {
+  testTreeWithVector([] {
                        TreeWithVector tree;
                        for (int val : {1, 2, 3, 4, 5})
                          tree.add(val);
@@ -170,14 +161,13 @@ int main() {
                      }(),
                      {1, 2, 3, 4, 5}, {1, 2, 3, 4, 5});
 
-  testTreeWithVector(runner,
-                     [] {
+  testTreeWithVector([] {
                        TreeWithVector tree;
                        tree.add(1);
                        return tree;
                      }(),
                      {1}, {1});
-  runner.summary();
+  summary();
 
   return 0;
 }

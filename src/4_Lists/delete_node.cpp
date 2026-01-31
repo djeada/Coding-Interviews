@@ -59,13 +59,26 @@ public:
   }
 };
 
-namespace {
-struct TestRunner {
+int main() {
   int total = 0;
   int failed = 0;
 
-  void expectEqual(const List &got, const List &expected,
-                   const std::string &label) {
+  auto listToString = [](const List &list) {
+    std::ostringstream oss;
+    oss << "{";
+    bool first = true;
+    for (int value : list) {
+      if (!first)
+        oss << ", ";
+      oss << value;
+      first = false;
+    }
+    oss << "}";
+    return oss.str();
+  };
+
+  auto expectEqual = [&](const List &got, const List &expected,
+                         const std::string &label) {
     ++total;
     if (got == expected) {
       std::cout << "[PASS] " << label << "\n";
@@ -74,105 +87,82 @@ struct TestRunner {
     ++failed;
     std::cout << "[FAIL] " << label << " expected=" << listToString(expected)
               << " got=" << listToString(got) << "\n";
-  }
+  };
 
-  void summary() const {
+  auto summary = [&]() {
     std::cout << "Tests: " << total - failed << " passed, " << failed
               << " failed, " << total << " total\n";
+  };
+
+  {
+    ListWithDeletion list;
+    list.append(1);
+    list.append(2);
+    list.append(3);
+    list.append(4);
+    list.append(5);
+
+    list.remove(3);
+
+    List expectedResult;
+    expectedResult.append(1);
+    expectedResult.append(2);
+    expectedResult.append(4);
+    expectedResult.append(5);
+
+    expectEqual(list, expectedResult, "remove middle node");
   }
 
-private:
-  static std::string listToString(const List &list) {
-    std::ostringstream oss;
-    oss << "{";
-    for (unsigned int i = 0; i < list.size(); ++i) {
-      if (i > 0)
-        oss << ", ";
-      oss << list.get(i);
-    }
-    oss << "}";
-    return oss.str();
+  {
+    ListWithDeletion list;
+    list.append(1);
+    list.append(2);
+    list.append(3);
+    list.append(4);
+    list.append(5);
+
+    list.remove(5);
+
+    List expectedResult;
+    expectedResult.append(1);
+    expectedResult.append(2);
+    expectedResult.append(3);
+    expectedResult.append(4);
+
+    expectEqual(list, expectedResult, "remove tail node");
   }
-};
-} // namespace
 
-// ------------------- Test Cases -------------------
+  {
+    ListWithDeletion list;
+    list.append(1);
+    list.append(2);
+    list.append(3);
+    list.append(4);
+    list.append(5);
 
-void test1(TestRunner &runner) {
-  ListWithDeletion list;
-  list.append(1);
-  list.append(2);
-  list.append(3);
-  list.append(4);
-  list.append(5);
+    list.remove(1);
 
-  list.remove(3);
+    List expectedResult;
+    expectedResult.append(2);
+    expectedResult.append(3);
+    expectedResult.append(4);
+    expectedResult.append(5);
 
-  List expectedResult;
-  expectedResult.append(1);
-  expectedResult.append(2);
-  expectedResult.append(4);
-  expectedResult.append(5);
+    expectEqual(list, expectedResult, "remove head node");
+  }
 
-  runner.expectEqual(list, expectedResult, "remove middle node");
-}
+  {
+    ListWithDeletion list;
+    list.append(1);
 
-void test2(TestRunner &runner) {
-  ListWithDeletion list;
-  list.append(1);
-  list.append(2);
-  list.append(3);
-  list.append(4);
-  list.append(5);
+    list.remove(1);
 
-  list.remove(5);
+    List expectedResult;
 
-  List expectedResult;
-  expectedResult.append(1);
-  expectedResult.append(2);
-  expectedResult.append(3);
-  expectedResult.append(4);
+    expectEqual(list, expectedResult, "remove sole node");
+  }
 
-  runner.expectEqual(list, expectedResult, "remove tail node");
-}
-
-void test3(TestRunner &runner) {
-  ListWithDeletion list;
-  list.append(1);
-  list.append(2);
-  list.append(3);
-  list.append(4);
-  list.append(5);
-
-  list.remove(1);
-
-  List expectedResult;
-  expectedResult.append(2);
-  expectedResult.append(3);
-  expectedResult.append(4);
-  expectedResult.append(5);
-
-  runner.expectEqual(list, expectedResult, "remove head node");
-}
-
-void test4(TestRunner &runner) {
-  ListWithDeletion list;
-  list.append(1);
-
-  list.remove(1);
-
-  List expectedResult;
-
-  runner.expectEqual(list, expectedResult, "remove sole node");
-}
-
-int main() {
-  TestRunner runner;
-  test1(runner);
-  test2(runner);
-  test3(runner);
-  test4(runner);
-  runner.summary();
+  summary();
 
   return 0;
 }

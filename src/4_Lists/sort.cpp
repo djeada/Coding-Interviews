@@ -57,13 +57,26 @@ public:
   }
 };
 
-namespace {
-struct TestRunner {
+int main() {
   int total = 0;
   int failed = 0;
 
-  void expectEqual(const List &got, const List &expected,
-                   const std::string &label) {
+  auto listToString = [](const List &list) {
+    std::ostringstream oss;
+    oss << "{";
+    bool first = true;
+    for (int value : list) {
+      if (!first)
+        oss << ", ";
+      oss << value;
+      first = false;
+    }
+    oss << "}";
+    return oss.str();
+  };
+
+  auto expectEqual = [&](const List &got, const List &expected,
+                         const std::string &label) {
     ++total;
     if (got == expected) {
       std::cout << "[PASS] " << label << "\n";
@@ -72,90 +85,69 @@ struct TestRunner {
     ++failed;
     std::cout << "[FAIL] " << label << " expected=" << listToString(expected)
               << " got=" << listToString(got) << "\n";
-  }
+  };
 
-  void summary() const {
+  auto summary = [&]() {
     std::cout << "Tests: " << total - failed << " passed, " << failed
               << " failed, " << total << " total\n";
+  };
+
+  {
+    ListWithSorting list;
+    list.append(2);
+    list.append(4);
+    list.append(5);
+    list.append(1);
+    list.append(3);
+
+    List expected;
+    expected.append(1);
+    expected.append(2);
+    expected.append(3);
+    expected.append(4);
+    expected.append(5);
+
+    list.sort();
+    expectEqual(list, expected, "sort mixed");
   }
 
-private:
-  static std::string listToString(const List &list) {
-    std::ostringstream oss;
-    oss << "{";
-    for (unsigned int i = 0; i < list.size(); ++i) {
-      if (i > 0)
-        oss << ", ";
-      oss << list.get(i);
-    }
-    oss << "}";
-    return oss.str();
+  {
+    ListWithSorting list;
+    list.append(5);
+    list.append(4);
+    list.append(3);
+    list.append(2);
+    list.append(1);
+
+    List expected;
+    expected.append(1);
+    expected.append(2);
+    expected.append(3);
+    expected.append(4);
+    expected.append(5);
+
+    list.sort();
+    expectEqual(list, expected, "sort reverse");
   }
-};
-} // namespace
 
-void test1(TestRunner &runner) {
-  ListWithSorting list;
-  list.append(2);
-  list.append(4);
-  list.append(5);
-  list.append(1);
-  list.append(3);
+  {
+    ListWithSorting list;
+    list.append(1);
 
-  List expected;
-  expected.append(1);
-  expected.append(2);
-  expected.append(3);
-  expected.append(4);
-  expected.append(5);
+    List expected;
+    expected.append(1);
 
-  list.sort();
-  runner.expectEqual(list, expected, "sort mixed");
-}
+    list.sort();
+    expectEqual(list, expected, "sort single");
+  }
 
-void test2(TestRunner &runner) {
-  ListWithSorting list;
-  list.append(5);
-  list.append(4);
-  list.append(3);
-  list.append(2);
-  list.append(1);
+  {
+    ListWithSorting list;
+    List expected;
+    list.sort();
+    expectEqual(list, expected, "sort empty");
+  }
 
-  List expected;
-  expected.append(1);
-  expected.append(2);
-  expected.append(3);
-  expected.append(4);
-  expected.append(5);
-
-  list.sort();
-  runner.expectEqual(list, expected, "sort reverse");
-}
-
-void test3(TestRunner &runner) {
-  ListWithSorting list;
-  list.append(1);
-
-  List expected;
-  expected.append(1);
-
-  list.sort();
-  runner.expectEqual(list, expected, "sort single");
-}
-
-void test4(TestRunner &runner) {
-  ListWithSorting list;
-  List expected;
-  list.sort();
-  runner.expectEqual(list, expected, "sort empty");
-}
-
-int main() {
-  TestRunner runner;
-  test1(runner);
-  test2(runner);
-  test3(runner);
-  test4(runner);
-  runner.summary();
+  summary();
   return 0;
 }

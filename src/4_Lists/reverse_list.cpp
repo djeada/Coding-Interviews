@@ -58,13 +58,26 @@ public:
   }
 };
 
-namespace {
-struct TestRunner {
+int main() {
   int total = 0;
   int failed = 0;
 
-  void expectEqual(const List &got, const List &expected,
-                   const std::string &label) {
+  auto listToString = [](const List &list) {
+    std::ostringstream oss;
+    oss << "{";
+    bool first = true;
+    for (int value : list) {
+      if (!first)
+        oss << ", ";
+      oss << value;
+      first = false;
+    }
+    oss << "}";
+    return oss.str();
+  };
+
+  auto expectEqual = [&](const List &got, const List &expected,
+                         const std::string &label) {
     ++total;
     if (got == expected) {
       std::cout << "[PASS] " << label << "\n";
@@ -73,73 +86,51 @@ struct TestRunner {
     ++failed;
     std::cout << "[FAIL] " << label << " expected=" << listToString(expected)
               << " got=" << listToString(got) << "\n";
-  }
+  };
 
-  void summary() const {
+  auto summary = [&]() {
     std::cout << "Tests: " << total - failed << " passed, " << failed
               << " failed, " << total << " total\n";
+  };
+
+  {
+    ListWithReversion list;
+    list.append(1);
+    list.append(2);
+    list.append(3);
+    list.append(4);
+    list.append(5);
+
+    List expected;
+    expected.append(5);
+    expected.append(4);
+    expected.append(3);
+    expected.append(2);
+    expected.append(1);
+
+    list.reverse();
+    expectEqual(list, expected, "reverse multi");
   }
 
-private:
-  static std::string listToString(const List &list) {
-    std::ostringstream oss;
-    oss << "{";
-    for (unsigned int i = 0; i < list.size(); ++i) {
-      if (i > 0)
-        oss << ", ";
-      oss << list.get(i);
-    }
-    oss << "}";
-    return oss.str();
+  {
+    ListWithReversion list;
+    list.append(1);
+
+    List expected;
+    expected.append(1);
+
+    list.reverse();
+    expectEqual(list, expected, "reverse single");
   }
-};
-} // namespace
 
-// ------------------- Test Cases -------------------
+  {
+    ListWithReversion list;
+    List expected;
 
-void test1(TestRunner &runner) {
-  ListWithReversion list;
-  list.append(1);
-  list.append(2);
-  list.append(3);
-  list.append(4);
-  list.append(5);
+    list.reverse();
+    expectEqual(list, expected, "reverse empty");
+  }
 
-  List expected;
-  expected.append(5);
-  expected.append(4);
-  expected.append(3);
-  expected.append(2);
-  expected.append(1);
-
-  list.reverse();
-  runner.expectEqual(list, expected, "reverse multi");
-}
-
-void test2(TestRunner &runner) {
-  ListWithReversion list;
-  list.append(1);
-
-  List expected;
-  expected.append(1);
-
-  list.reverse();
-  runner.expectEqual(list, expected, "reverse single");
-}
-
-void test3(TestRunner &runner) {
-  ListWithReversion list;
-  List expected;
-
-  list.reverse();
-  runner.expectEqual(list, expected, "reverse empty");
-}
-
-int main() {
-  TestRunner runner;
-  test1(runner);
-  test2(runner);
-  test3(runner);
-  runner.summary();
+  summary();
   return 0;
 }

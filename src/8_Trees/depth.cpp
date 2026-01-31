@@ -57,13 +57,12 @@ private:
   }
 };
 
-namespace {
-struct TestRunner {
+int main() {
   int total = 0;
   int failed = 0;
 
-  void expectEqual(unsigned int got, unsigned int expected,
-                   const std::string &label) {
+  auto expectEqual = [&](unsigned int got, unsigned int expected,
+                         const std::string &label) {
     ++total;
     if (got == expected) {
       std::cout << "[PASS] " << label << "\n";
@@ -72,29 +71,24 @@ struct TestRunner {
     ++failed;
     std::cout << "[FAIL] " << label << " expected=" << expected
               << " got=" << got << "\n";
-  }
+  };
 
-  void summary() const {
+  auto summary = [&]() {
     std::cout << "Tests: " << total - failed << " passed, " << failed
               << " failed, " << total << " total\n";
-  }
-};
-} // namespace
+  };
 
-// Test function to verify that the computed depth matches the expected depth.
-void testTreeWithDepth(TestRunner &runner, const TreeWithDepth &tree,
-                       unsigned int expectedDepth, const std::string &label) {
-  runner.expectEqual(tree.depth(), expectedDepth, label);
-}
+  auto testTreeWithDepth = [&](const TreeWithDepth &tree,
+                               unsigned int expectedDepth,
+                               const std::string &label) {
+    expectEqual(tree.depth(), expectedDepth, label);
+  };
 
-int main() {
-  TestRunner runner;
   {
     TreeWithDepth empty;
-    testTreeWithDepth(runner, empty, 0, "depth empty");
+    testTreeWithDepth(empty, 0, "depth empty");
   }
   testTreeWithDepth(
-      runner,
       [] {
         TreeWithDepth tree;
         for (int val : {9, 8, 13, 4, 10, 16, 7, 15})
@@ -104,7 +98,6 @@ int main() {
       4, "depth balanced");
 
   testTreeWithDepth(
-      runner,
       [] {
         TreeWithDepth tree;
         for (int val : {5, 4, 3, 2, 1})
@@ -114,7 +107,6 @@ int main() {
       5, "depth left-skewed");
 
   testTreeWithDepth(
-      runner,
       [] {
         TreeWithDepth tree;
         for (int val : {1, 2, 3, 4, 5})
@@ -124,14 +116,13 @@ int main() {
       5, "depth right-skewed");
 
   testTreeWithDepth(
-      runner,
       [] {
         TreeWithDepth tree;
         tree.add(1);
         return tree;
       }(),
       1, "depth single");
-  runner.summary();
+  summary();
 
   return 0;
 }

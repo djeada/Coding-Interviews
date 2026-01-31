@@ -82,12 +82,11 @@ private:
   }
 };
 
-namespace {
-struct TestRunner {
+int main() {
   int total = 0;
   int failed = 0;
 
-  void expectEqual(int got, int expected, const std::string &label) {
+  auto expectEqual = [&](int got, int expected, const std::string &label) {
     ++total;
     if (got == expected) {
       std::cout << "[PASS] " << label << "\n";
@@ -96,30 +95,24 @@ struct TestRunner {
     ++failed;
     std::cout << "[FAIL] " << label << " expected=" << expected
               << " got=" << got << "\n";
-  }
+  };
 
-  void summary() const {
+  auto summary = [&]() {
     std::cout << "Tests: " << total - failed << " passed, " << failed
               << " failed, " << total << " total\n";
-  }
-};
-} // namespace
+  };
 
-// Test function to ensure that the computed largest BST subtree size matches
-// the expected size.
-void testTreeWithSubtree(TestRunner &runner, const TreeWithSubtree &tree,
-                         int expectedSize, const std::string &label) {
-  runner.expectEqual(tree.largestBST(), expectedSize, label);
-}
+  auto testTreeWithSubtree = [&](const TreeWithSubtree &tree,
+                                 int expectedSize,
+                                 const std::string &label) {
+    expectEqual(tree.largestBST(), expectedSize, label);
+  };
 
-int main() {
-  TestRunner runner;
   {
     TreeWithSubtree empty;
-    testTreeWithSubtree(runner, empty, 0, "largest BST empty");
+    testTreeWithSubtree(empty, 0, "largest BST empty");
   }
   testTreeWithSubtree(
-      runner,
       [] {
         TreeWithSubtree tree;
         for (int val : {8, 6, 10, 5, 7, 9, 11})
@@ -129,7 +122,6 @@ int main() {
       7, "largest BST full");
 
   testTreeWithSubtree(
-      runner,
       [] {
         TreeWithSubtree tree;
         for (int val : {11, 6, 16, 5, 7, 19})
@@ -139,7 +131,6 @@ int main() {
       6, "largest BST case 2");
 
   testTreeWithSubtree(
-      runner,
       [] {
         TreeWithSubtree tree;
         for (int val : {12, 6, 9, 5, 8, 10})
@@ -149,7 +140,6 @@ int main() {
       6, "largest BST case 3");
 
   testTreeWithSubtree(
-      runner,
       [] {
         TreeWithSubtree tree;
         for (int val : {5, 3, 4, 2, 1})
@@ -157,7 +147,7 @@ int main() {
         return tree;
       }(),
       5, "largest BST skewed");
-  runner.summary();
+  summary();
 
   return 0;
 }

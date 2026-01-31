@@ -119,12 +119,11 @@ private:
   }
 };
 
-namespace {
-struct TestRunner {
+int main() {
   int total = 0;
   int failed = 0;
 
-  void expectEqual(bool got, bool expected, const std::string &label) {
+  auto expectEqual = [&](bool got, bool expected, const std::string &label) {
     ++total;
     if (got == expected) {
       std::cout << "[PASS] " << label << "\n";
@@ -133,62 +132,52 @@ struct TestRunner {
     ++failed;
     std::cout << "[FAIL] " << label << " expected=" << std::boolalpha
               << expected << " got=" << got << "\n";
-  }
+  };
 
-  void summary() const {
+  auto summary = [&]() {
     std::cout << "Tests: " << total - failed << " passed, " << failed
               << " failed, " << total << " total\n";
+  };
+
+  {
+    ListWithLoops list;
+    list.append(1);
+    // Single node should not have a loop.
+    expectEqual(list.hasLoop(), false, "single node no loop");
   }
-};
-} // namespace
 
-// ------------------- Test Cases -------------------
+  {
+    ListWithLoops list;
+    list.append(1);
+    // Connect the only node to itself to form a loop.
+    list.connectNodes(0, 0);
+    expectEqual(list.hasLoop(), true, "self loop");
+  }
 
-void test1(TestRunner &runner) {
-  ListWithLoops list;
-  list.append(1);
-  // Single node should not have a loop.
-  runner.expectEqual(list.hasLoop(), false, "single node no loop");
-}
+  {
+    ListWithLoops list;
+    list.append(1);
+    list.append(2);
+    list.append(3);
+    list.append(4);
+    list.append(5);
+    // Connect the last node (index 4) to the node at index 2.
+    list.connectNodes(4, 2);
+    expectEqual(list.hasLoop(), true, "tail to middle loop");
+  }
 
-void test2(TestRunner &runner) {
-  ListWithLoops list;
-  list.append(1);
-  // Connect the only node to itself to form a loop.
-  list.connectNodes(0, 0);
-  runner.expectEqual(list.hasLoop(), true, "self loop");
-}
+  {
+    ListWithLoops list;
+    list.append(1);
+    list.append(2);
+    list.append(3);
+    list.append(4);
+    list.append(5);
+    // Connect the last node (index 4) to the first node (index 0).
+    list.connectNodes(4, 0);
+    expectEqual(list.hasLoop(), true, "tail to head loop");
+  }
 
-void test3(TestRunner &runner) {
-  ListWithLoops list;
-  list.append(1);
-  list.append(2);
-  list.append(3);
-  list.append(4);
-  list.append(5);
-  // Connect the last node (index 4) to the node at index 2.
-  list.connectNodes(4, 2);
-  runner.expectEqual(list.hasLoop(), true, "tail to middle loop");
-}
-
-void test4(TestRunner &runner) {
-  ListWithLoops list;
-  list.append(1);
-  list.append(2);
-  list.append(3);
-  list.append(4);
-  list.append(5);
-  // Connect the last node (index 4) to the first node (index 0).
-  list.connectNodes(4, 0);
-  runner.expectEqual(list.hasLoop(), true, "tail to head loop");
-}
-
-int main() {
-  TestRunner runner;
-  test1(runner);
-  test2(runner);
-  test3(runner);
-  test4(runner);
-  runner.summary();
+  summary();
   return 0;
 }

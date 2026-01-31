@@ -78,30 +78,11 @@ private:
   }
 };
 
-namespace {
-struct TestRunner {
+int main() {
   int total = 0;
   int failed = 0;
 
-  void expectEqual(const std::vector<int> &got,
-                   const std::vector<int> &expected, const std::string &label) {
-    ++total;
-    if (got == expected) {
-      std::cout << "[PASS] " << label << "\n";
-      return;
-    }
-    ++failed;
-    std::cout << "[FAIL] " << label << " expected=" << toString(expected)
-              << " got=" << toString(got) << "\n";
-  }
-
-  void summary() const {
-    std::cout << "Tests: " << total - failed << " passed, " << failed
-              << " failed, " << total << " total\n";
-  }
-
-private:
-  static std::string toString(const std::vector<int> &values) {
+  auto toString = [](const std::vector<int> &values) {
     std::ostringstream oss;
     oss << "{";
     for (size_t i = 0; i < values.size(); ++i) {
@@ -111,19 +92,32 @@ private:
     }
     oss << "}";
     return oss.str();
-  }
-};
-} // namespace
+  };
 
-// Test function to verify that the found path meets the expected result.
-void runTests() {
-  TestRunner runner;
+  auto expectEqual = [&](const std::vector<int> &got,
+                         const std::vector<int> &expected,
+                         const std::string &label) {
+    ++total;
+    if (got == expected) {
+      std::cout << "[PASS] " << label << "\n";
+      return;
+    }
+    ++failed;
+    std::cout << "[FAIL] " << label << " expected=" << toString(expected)
+              << " got=" << toString(got) << "\n";
+  };
+
+  auto summary = [&]() {
+    std::cout << "Tests: " << total - failed << " passed, " << failed
+              << " failed, " << total << " total\n";
+  };
+
   {
     TreeWithSumPath tree;
     for (const auto &value : {10, 5, 12, 4, 7})
       tree.add(value);
     const auto result = tree.findPathWithSum(22);
-    runner.expectEqual(result, std::vector<int>{10, 5, 7}, "path sum 22");
+    expectEqual(result, std::vector<int>{10, 5, 7}, "path sum 22");
   }
 
   {
@@ -131,7 +125,7 @@ void runTests() {
     for (const auto &value : {10, 5, 12, 4, 7})
       tree.add(value);
     const auto result = tree.findPathWithSum(15);
-    runner.expectEqual(result, std::vector<int>{}, "path sum 15 missing");
+    expectEqual(result, std::vector<int>{}, "path sum 15 missing");
   }
 
   {
@@ -139,8 +133,8 @@ void runTests() {
     for (const auto &value : {5, 4, 3, 2, 1})
       tree.add(value);
     const auto result = tree.findPathWithSum(15);
-    runner.expectEqual(result, std::vector<int>{5, 4, 3, 2, 1},
-                       "path sum 15 left-skewed");
+    expectEqual(result, std::vector<int>{5, 4, 3, 2, 1},
+                "path sum 15 left-skewed");
   }
 
   {
@@ -148,12 +142,8 @@ void runTests() {
     for (const auto &value : {1, 2, 3, 4, 5})
       tree.add(value);
     const auto result = tree.findPathWithSum(16);
-    runner.expectEqual(result, std::vector<int>{}, "path sum 16 missing");
+    expectEqual(result, std::vector<int>{}, "path sum 16 missing");
   }
-  runner.summary();
-}
-
-int main() {
-  runTests();
+  summary();
   return 0;
 }

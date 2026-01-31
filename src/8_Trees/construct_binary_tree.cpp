@@ -35,18 +35,19 @@
  */
 
 #include "binary_tree.h" // Assumed to exist and be implemented.
-#include <algorithm>
 #include <iostream>
 #include <stdexcept>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 class TreeWithConstruct : public BinaryTree {
 private:
   // Recursively constructs the binary tree.
-  std::unique_ptr<Node> construct(std::vector<int> &inorder,
-                                  std::vector<int> &preorder, int start,
-                                  int end, int &preInd) {
+  std::unique_ptr<Node> construct(
+      const std::vector<int> &inorder, const std::vector<int> &preorder,
+      int start, int end, int &preInd,
+      const std::unordered_map<int, int> &indexMap) {
     if (start > end)
       return nullptr;
 
@@ -57,12 +58,15 @@ private:
     if (start == end)
       return root;
 
-    auto ind =
-        std::find(inorder.begin() + start, inorder.begin() + end + 1, val) -
-        inorder.begin();
+    auto indIt = indexMap.find(val);
+    if (indIt == indexMap.end())
+      throw std::runtime_error("Invalid traversal data.");
+    int ind = indIt->second;
 
-    root->left = construct(inorder, preorder, start, ind - 1, preInd);
-    root->right = construct(inorder, preorder, ind + 1, end, preInd);
+    root->left =
+        construct(inorder, preorder, start, ind - 1, preInd, indexMap);
+    root->right =
+        construct(inorder, preorder, ind + 1, end, preInd, indexMap);
 
     return root;
   }
@@ -71,20 +75,26 @@ public:
   TreeWithConstruct() : BinaryTree() {}
 
   TreeWithConstruct(std::vector<int> &inorder, std::vector<int> &preorder) {
-    if (inorder.empty() || preorder.empty())
+    if (inorder.empty() || preorder.empty() || inorder.size() != preorder.size())
       throw std::runtime_error("Invalid input.");
 
+    std::unordered_map<int, int> indexMap;
+    indexMap.reserve(inorder.size());
+    for (int i = 0; i < static_cast<int>(inorder.size()); ++i) {
+      indexMap[inorder[i]] = i;
+    }
+
     int pre = 0;
-    root = construct(inorder, preorder, 0, preorder.size() - 1, pre);
+    root = construct(inorder, preorder, 0, preorder.size() - 1, pre, indexMap);
+    count = countNodes(root);
   }
 };
 
-namespace {
-struct TestRunner {
+int main() {
   int total = 0;
   int failed = 0;
 
-  void expectEqual(bool got, bool expected, const std::string &label) {
+  auto expectEqual = [&](bool got, bool expected, const std::string &label) {
     ++total;
     if (got == expected) {
       std::cout << "[PASS] " << label << "\n";
@@ -93,85 +103,77 @@ struct TestRunner {
     ++failed;
     std::cout << "[FAIL] " << label << " expected=" << std::boolalpha
               << expected << " got=" << got << "\n";
-  }
+  };
 
-  void summary() const {
+  auto summary = [&]() {
     std::cout << "Tests: " << total - failed << " passed, " << failed
               << " failed, " << total << " total\n";
+  };
+
+  {
+    std::vector<int> preorder{9, 8, 4, 7, 13, 10, 16, 15};
+    std::vector<int> inorder{4, 7, 8, 9, 10, 13, 15, 16};
+
+    TreeWithConstruct tree(inorder, preorder);
+
+    BinaryTree result;
+    result.add(9);
+    result.add(8);
+    result.add(13);
+    result.add(4);
+    result.add(10);
+    result.add(16);
+    result.add(7);
+    result.add(15);
+
+    expectEqual(tree == result, true, "construct tree case 1");
   }
-};
-} // namespace
 
-void test1(TestRunner &runner) {
-  std::vector<int> preorder{9, 8, 4, 7, 13, 10, 16, 15};
-  std::vector<int> inorder{4, 7, 8, 9, 10, 13, 15, 16};
+  {
+    std::vector<int> inorder{1, 2, 3, 4, 5};
+    std::vector<int> preorder{5, 4, 3, 2, 1};
 
-  TreeWithConstruct tree(inorder, preorder);
+    TreeWithConstruct tree(inorder, preorder);
 
-  BinaryTree result;
-  result.add(9);
-  result.add(8);
-  result.add(13);
-  result.add(4);
-  result.add(10);
-  result.add(16);
-  result.add(7);
-  result.add(15);
+    BinaryTree result;
+    result.add(5);
+    result.add(4);
+    result.add(3);
+    result.add(2);
+    result.add(1);
 
-  runner.expectEqual(tree == result, true, "construct tree case 1");
-}
+    expectEqual(tree == result, true, "construct tree case 2");
+  }
 
-void test2(TestRunner &runner) {
-  std::vector<int> inorder{1, 2, 3, 4, 5};
-  std::vector<int> preorder{5, 4, 3, 2, 1};
+  {
+    std::vector<int> preorder{1, 2, 3, 4, 5};
+    std::vector<int> inorder{1, 2, 3, 4, 5};
 
-  TreeWithConstruct tree(inorder, preorder);
+    TreeWithConstruct tree(inorder, preorder);
 
-  BinaryTree result;
-  result.add(5);
-  result.add(4);
-  result.add(3);
-  result.add(2);
-  result.add(1);
+    BinaryTree result;
+    result.add(1);
+    result.add(2);
+    result.add(3);
+    result.add(4);
+    result.add(5);
 
-  runner.expectEqual(tree == result, true, "construct tree case 2");
-}
+    expectEqual(tree == result, true, "construct tree case 3");
+  }
 
-void test3(TestRunner &runner) {
-  std::vector<int> preorder{1, 2, 3, 4, 5};
-  std::vector<int> inorder{1, 2, 3, 4, 5};
+  {
+    std::vector<int> preorder{1};
+    std::vector<int> inorder{1};
 
-  TreeWithConstruct tree(inorder, preorder);
+    TreeWithConstruct tree(inorder, preorder);
 
-  BinaryTree result;
-  result.add(1);
-  result.add(2);
-  result.add(3);
-  result.add(4);
-  result.add(5);
+    BinaryTree result;
+    result.add(1);
 
-  runner.expectEqual(tree == result, true, "construct tree case 3");
-}
+    expectEqual(tree == result, true, "construct tree case 4");
+  }
 
-void test4(TestRunner &runner) {
-  std::vector<int> preorder{1};
-  std::vector<int> inorder{1};
-
-  TreeWithConstruct tree(inorder, preorder);
-
-  BinaryTree result;
-  result.add(1);
-
-  runner.expectEqual(tree == result, true, "construct tree case 4");
-}
-
-int main() {
-  TestRunner runner;
-  test1(runner);
-  test2(runner);
-  test3(runner);
-  test4(runner);
-  runner.summary();
+  summary();
 
   return 0;
 }

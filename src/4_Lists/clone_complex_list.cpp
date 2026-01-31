@@ -68,6 +68,7 @@ public:
     // Create the new head.
     head = std::unique_ptr<List::Node>(static_cast<List::Node *>(
         new Node(static_cast<const Node *>(other.head.get())->data)));
+    count = 1;
     nodeMap[static_cast<const Node *>(other.head.get())] =
         static_cast<Node *>(head.get());
 
@@ -80,6 +81,7 @@ public:
       currentNew = static_cast<Node *>(currentNew->next.get());
       currentOld = static_cast<const Node *>(currentOld->next.get());
       nodeMap[currentOld] = currentNew;
+      ++count;
     }
 
     // Set sibling pointers.
@@ -93,6 +95,17 @@ public:
       currentNew = static_cast<Node *>(currentNew->next.get());
     }
   }
+
+  ComplexList &operator=(const ComplexList &other) {
+    if (this == &other)
+      return *this;
+    ComplexList temp(other);
+    swap(temp);
+    return *this;
+  }
+
+  ComplexList(ComplexList &&other) noexcept = default;
+  ComplexList &operator=(ComplexList &&other) noexcept = default;
 
   // Append a new node with the given value.
   // Returns a pointer to the new node (of our Node type).
@@ -108,6 +121,7 @@ public:
         curr = static_cast<Node *>(curr->next.get());
       curr->next = std::move(newNode);
     }
+    ++count;
     return newNodePtr;
   }
 
@@ -144,12 +158,11 @@ public:
   }
 };
 
-namespace {
-struct TestRunner {
+int main() {
   int total = 0;
   int failed = 0;
 
-  void expectTrue(bool condition, const std::string &label) {
+  auto expectTrue = [&](bool condition, const std::string &label) {
     ++total;
     if (condition) {
       std::cout << "[PASS] " << label << "\n";
@@ -157,69 +170,59 @@ struct TestRunner {
     }
     ++failed;
     std::cout << "[FAIL] " << label << " expected=true got=false\n";
-  }
+  };
 
-  void summary() const {
+  auto summary = [&]() {
     std::cout << "Tests: " << total - failed << " passed, " << failed
               << " failed, " << total << " total\n";
+  };
+
+  {
+    ComplexList list;
+    auto node1 = list.append(1);
+    auto node2 = list.append(2);
+    auto node3 = list.append(3);
+    list.append(4);
+    auto node5 = list.append(5);
+
+    list.setSibling(node1, node3);
+    list.setSibling(node2, node5);
+    list.setSibling(node5, node2);
+
+    ComplexList copy(list);
+    expectTrue(list == copy, "clone test1");
   }
-};
-} // namespace
 
-// ----- Test Cases -----
+  {
+    ComplexList list;
+    auto node1 = list.append(1);
+    auto node2 = list.append(2);
+    auto node3 = list.append(3);
+    auto node4 = list.append(4);
+    auto node5 = list.append(5);
 
-void test1(TestRunner &runner) {
-  ComplexList list;
-  auto node1 = list.append(1);
-  auto node2 = list.append(2);
-  auto node3 = list.append(3);
-  auto node4 = list.append(4);
-  auto node5 = list.append(5);
+    list.setSibling(node1, node2);
+    list.setSibling(node2, node3);
+    list.setSibling(node5, node4);
+    list.setSibling(node4, node1);
 
-  list.setSibling(node1, node3);
-  list.setSibling(node2, node5);
-  list.setSibling(node5, node2);
+    ComplexList copy(list);
+    expectTrue(list == copy, "clone test2");
+  }
 
-  ComplexList copy(list);
-  runner.expectTrue(list == copy, "clone test1");
-}
+  {
+    ComplexList list;
+    list.append(1);
+    ComplexList copy(list);
+    expectTrue(list == copy, "clone test3");
+  }
 
-void test2(TestRunner &runner) {
-  ComplexList list;
-  auto node1 = list.append(1);
-  auto node2 = list.append(2);
-  auto node3 = list.append(3);
-  auto node4 = list.append(4);
-  auto node5 = list.append(5);
+  {
+    ComplexList list;
+    ComplexList copy(list);
+    expectTrue(list == copy, "clone test4");
+  }
 
-  list.setSibling(node1, node2);
-  list.setSibling(node2, node3);
-  list.setSibling(node5, node4);
-  list.setSibling(node4, node1);
-
-  ComplexList copy(list);
-  runner.expectTrue(list == copy, "clone test2");
-}
-
-void test3(TestRunner &runner) {
-  ComplexList list;
-  auto node1 = list.append(1);
-  ComplexList copy(list);
-  runner.expectTrue(list == copy, "clone test3");
-}
-
-void test4(TestRunner &runner) {
-  ComplexList list;
-  ComplexList copy(list);
-  runner.expectTrue(list == copy, "clone test4");
-}
-
-int main() {
-  TestRunner runner;
-  test1(runner);
-  test2(runner);
-  test3(runner);
-  test4(runner);
-  runner.summary();
+  summary();
   return 0;
 }
