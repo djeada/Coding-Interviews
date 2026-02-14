@@ -6,20 +6,6 @@
  * Find the kth element from the tail (0-indexed) of a singly linked list.
  * Three solutions are provided:
  *
- * 1. Simple Solution:
- *    - Traverses the list to store all elements in a vector and then indexes
- * from the end.
- *    - Easy to implement and understand, but uses O(n) extra space.
- *
- * 2. Optimal (Efficient) Solution:
- *    - Uses the two-pointer technique: one pointer is moved k steps ahead,
- *      then both pointers move until the lead pointer reaches the end.
- *    - Achieves O(n) time and O(1) space complexity.
- *
- * 3. Alternative Solution:
- *    - Uses recursion to determine the kth element from the tail.
- *    - Although elegant, it uses additional stack space due to recursive calls.
- *
  * ASCII Illustration:
  *
  *      Linked List: 1 -> 2 -> 3 -> 4 -> 5
