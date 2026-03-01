@@ -81,49 +81,57 @@ std::unique_ptr<List::Node> *List::ownerAt(unsigned int index) {
   return owner;
 }
 
-void List::connectNodes(unsigned int index1, unsigned int index2) {
-  if (index1 == index2 || index1 >= count || index2 >= count) {
-    throw std::out_of_range{"Index out of range!"};
-  }
-
-  if (index1 < index2) {
-    auto *owner1 = ownerAt(index1);
-    auto *owner2 = ownerAt(index2);
-    if (!owner1 || !owner2) {
-      throw std::out_of_range{"Index out of range!"};
+void List::connectNodes(unsigned int index1, unsigned int index2)
+{
+    if (index1 == index2 || index1 >= count || index2 >= count) {
+        throw std::out_of_range{"Index out of range!"};
     }
-    Node *node1 = owner1->get();
-    Node *node2 = owner2->get();
-    if (!node1 || !node2) {
-      throw std::out_of_range{"Index out of range!"};
-    }
-    if (node1->next.get() == node2) {
-      return;
-    }
-    auto moving = std::move(*owner2);
-    *owner2 = std::move(moving->next);
-    moving->next = std::move(node1->next);
-    node1->next = std::move(moving);
-    return;
-  }
 
-  auto *owner2 = ownerAt(index2);
-  if (!owner2) {
-    throw std::out_of_range{"Index out of range!"};
-  }
-  auto moving = std::move(*owner2);
-  *owner2 = std::move(moving->next);
+    auto requireOwner = [&](unsigned int idx) {
+        if (auto* o = ownerAt(idx)) return o;
+        throw std::out_of_range{"Index out of range!"};
+    };
 
-  auto *owner1 = ownerAt(index1 - 1);
-  if (!owner1) {
-    throw std::out_of_range{"Index out of range!"};
-  }
-  Node *node1 = owner1->get();
-  if (!node1) {
-    throw std::out_of_range{"Index out of range!"};
-  }
-  moving->next = std::move(node1->next);
-  node1->next = std::move(moving);
+    auto detachAt = [&](unsigned int idx) -> std::unique_ptr<Node> {
+        auto* owner = requireOwner(idx);      // owner points to the unique_ptr that owns node idx
+        auto moving = std::move(*owner);      // take node idx
+        *owner = std::move(moving->next);     // owner now owns the remainder
+        moving->next = nullptr;               // optional: make it explicit it's detached
+        return moving;
+    };
+
+    auto insertAfter = [&](unsigned int idx, std::unique_ptr<Node> moving) {
+        auto* owner = requireOwner(idx);
+        Node* node = owner->get();
+        if (!node) throw std::out_of_range{"Index out of range!"};
+
+        moving->next = std::move(node->next);
+        node->next = std::move(moving);
+    };
+
+    // - if index1 < index2: move node at index2 after node at index1, unless already adjacent
+    // - else: move node at index2 after node at (index1 - 1)
+    if (index1 < index2) {
+        auto* owner1 = requireOwner(index1);
+        auto* owner2 = requireOwner(index2);
+
+        Node* node1 = owner1->get();
+        Node* node2 = owner2->get();
+        if (!node1 || !node2) throw std::out_of_range{"Index out of range!"};
+
+        if (node1->next.get() == node2) {
+            return; // already connected in desired way
+        }
+
+        insertAfter(index1, detachAt(index2));
+        return;
+    }
+
+    // index1 > index2
+    if (index1 == 0) { // defensive: would underflow (even though bounds might already prevent it)
+        throw std::out_of_range{"Index out of range!"};
+    }
+    insertAfter(index1 - 1, detachAt(index2));
 }
 
 void List::print() const {
