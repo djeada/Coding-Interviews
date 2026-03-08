@@ -3,19 +3,6 @@
  *
  * MERGE TWO SORTED LINKED LISTS
  *
- * Merge two sorted linked lists into a single sorted list. Two solutions are
- * provided:
- *
- * 1. Optimal (Two-Pointer) Solution:
- *    - Uses two indices to traverse both lists simultaneously, appending the
- *      smaller element at each step.
- *    - Time Complexity: O(n + m) where n and m are the sizes of the two lists.
- *
- * 2. Alternative (Concatenate and Sort) Solution:
- *    - First concatenates both lists into one, then sorts the resulting list.
- *    - Simpler to implement but less efficient due to the sorting step.
- *    - Time Complexity: O((n + m) log(n + m))
- *
  * ASCII Illustration:
  *
  *    List1: 1 -> 3 -> 5
