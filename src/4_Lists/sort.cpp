@@ -1,3 +1,25 @@
+/*
+ * Task: Sort a singly linked list in non-decreasing order.
+ *
+ * SORT LINKED LIST (INSERTION SORT)
+ *
+ * Problem:
+ * Given the head of a singly linked list, sort the list in ascending order.
+ * This implementation performs insertion sort by re-linking nodes.
+ *
+ * Constraints:
+ * - 0 <= n <= 10^5
+ * - -10^9 <= Node.val <= 10^9
+ *
+ * Example 1:
+ * Input: head = [2,4,5,1,3]
+ * Output: [1,2,3,4,5]
+ *
+ * Example 2:
+ * Input: head = [5,4,3,2,1]
+ * Output: [1,2,3,4,5]
+ */
+
 #include "list.h"
 #include <iostream>
 #include <memory>

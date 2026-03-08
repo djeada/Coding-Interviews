@@ -1,29 +1,23 @@
 /*
  * Task: Delete duplicate values from a singly linked list.
  *
- * DELETE DUPLICATE NODES IN A LINKED LIST
+ * REMOVE DUPLICATES FROM AN UNSORTED LINKED LIST
  *
- * Define a class named UniqueList that extends a basic singly linked list
- * (from list.h) and provides an operation to delete duplicate nodes from the
- * list. The deletion process is implemented by traversing the list and using
- * an unordered_set to keep track of seen values. When a duplicate node is
- * encountered, it is removed from the list.
+ * Problem:
+ * Given the head of an unsorted singly linked list, remove duplicate values so
+ * that each value appears only once. Keep the first occurrence of each value.
  *
- * ASCII Illustration:
+ * Constraints:
+ * - 0 <= n <= 10^5
+ * - Node values are 32-bit signed integers.
  *
- *      Before: 1 -> 2 -> 3 -> 4 -> 4 -> 5
- *                      |         |
- *                      +---------+
+ * Example 1:
+ * Input: head = [1,2,3,4,4,5]
+ * Output: [1,2,3,4,5]
  *
- *      After:  1 -> 2 -> 3 -> 4 -> 5
- *
- * Example Input/Output:
- * Input List: 1, 2, 3, 4, 4, 5
- * Output List: 1, 2, 3, 4, 5
- *
- * Explanation:
- * The duplicate node containing 4 is removed so that each value appears only
- * once.
+ * Example 2:
+ * Input: head = [1,1,1,1,2]
+ * Output: [1,2]
  */
 
 #include "list.h"

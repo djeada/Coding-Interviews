@@ -1,32 +1,23 @@
 /*
  * Task: Print the elements of a linked list in reverse order.
  *
- * PRINT LINKED LIST IN REVERSE ORDER
+ * PRINT LINKED LIST IN REVERSE
  *
- * Demonstrate two approaches to print the elements of a linked list in reverse
- * order.
+ * Problem:
+ * Given the head of a singly linked list, output the node values from tail to
+ * head. This file demonstrates both iterative (stack) and recursive solutions.
  *
- * ASCII Illustration:
+ * Constraints:
+ * - 0 <= n <= 10^5
+ * - Node values are 32-bit signed integers.
  *
- *     List: 1 -> 2 -> 3
+ * Example 1:
+ * Input: head = [1,2,3]
+ * Output: [3,2,1]
  *
- *     Reverse Output:
- *         3
- *         2
- *         1
- *
- * Example:
- * Input:  List = [1, 2, 3]
- * Output:
- *         (Iterative)
- *             3
- *             2
- *             1
- *
- *         (Recursive)
- *             3
- *             2
- *             1
+ * Example 2:
+ * Input: head = []
+ * Output: []
  */
 
 #include "list.h"

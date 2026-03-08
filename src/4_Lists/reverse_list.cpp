@@ -1,28 +1,23 @@
 /*
  * Task: Reverse a singly linked list in-place using pointer re-linking.
  *
- * REVERSE A LINKED LIST USING UNIQUE_PTR
+ * REVERSE LINKED LIST
  *
- * Define a class ListWithReversion that extends a basic singly linked list
- * (from list.h) by providing a function to reverse the list. The reversal is
- * done by re-linking the nodes, which are managed by std::unique_ptr, without
- * creating new nodes.
+ * Problem:
+ * Given the head of a singly linked list, reverse the list in-place and return
+ * the reversed list.
  *
- * ASCII Illustration:
+ * Constraints:
+ * - 0 <= n <= 10^5
+ * - Node values are 32-bit signed integers.
  *
- *   Original List: 1 -> 2 -> 3 -> 4 -> 5
- *         |
- *       Reverse
- *         V
- *   Reversed List: 5 -> 4 -> 3 -> 2 -> 1
+ * Example 1:
+ * Input: head = [1,2,3,4,5]
+ * Output: [5,4,3,2,1]
  *
- * Example:
- * Input:  List = [1, 2, 3, 4, 5]
- * Output: List = [5, 4, 3, 2, 1]
- *
- * Edge Cases:
- * - An empty list remains empty.
- * - A list with a single element remains unchanged.
+ * Example 2:
+ * Input: head = []
+ * Output: []
  */
 
 #include "list.h"

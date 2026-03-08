@@ -1,30 +1,25 @@
 /*
  * Task: Detect whether a linked list contains a loop.
  *
- * DETECT LOOP IN A LINKED LIST (WITH LOOPS)
+ * LINKED LIST CYCLE
  *
- * Define a linked list class (ListWithLoops) that supports creating loops in
- * the list by connecting nodes arbitrarily. Memory management is handled by
- * storing all allocated nodes in a vector so that they can be safely deleted
- * even if a loop exists.
+ * Problem:
+ * Given the head of a linked list, determine whether it contains a cycle. A
+ * cycle exists if some node can be reached again by continuously following
+ * next pointers.
  *
- * ASCII Illustration:
+ * Constraints:
+ * - 0 <= n <= 10^5
+ * - Node values are 32-bit signed integers.
+ * - `next` may point to any node in the list or null.
  *
- *      Without Loop:
- *        1 -> nullptr
+ * Example 1:
+ * Input: head = [1,2,3,4,5], tail connects to index 2
+ * Output: true
  *
- *      With Loop:
- *        1 -> 2 -> 3 -> 4 -> 5
- *                 ^         |
- *                 |_________|
- *
- * Example:
- * Input:  List = [1, 2, 3, 4, 5] with connection from node 5 to node 3.
- * Output: hasLoop() returns true.
- *
- * Edge Cases:
- *  - A single node with no loop.
- *  - A node connected to itself.
+ * Example 2:
+ * Input: head = [1], tail connects to null
+ * Output: false
  */
 
 #include <algorithm>

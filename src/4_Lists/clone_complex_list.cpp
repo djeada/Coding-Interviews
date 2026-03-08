@@ -1,33 +1,25 @@
 /*
  * Task: Deep copy a linked list with sibling pointers.
  *
- * DEEP COPY OF A COMPLEX LINKED LIST WITH SIBLING POINTERS
+ * COPY LIST WITH RANDOM (SIBLING) POINTER
  *
- * Define a class named ComplexList that represents a singly linked list where
- * each node has an integer value, a pointer to the next node, and an additional
- * "sibling" pointer that can reference any other node in the list. The class
- * supports operations for appending nodes, setting sibling pointers, and
- * performing a deep copy of the entire list while preserving the sibling
- * relationships.
+ * Problem:
+ * Given a linked list where each node has `next` and `sibling` pointers,
+ * create a deep copy of the list. The copied nodes must be new objects, and
+ * every copied sibling pointer must reference the corresponding copied node.
  *
- * ASCII Illustration:
+ * Constraints:
+ * - 0 <= n <= 10^5
+ * - Node values are 32-bit signed integers.
+ * - `sibling` is either null or points to any node in the same list.
  *
- *    Original List:      Copied List:
+ * Example 1:
+ * Input: values = [1,2,3,4,5], sibling = {1->3, 2->5, 5->2}
+ * Output: deep-copied list with identical `next` and `sibling` structure
  *
- *      1  -->  2  -->  3       1  -->  2  -->  3
- *       \       \              \       \
- *        v       v              v       v
- *        3       5              3       5
- *
- * Example:
- * Input List:
- *    Node values: 1 -> 2 -> 3 -> 4 -> 5
- *    Sibling relationships:
- *      - 1's sibling -> 3
- *      - 2's sibling -> 5
- *      - 5's sibling -> 2
- *
- * When copied, both lists will have the same structure and sibling connections.
+ * Example 2:
+ * Input: values = [1], sibling = {}
+ * Output: [1] (copied node, not the same address)
  */
 
 #include "list.h"

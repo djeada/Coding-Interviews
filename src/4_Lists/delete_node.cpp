@@ -1,25 +1,24 @@
 /*
  * Task: Remove the first occurrence of a value from a singly linked list.
  *
- * REMOVE ELEMENT FROM A LINKED LIST
+ * REMOVE LINKED LIST ELEMENT
  *
- * Extend a basic singly linked list (as defined in list.h) by providing a
- * function to remove the first occurrence of a given value from the list.
+ * Problem:
+ * Given the head of a singly linked list and an integer target, remove the
+ * first node whose value equals target. If target does not exist, keep the
+ * list unchanged.
  *
- * ASCII Illustration:
+ * Constraints:
+ * - 0 <= n <= 10^5
+ * - Node values and target are 32-bit signed integers.
  *
- *     Before removal: 1 -> 2 -> 3 -> 4 -> 5
- *                     remove(3)
- *     After removal:  1 -> 2 -> 4 -> 5
+ * Example 1:
+ * Input: head = [1,2,3,4,5], target = 3
+ * Output: [1,2,4,5]
  *
- * Example:
- * Input:  List = [1, 2, 3, 4, 5], remove(3)
- * Output: List = [1, 2, 4, 5]
- *
- * Edge Cases:
- * - Removing the head element.
- * - Removing the tail element.
- * - Removing from a list with a single element.
+ * Example 2:
+ * Input: head = [1], target = 1
+ * Output: []
  */
 
 #include "list.h"

@@ -1,25 +1,24 @@
 /*
  * Task: Find the kth element from the tail of a singly linked list.
  *
- * FIND KTH TO TAIL ELEMENT IN A LINKED LIST
+ * KTH NODE FROM END OF LIST
  *
- * Find the kth element from the tail (0-indexed) of a singly linked list.
- * Three solutions are provided:
+ * Problem:
+ * Given the head of a singly linked list and an integer k (0-indexed from the
+ * tail), return the value of the kth node from the end of the list.
  *
- * ASCII Illustration:
+ * Constraints:
+ * - 1 <= n <= 10^5
+ * - 0 <= k < n
+ * - Node values are 32-bit signed integers.
  *
- *      Linked List: 1 -> 2 -> 3 -> 4 -> 5
+ * Example 1:
+ * Input: head = [1,2,3,4,5], k = 0
+ * Output: 5
  *
- *      For k = 0 (0th from tail), the answer is 5.
- *      For k = 4 (4th from tail), the answer is 1.
- *
- * Example Input/Output:
- * Input:  List = 1 -> 2 -> 3 -> 4 -> 5, k = 1
+ * Example 2:
+ * Input: head = [1,2,3,4,5], k = 1
  * Output: 4
- *
- * Explanation:
- * For k=1, the kth element from the tail is the second-to-last element in the
- * list.
  */
 
 #include "list.h"

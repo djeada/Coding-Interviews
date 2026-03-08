@@ -1,22 +1,24 @@
 /*
  * Task: Merge two sorted linked lists into one sorted list.
  *
- * MERGE TWO SORTED LINKED LISTS
+ * MERGE TWO SORTED LISTS
  *
- * ASCII Illustration:
+ * Problem:
+ * Given the heads of two sorted linked lists, merge them into one sorted list
+ * containing all nodes from both lists.
  *
- *    List1: 1 -> 3 -> 5
- *    List2: 2 -> 4 -> 6
+ * Constraints:
+ * - 0 <= n, m <= 10^5
+ * - -10^9 <= Node.val <= 10^9
+ * - Both input lists are sorted in non-decreasing order.
  *
- *    Merged: 1 -> 2 -> 3 -> 4 -> 5 -> 6
+ * Example 1:
+ * Input: list1 = [1,3,5], list2 = [2,4,6]
+ * Output: [1,2,3,4,5,6]
  *
- * Example:
- * Input:  list1 = [1, 3, 5], list2 = [2, 4, 6]
- * Output: [1, 2, 3, 4, 5, 6]
- *
- * Edge Cases:
- * - One or both lists are empty.
- * - Lists of different lengths.
+ * Example 2:
+ * Input: list1 = [1,2,3], list2 = []
+ * Output: [1,2,3]
  */
 
 #include "list.h"
