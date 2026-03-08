@@ -6,17 +6,6 @@
  * Demonstrate two approaches to print the elements of a linked list in reverse
  * order.
  *
- * 1. Iterative Approach:
- *    - Uses a stack to store list elements and then prints them in reverse
- * order by popping the stack.
- *    - Time Complexity: O(n), Space Complexity: O(n)
- *
- * 2. Recursive Approach:
- *    - Uses recursion to traverse the list to the end and then prints the
- * elements as the recursion unwinds.
- *    - Time Complexity: O(n), Space Complexity: O(n) due to the recursion
- * stack.
- *
  * ASCII Illustration:
  *
  *     List: 1 -> 2 -> 3
