@@ -6,11 +6,6 @@
  * Extend a basic singly linked list (as defined in list.h) by providing a
  * function to remove the first occurrence of a given value from the list.
  *
- * The remove operation works as follows:
- * - It traverses the list looking for the node containing the target value.
- * - If found, it adjusts the pointers to exclude the node from the list.
- * - Special handling is provided for removing the head node.
- *
  * ASCII Illustration:
  *
  *     Before removal: 1 -> 2 -> 3 -> 4 -> 5
