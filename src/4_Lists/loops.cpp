@@ -8,11 +8,6 @@
  * storing all allocated nodes in a vector so that they can be safely deleted
  * even if a loop exists.
  *
- * The class provides:
- *  - append: Add a new node with a given value.
- *  - connectNodes: Connect one node to another (forming a loop if desired).
- *  - hasLoop: Detects a loop in the list using Floyd's cycle-finding algorithm.
- *
  * ASCII Illustration:
  *
  *      Without Loop:
