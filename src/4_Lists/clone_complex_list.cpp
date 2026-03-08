@@ -10,11 +10,6 @@
  * performing a deep copy of the entire list while preserving the sibling
  * relationships.
  *
- * The deep copy is implemented in the copy constructor, which:
- * - Traverses the original list to create new nodes and maps each original node
- * to its copy.
- * - Iterates again to correctly set the sibling pointers in the copied list.
- *
  * ASCII Illustration:
  *
  *    Original List:      Copied List:
