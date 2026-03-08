@@ -1,32 +1,19 @@
 /*
  * Task: Find a root-to-leaf path with a given sum in a binary tree.
  *
- * FIND PATH WITH GIVEN SUM IN A BINARY TREE
+ * ROOT-TO-LEAF PATH SUM
  *
- * Extend an assumed BinaryTree implementation (from "binary_tree.h") by
- * adding functionality to find a path from the root to a leaf whose node
- * values sum up to a given target.
+ * Problem:
+ * Given a binary tree and a target sum, find one root-to-leaf path whose node
+ * values add up to the target. Return an empty result if no such path exists.
  *
- * The algorithm uses a recursive helper function that traverses the tree while
- * maintaining the current sum and the path taken. If a leaf is reached and the
- * current sum equals the target sum, the path is returned. Otherwise, the
- * algorithm backtracks.
+ * Constraints:
+ * - 0 <= number of nodes <= 10^5
+ * - Node values and target sum are 32-bit signed integers.
  *
- * ASCII Illustration:
- *         10
- *        /  \
- *       5   12
- *      / \
- *     4   7
- *
- * Example Input/Output:
- * Input: Tree built by inserting values {10, 5, 12, 4, 7} and targetSum = 22.
- * Output: Path [10, 5, 7] since 10 + 5 + 7 = 22.
- *
- * Explanation:
- * The algorithm explores each root-to-leaf path. When it reaches the leaf node,
- * it checks if the sum of the values along the path matches the target sum. If
- * so, it returns that path; if not, it backtracks.
+ * Example:
+ * Input: root built from [10,5,12,4,7], targetSum = 22
+ * Output: [10,5,7]
  */
 
 #include "binary_tree.h"

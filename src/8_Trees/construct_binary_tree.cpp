@@ -1,37 +1,20 @@
 /*
  * Task: Construct a binary tree from inorder and preorder traversals.
  *
- * BINARY TREE CONSTRUCTION FROM TRAVERSAL DATA
+ * CONSTRUCT BINARY TREE FROM PREORDER AND INORDER TRAVERSAL
  *
- * Construct a binary tree from given inorder and preorder traversal arrays. It
- * extends an assumed BinaryTree implementation provided in "binary_tree.h".
+ * Problem:
+ * Given preorder and inorder traversal arrays of the same binary tree, rebuild
+ * and return the original tree.
  *
- * The algorithm is based on the fact that:
- *   - The first element in the preorder array is always the root of the
- * (sub)tree.
- *   - The inorder array is used to separate the left and right subtrees.
+ * Constraints:
+ * - 1 <= n <= 10^5
+ * - preorder and inorder contain unique values.
+ * - preorder.size() == inorder.size()
  *
- * ASCII Illustration:
- *           9
- *          / \
- *         8  13
- *        /   / \
- *       4   10 16
- *        \
- *         7
- *
- * Example Input/Output:
- * Input:
- *   Preorder: [9, 8, 4, 7, 13, 10, 16, 15]
- *   Inorder:  [4, 7, 8, 9, 10, 13, 15, 16]
- * Output:
- *   A binary tree that, when traversed, yields the corresponding inorder and
- * preorder arrays.
- *
- * Explanation:
- *   The tree is built by selecting the root from the preorder array and
- * partitioning the inorder array into left and right subtrees, recursively
- * constructing each subtree.
+ * Example:
+ * Input: preorder = [9,8,4,7,13,10,16,15], inorder = [4,7,8,9,10,13,15,16]
+ * Output: tree consistent with both traversals
  */
 
 #include "binary_tree.h" // Assumed to exist and be implemented.

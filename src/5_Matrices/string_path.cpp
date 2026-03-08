@@ -1,34 +1,21 @@
 /*
  * Task: Determine whether a string can be formed by a path in a 2D matrix.
  *
- * PATH SEARCH IN MATRIX FOR A STRING
+ * WORD SEARCH IN MATRIX
  *
- * Determine whether there exists a path in a 2D matrix such that, starting
- * from any cell, moving horizontally or vertically (up, down, left, right) and
- * without revisiting cells, the characters along the path form a specified
- * string.
+ * Problem:
+ * Given a 2D grid of characters and a target string, determine whether the
+ * string can be formed by moving up, down, left, or right between adjacent
+ * cells. A cell may be used at most once in a single path.
  *
- * ASCII Illustration:
+ * Constraints:
+ * - 1 <= rows, cols <= 200
+ * - 1 <= target.length <= rows * cols
+ * - Grid contains printable ASCII characters.
  *
- *          Matrix:
- *        +---+---+---+
- *        | A | B | C |
- *        +---+---+---+
- *        | D | E | F |
- *        +---+---+---+
- *        | G | H | I |
- *        +---+---+---+
- *
- *      Target String: "ABE"
- *      One valid path: (0,0) -> (0,1) -> (1,1)
- *
- * Example Input/Output:
- * Input:  Matrix = {"ABC", "DEF", "GHI"}, Target = "ABE"
+ * Example:
+ * Input: matrix = ["ABC","DEF","GHI"], target = "ABE"
  * Output: true
- *
- * Explanation:
- * The path starting at 'A' at (0,0), moving right to 'B' at (0,1), and then
- * down to 'E' at (1,1) forms the target string "ABE".
  */
 
 #include <functional>

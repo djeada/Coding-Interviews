@@ -1,34 +1,19 @@
 /*
  * Task: Find the contiguous subarray with the maximum sum.
  *
- * MAXIMUM SUBARRAY PROBLEM
+ * MAXIMUM SUBARRAY
  *
- * Find the contiguous subarray within a one-dimensional array of numbers that
- * has the largest sum.
+ * Problem:
+ * Given an integer array, find the contiguous subarray with the largest sum
+ * and return that sum.
  *
- * We provide two implementations:
- *  1. Naive Approach (Easy to implement) that computes the sum of every
- * possible contiguous subarray. It has a quadratic time complexity: O(n^2).
- *  2. Optimal Approach using Kadane's algorithm, which computes the result in
- *     linear time: O(n).
+ * Constraints:
+ * - 1 <= nums.size() <= 10^5
+ * - -10^9 <= nums[i] <= 10^9
  *
- * Edge Cases:
- *  - Arrays with all negative numbers (should return the maximum single
- * element).
- *  - Arrays with a single element.
- *
- * Visual Illustration:
- *  Given the array:
- *     [ 1, -2, 3, 10, -4, 7, 2, -5 ]
- *
- *  The contiguous subarray with the maximum sum is:
- *     [ 3, 10, -4, 7, 2 ]
- *
- * Example Input/Output:
- *  Input:  [ 1, -2, 3, 10, -4, 7, 2, -5 ]
- *  Output: 18
- *  Explanation: The sum of the subarray [ 3, 10, -4, 7, 2 ] equals 18, which is
- *               the maximum achievable sum among all contiguous subarrays.
+ * Example:
+ * Input: nums = [1,-2,3,10,-4,7,2,-5]
+ * Output: 18
  */
 
 #include <algorithm>

@@ -1,35 +1,20 @@
 /*
  * Task: Find all nodes at distance k from the root in a binary tree.
  *
- * FIND NODES AT K DISTANCE FROM ROOT IN A BINARY TREE
+ * NODES AT DISTANCE K FROM ROOT
  *
- * Extend an assumed BinaryTree implementation (from "binary_tree.h") by
- * adding functionality to find all nodes that are exactly K edges away from
- * the root.
+ * Problem:
+ * Given the root of a binary tree and an integer k, return all node values
+ * that are exactly k edges away from the root.
  *
- * The algorithm uses a recursive helper function that traverses the tree,
- * decrementing the distance until it reaches zero. When the distance is zero,
- * the node's value is added to the result.
+ * Constraints:
+ * - 0 <= number of nodes <= 10^5
+ * - 0 <= k <= 10^5
+ * - Node values are 32-bit signed integers.
  *
- * ASCII Illustration:
- *             9
- *            / \
- *           8   13
- *          /   /  \
- *         4   10  16
- *          \
- *           7        <- Node at distance 3
- *                \
- *                15     <- Node at distance 3
- *
- * Example Input/Output:
- * Input: Tree built by inserting values {9, 8, 13, 4, 10, 16, 7, 15} and k = 3.
- * Output: Nodes at distance 3 are [7, 15].
- *
- * Explanation:
- * Starting from the root (distance 0), the algorithm recursively explores the
- * tree, reducing the distance by one at each level. When the distance becomes
- * zero, the current node is part of the result.
+ * Example:
+ * Input: root built from [9,8,13,4,10,16,7,15], k = 3
+ * Output: [7,15]
  */
 
 #include "binary_tree.h"

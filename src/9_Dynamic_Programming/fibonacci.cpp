@@ -1,26 +1,19 @@
 /*
  * Task: Compute the nth Fibonacci number.
  *
- * COMPUTING THE N-TH FIBONACCI NUMBER
+ * NTH FIBONACCI NUMBER
  *
- * Given a non-negative integer n, compute the nth Fibonacci number.
- * The Fibonacci sequence is defined by the recurrence relation:
- *
- *    F(0) = 0, F(1) = 1,
- *    F(n) = F(n-1) + F(n-2) for n > 1.
+ * Problem:
+ * Given n, return the nth Fibonacci number where F(0) = 0, F(1) = 1, and
+ * F(n) = F(n-1) + F(n-2).
  *
  * Constraints:
- *    - 0 <= n <= 90 (to avoid overflow with long long)
+ * - 0 <= n <= 90
+ * - Use 64-bit integer arithmetic for this range.
  *
- * Visual illustration (Fibonacci sequence):
- *
- *    n: 0  1  2  3  4  5  6  7  8  9  10
- * F(n): 0  1  1  2  3  5  8 13 21 34  55
- *
- * Example Input/Output:
- * Input:  7
+ * Example:
+ * Input: n = 7
  * Output: 13
- * Explanation: The 7th Fibonacci number (0-indexed) is 13.
  */
 
 #include <algorithm>

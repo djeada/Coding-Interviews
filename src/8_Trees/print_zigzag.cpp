@@ -1,32 +1,19 @@
 /*
  * Task: Print a binary tree in zigzag (spiral) level order.
  *
- * ZIGZAG (SPIRAL) LEVEL ORDER TRAVERSAL
+ * BINARY TREE ZIGZAG LEVEL ORDER TRAVERSAL
  *
- * Extend an assumed BinaryTree implementation (from "binary_tree.h") by
- * adding functionality to print the tree in a zigzag (spiral) level order.
- * This means that the nodes at each level are printed alternately from
- * left-to-right and right-to-left.
+ * Problem:
+ * Given the root of a binary tree, output node values level by level while
+ * alternating direction each level (left-to-right, then right-to-left).
  *
- * Approach:
- *   - Use two stacks to alternate between levels.
- *   - For the current level, push the child nodes into the alternate stack in
- * an order that ensures the next level is printed in the opposite direction.
+ * Constraints:
+ * - 0 <= number of nodes <= 10^5
+ * - Node values are 32-bit signed integers.
  *
- * ASCII Illustration:
- *           10
- *          /  \
- *         5    12
- *             /  \
- *           11    16
- *
- * Example Output:
- * For the tree built by inserting {10, 5, 12, 11, 16}, the printed output might
- * be: 10 12 5 11 16
- *
- * Explanation:
- * The first level is printed left-to-right (just the root), the second level is
- * printed right-to-left, and the process alternates for subsequent levels.
+ * Example:
+ * Input: root built from [10,5,12,11,16]
+ * Output: [10,12,5,11,16]
  */
 
 #include "binary_tree.h"

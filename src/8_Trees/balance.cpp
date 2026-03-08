@@ -1,38 +1,20 @@
 /*
  * Task: Check whether a binary tree is height-balanced.
  *
- * BINARY TREE BALANCE CHECK
+ * BALANCED BINARY TREE
  *
- * Demonstrate two modern C++ solutions to check whether a binary search tree is
- * balanced. A binary tree is considered balanced if, for every node, the
- * difference in height between its left and right subtrees is no more than one.
+ * Problem:
+ * Given the root of a binary tree, determine whether the tree is height
+ * balanced. A tree is balanced if for every node, the heights of the left and
+ * right subtrees differ by at most 1.
  *
- * Two approaches are implemented:
- * 1. Simple (Brute-force) Approach:
- *    - For each node, recursively compute the depths of its left and right
- * subtrees and check the difference.
- *    - This solution is easy to implement but can be inefficient (O(n^2) in the
- * worst case) because depth is computed repeatedly for the same nodes.
+ * Constraints:
+ * - 0 <= number of nodes <= 10^5
+ * - Node values are 32-bit signed integers.
  *
- * 2. Optimal (Efficient) Approach:
- *    - Combine the depth calculation and balance checking in a single recursive
- * function.
- *    - This approach improves performance to O(n) by avoiding redundant
- * computations.
- *
- * ASCII Illustration:
- *           4
- *          / \
- *         2   6
- *        / \ / \
- *       1  3 5  7
- *
- * Example Input/Output:
- * Input: Insert values [4, 6, 2, 3, 1, 5, 7] into the tree.
- * Output: The tree is balanced.
- *
- * Explanation: Each node's left and right subtree depths differ by no more
- * than 1.
+ * Example:
+ * Input: root = [4,2,6,1,3,5,7]
+ * Output: true
  */
 
 #include "binary_tree.h"

@@ -1,32 +1,20 @@
 /*
  * Task: Find the minimum number of coins needed to reach a target amount.
  *
- * MINIMUM COIN CHANGE PROBLEM
+ * COIN CHANGE (MINIMUM COINS)
  *
- * Given a set of coin denominations and a target amount, determine the minimum
- * number of coins required to reach exactly that amount. If it's impossible,
- * indicate appropriately.
+ * Problem:
+ * Given coin denominations and a target amount, return the minimum number of
+ * coins needed to form the amount. If impossible, return an impossible marker.
  *
  * Constraints:
- * - Coin denominations are positive integers and unique.
- * - Target amount is a non-negative integer.
- * - If the amount cannot be formed, return INT_MAX.
+ * - 1 <= coins.size() <= 100
+ * - 1 <= coin value <= 10^4
+ * - 0 <= targetAmount <= 10^5
  *
- * Visual illustration (example):
- * Coin denominations = [1, 3, 4]
- * Target amount = 6
- *
- * Possible combinations:
- * 6 = 3 + 3 (2 coins)
- * 6 = 4 + 1 + 1 (3 coins)
- * 6 = 1 + 1 + 1 + 1 + 1 + 1 (6 coins)
- *
- * Optimal solution picks 3 + 3 = 2 coins.
- *
- * Example Input/Output:
- * Input: coins = [1, 3, 4], target = 6
+ * Example:
+ * Input: coins = [1,3,4], targetAmount = 6
  * Output: 2
- * Explanation: The minimal combination is [3, 3].
  */
 
 #include <algorithm>

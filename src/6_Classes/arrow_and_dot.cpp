@@ -1,38 +1,21 @@
 /*
  * Task: Demonstrate member access with dot and arrow operators in C++.
  *
- * Arrow and Dot Showcase
+ * DOT VS ARROW MEMBER ACCESS
  *
- * Demonstrate how to access class members using both the dot (.) and arrow (->)
- * operators in C++. A class "Human" is defined with private and public members.
- * We create an object (accessed via the dot operator) and a pointer to an
- * object (accessed via the arrow operator). The program also uses the scope
- * resolution operator (::) to call a static member function.
+ * Problem:
+ * Show how to access class members through an object instance (`.`) and
+ * through a pointer (`->`), and how to call a static member function with
+ * scope resolution (`::`).
  *
- * ASCII Illustration:
+ * Constraints:
+ * - `.` is used with object values.
+ * - `->` is used with pointers to objects.
+ * - Static member calls do not require an object instance.
  *
- *       +--------------+
- *       |    Human     |
- *       +--------------+
- *       | - age        |
- *       | - occupation |
- *       | + name       |
- *       +--------------+
- *             |
- *   +---------+---------+
- *   |                   |
- * Object             Pointer
- * (dot operator)     (arrow operator)
- *
- * Example Output:
- * Name: Jim
- * Jim of age 13 is doing something.
- * Jim works as a Student.
- * Name: Tom
- * Tom of age 24 is doing something.
- * Tom works as a Engineer.
- * Tom works as a Data Scientist.
- * Jim is 13 years old.
+ * Example:
+ * Input: Human firstMan(13, "Jim", "Student"), Human* secondMan = new Human(...)
+ * Output: reads/writes members correctly through both access styles
  */
 
 #include <iostream>

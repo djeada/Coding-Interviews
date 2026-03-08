@@ -3,50 +3,17 @@
  *
  * LONGEST INCREASING PATH IN A MATRIX
  *
- * Find the length of the longest strictly increasing path in a given 2D matrix.
- * From any cell, you can move in four directions (up, down, left, right) to a
- * neighboring cell with a higher value.
+ * Problem:
+ * Given an m x n matrix, return the length of the longest strictly increasing
+ * path where moves are allowed in four directions: up, down, left, and right.
  *
- * Three solutions are provided:
- *
- * 1. Simple (Brute-force DFS) Solution:
- *    Recursively explores all paths from each cell without caching intermediate
- *    results. This approach is easy to implement but suffers from exponential
- *    time complexity.
- *
- * 2. Optimal (DFS with Memoization) Solution:
- *    Uses depth-first search (DFS) along with memoization to cache the length
- * of the longest increasing path starting from each cell, significantly
- * reducing redundant computations. Time complexity: O(m*n).
- *
- * 3. Alternative (Topological Sort) Solution:
- *    Constructs a directed acyclic graph (DAG) based on the matrix and performs
- * a topological sort (using a BFS-like approach) to compute the longest
- * increasing path. This method leverages in-degrees to start from local minima.
- *
- * ASCII Illustration:
- *
- *     Consider the matrix:
- *
- *         [ 9, 9, 4 ]
- *         [ 6, 6, 8 ]
- *         [ 2, 1, 1 ]
- *
- *     One longest increasing path is:
- *         1 -> 2 -> 6 -> 9
+ * Constraints:
+ * - 1 <= m, n <= 200
+ * - -10^9 <= matrix[i][j] <= 10^9
  *
  * Example:
- *   Input:
- *     matrix = [ [9, 9, 4],
- *                [6, 6, 8],
- *                [2, 1, 1] ]
- *
- *   Output:
- *     4
- *
- *   Explanation:
- *     The longest increasing path is of length 4, for example: 1 -> 2 -> 6
- * -> 9.
+ * Input: matrix = [[9,9,4],[6,6,8],[2,1,1]]
+ * Output: 4
  */
 
 #include <algorithm>

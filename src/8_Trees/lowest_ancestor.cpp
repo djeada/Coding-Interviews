@@ -1,44 +1,20 @@
 /*
  * Task: Find the lowest common ancestor of two nodes in a BST.
  *
- * LOWEST COMMON ANCESTOR IN A BINARY SEARCH TREE
+ * LOWEST COMMON ANCESTOR OF A BST
  *
- * Extend an assumed BinaryTree implementation (from "binary_tree.h") by
- * adding functionality to find the lowest common ancestor (LCA) of two nodes
- * in a binary search tree (BST).
+ * Problem:
+ * Given the root of a binary search tree and two node values p and q, return
+ * the value of their lowest common ancestor.
  *
- * The lowest common ancestor of two nodes in a BST is defined as the lowest
- * node in the tree that has both nodes as descendants (where we allow a node to
- * be a descendant of itself).
+ * Constraints:
+ * - 2 <= number of nodes <= 10^5
+ * - All node values are unique.
+ * - p and q both exist in the BST.
  *
- * Approach:
- * 1. The function first checks if the tree is empty or if either of the values
- * is not present in the tree, in which case an exception is thrown.
- * 2. The recursive helper function 'findLCA' takes advantage of the BST
- * property:
- *    - If both values are less than the current node's value, the LCA must be
- * in the left subtree.
- *    - If both values are greater than the current node's value, the LCA must
- * be in the right subtree.
- *    - Otherwise, the current node is the LCA.
- *
- * ASCII Illustration:
- *              20
- *             /  \
- *            8    22
- *           / \
- *          4  12
- *             / \
- *            10 14
- *
- * Example Input/Output:
- * Input: Insert values {20, 8, 22, 4, 12, 10, 14} into the BST.
- * Query: Find LCA of 10 and 14.
+ * Example:
+ * Input: root = [20,8,22,4,12,10,14], p = 10, q = 14
  * Output: 12
- *
- * Explanation:
- * For values 10 and 14, the LCA is 12 because 12 is the lowest node that is an
- * ancestor to both.
  */
 
 #include "binary_tree.h"

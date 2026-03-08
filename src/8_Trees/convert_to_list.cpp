@@ -1,37 +1,19 @@
 /*
  * Task: Return inorder and preorder traversals of a binary tree as vectors.
  *
- * BINARY TREE TRAVERSALS WITH VECTOR OUTPUT
+ * BINARY TREE TRAVERSALS TO VECTOR
  *
- * Extend an assumed BinaryTree implementation (from "binary_tree.h") by
- * adding inorder and preorder traversal methods that return the result as a
- * std::vector<int>.
+ * Problem:
+ * Given the root of a binary tree, return its inorder traversal and preorder
+ * traversal as arrays.
  *
- * The inorder() method uses an iterative approach with a stack to traverse the
- * tree in left-root-right order. The preorder() method uses an iterative
- * approach with a stack to traverse the tree in root-left-right order.
+ * Constraints:
+ * - 0 <= number of nodes <= 10^5
+ * - Node values are 32-bit signed integers.
  *
- * ASCII Illustration:
- *             9
- *            / \
- *           8   13
- *          /   /  \
- *         4   10  16
- *          \
- *           7
- *                \
- *                15
- *
- * Example Input/Output:
- * When the tree is built by adding values in the order:
- *   {9, 8, 13, 4, 10, 16, 7, 15}
- * the inorder traversal returns: {4, 7, 8, 9, 10, 13, 15, 16}
- * and the preorder traversal returns: {9, 8, 4, 7, 13, 10, 16, 15}
- *
- * Explanation:
- * The tree is traversed using an iterative approach. Inorder traversal visits
- * the left subtree, the root, then the right subtree. Preorder traversal visits
- * the root first, then the left subtree followed by the right subtree.
+ * Example:
+ * Input: root built from [9,8,13,4,10,16,7,15]
+ * Output: inorder = [4,7,8,9,10,13,15,16], preorder = [9,8,4,7,13,10,16,15]
  */
 
 #include "binary_tree.h"

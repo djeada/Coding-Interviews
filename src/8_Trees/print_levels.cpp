@@ -1,30 +1,19 @@
 /*
  * Task: Print a binary tree in level-order (breadth-first) traversal.
  *
- * BREADTH-FIRST PRINT (LEVEL ORDER TRAVERSAL)
+ * BINARY TREE LEVEL ORDER TRAVERSAL
  *
- * Extend an assumed BinaryTree implementation (from "binary_tree.h") by
- * adding functionality to print the tree in a breadth-first (level order)
- * manner.
+ * Problem:
+ * Given the root of a binary tree, output the node values in level-order
+ * (breadth-first) from left to right.
  *
- * The algorithm uses a queue to traverse the tree level by level:
- *   - Start from the root node and push it into the queue.
- *   - While the queue is not empty, remove the front node, print its value, and
- * enqueue its children.
+ * Constraints:
+ * - 0 <= number of nodes <= 10^5
+ * - Node values are 32-bit signed integers.
  *
- * ASCII Illustration:
- *           10
- *          /  \
- *         5    12
- *             /  \
- *           11    16
- *
- * Example Output:
- * For the tree built by inserting {10, 5, 12, 11, 16}, the printed output will
- * be: 10 5 12 11 16
- *
- * Explanation:
- * The nodes are printed level by level from left to right.
+ * Example:
+ * Input: root built from [10,5,12,11,16]
+ * Output: [10,5,12,11,16]
  */
 
 #include "binary_tree.h"

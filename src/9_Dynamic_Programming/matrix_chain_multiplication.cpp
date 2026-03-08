@@ -1,46 +1,20 @@
 /*
  * Task: Compute the minimum scalar multiplications for a matrix chain.
  *
- * MATRIX CHAIN MULTIPLICATION OPTIMIZATION
+ * MATRIX CHAIN MULTIPLICATION
  *
- * Determine the most efficient way to multiply a given chain of matrices. The
- * matrices are represented by a vector of dimensions where the i-th matrix has
- * dimensions dims[i-1] x dims[i]. The goal is to compute the minimum number of
- * scalar multiplications required to multiply all matrices in the chain.
+ * Problem:
+ * Given matrix dimensions dims where matrix i has size dims[i-1] x dims[i],
+ * find the minimum number of scalar multiplications needed to multiply the
+ * whole chain.
  *
- * Three solutions are provided:
- *
- * 1. Simple (Brute-force) Recursive Solution:
- *    Recursively consider every possible split of the matrix chain and compute
- * the cost. This solution is simple but has exponential time complexity.
- *
- * 2. Optimal (Dynamic Programming) Solution:
- *    Uses a bottom-up DP approach to fill in a table where dp[i][j] represents
- * the minimum multiplication cost for matrices i to j. This solution runs in
- * O(n^3) time.
- *
- * 3. Alternative (Recursive with Memoization) Solution:
- *    A top-down recursive solution that uses memoization to store intermediate
- * results, reducing the number of repeated computations.
- *
- * ASCII Illustration:
- *
- *     Matrices: A1, A2, A3, A4
- *     Dimensions: {p0, p1, p2, p3, p4}
- *
- *     Optimal Parenthesization:
- *
- *         ((A1 x A2) x (A3 x A4))
+ * Constraints:
+ * - 2 <= dims.size() <= 500
+ * - 1 <= dims[i] <= 10^4
  *
  * Example:
- *   Input: dims = {40, 20, 30, 10, 30}
- *   Output: 26000
- *
- *   Explanation:
- *     The optimal way to multiply four matrices of dimensions:
- *        A1: 40x20, A2: 20x30, A3: 30x10, A4: 10x30
- *     is to first multiply A1 and A2, then A3 and A4, and finally multiply the
- * results. This requires 26000 scalar multiplications.
+ * Input: dims = [40,20,30,10,30]
+ * Output: 26000
  */
 
 #include <climits>

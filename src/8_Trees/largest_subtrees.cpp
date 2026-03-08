@@ -1,38 +1,19 @@
 /*
  * Task: Find the size of the largest BST subtree in a binary tree.
  *
- * LARGEST BINARY SEARCH TREE (BST) SUBTREE SIZE
+ * LARGEST BST SUBTREE
  *
- * Extend an assumed BinaryTree implementation (from "binary_tree.h") by
- * adding a method to determine the size of the largest subtree that is a valid
- * Binary Search Tree (BST).
+ * Problem:
+ * Given a binary tree, return the size of the largest subtree that is a valid
+ * binary search tree (BST).
  *
- * The algorithm uses a recursive helper function to traverse the tree and
- * calculate:
- *   - The minimum and maximum values in the subtree.
- *   - The size of the largest BST subtree found.
- *   - Whether the current subtree itself is a BST.
+ * Constraints:
+ * - 0 <= number of nodes <= 10^5
+ * - Node values are 32-bit signed integers.
  *
- * The base case treats an empty subtree as a valid BST with size 0, setting min
- * and max to extreme values. For non-empty nodes, it checks if both left and
- * right subtrees are BSTs, and if the current node's value is at least as large
- * as the maximum value in the left subtree and at most as small as the minimum
- * value in the right subtree.
- *
- * ASCII Illustration:
- *          8
- *         / \
- *        6   10
- *       / \  / \
- *      5   7 9  11
- *
- * Example Input/Output:
- * Input: Insert values {8, 6, 10, 5, 7, 9, 11} into the tree.
- * Output: The largest BST subtree size is 7.
- *
- * Explanation:
- * The entire tree is a BST, so the size of the largest BST subtree is the
- * number of nodes in the tree.
+ * Example:
+ * Input: root built from [8,6,10,5,7,9,11]
+ * Output: 7
  */
 
 #include "binary_tree.h"

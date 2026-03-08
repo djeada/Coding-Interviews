@@ -1,45 +1,21 @@
 /*
  * Task: Demonstrate diamond inheritance, covariant returns, and object slicing.
  *
- * ADVANCED INHERITANCE IN C++: DIAMOND, COVARIANCE, AND OBJECT SLICING
+ * ADVANCED C++ INHERITANCE PITFALLS
  *
- * Demonstrate several tricky parts of inheritance in C++:
+ * Problem:
+ * Build a small inheritance hierarchy that demonstrates three topics:
+ * virtual inheritance to solve the diamond problem, covariant return types in
+ * overridden methods, and object slicing when copying derived objects by value.
  *
- * 1. Diamond Inheritance with Virtual Inheritance:
- *    Shows how to solve the diamond problem by using virtual inheritance so
- * that the common base class appears only once in the derived hierarchy.
- *
- * 2. Covariant Return Types:
- *    Demonstrates how overridden methods in derived classes can have covariant
- * return types, allowing the derived version to return a pointer/reference to a
- * more specific type.
- *
- * 3. Avoiding Object Slicing:
- *    Highlights the slicing problem when copying derived objects into base
- * objects and shows how to avoid it using pointers or references.
- *
- * ASCII Illustration:
- *
- *              Base
- *             /    \
- *    Derived1        Derived2
- *             \    /
- *          FinalDerived
+ * Constraints:
+ * - Use one shared `Base` subobject via virtual inheritance.
+ * - Show that `clone()` in derived class can return a more specific pointer.
+ * - Include an example that slices by value and one that avoids slicing.
  *
  * Example:
- *   - Diamond Inheritance: Both Derived1 and Derived2 virtually inherit from
- * Base, and FinalDerived inherits from both ensuring only one Base instance
- * exists.
- *   - Covariant Return Type: FinalDerived::clone() returns a pointer to
- * FinalDerived, overriding Base::clone() which returns a pointer to Base.
- *   - Object Slicing: Demonstrates that copying by value from a derived to a
- * base object causes loss of derived-specific data; using pointers preserves
- * full object.
- *
- * Expected Console Output:
- *   Diamond inheritance test passed!
- *   Covariant return types test passed!
- *   Object slicing prevention test passed!
+ * Input: create `FinalDerived`, call `show()`, `clone()`, and pass to holder
+ * Output: behavior confirms diamond resolution, covariant clone, and slicing
  */
 
 #include <iostream>

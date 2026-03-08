@@ -1,32 +1,21 @@
 /*
  * Task: Simulate class-like behavior in C using structs and function pointers.
  *
- * Simulating Classes and Objects in Pure C
+ * OBJECT-LIKE DESIGN IN C
  *
- * Demonstrate how to simulate class-like behavior using pure C. We define a
- * struct "Object" that encapsulates data and a function pointer, which acts as
- * a method. Two "methods" (functions) are implemented: method1 and method2.
- * Each function takes a pointer to the struct instance ("self") to access the
- * encapsulated data.
+ * Problem:
+ * Build a C struct that stores state and a function pointer to emulate method
+ * dispatch. Show that different instances can point to different behaviors
+ * while sharing the same data layout.
  *
- * ASCII Illustration:
+ * Constraints:
+ * - Use C structs and function pointers only (no C++ features).
+ * - Method functions receive `self` pointer to access instance data.
+ * - Keep memory ownership explicit and simple.
  *
- *      +-----------------------+
- *      |       Object          |
- *      +-----------------------+
- *      | int data              |  ---> Data member
- *      | void (*execute)(*)    |  ---> Function pointer ("method")
- *      +-----------------------+
- *
- * Example Usage:
- *   1. Create an instance of Object (e.g., obj1).
- *   2. Set its data value.
- *   3. Assign a function pointer to emulate a method (e.g., method1).
- *   4. Call the method via the function pointer.
- *
- * Expected Output:
- *   method1, 10
- *   method2, 20
+ * Example:
+ * Input: obj1.data = 10 with method1, obj2.data = 20 with method2
+ * Output: method1, 10 and method2, 20
  */
 
 #include <stdio.h>

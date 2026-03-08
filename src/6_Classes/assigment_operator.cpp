@@ -1,36 +1,21 @@
 /*
  * Task: Implement a safe copy assignment operator for a custom string class.
  *
- * Custom String Class with Assignment Operator
+ * CUSTOM STRING COPY ASSIGNMENT
  *
- * Define a simple custom String class that manages its own dynamic memory.
- * It demonstrates the implementation of the copy assignment operator to
- * correctly handle resource management and avoid memory leaks. The class
- * includes:
- *   - Default, parameterized, and copy constructors.
- *   - Destructor to clean up allocated memory.
- *   - Copy assignment operator to enable safe assignment between String
- * objects.
+ * Problem:
+ * Implement a `String` class that manages a dynamic char buffer and supports
+ * safe copy assignment. Assignment must correctly handle self-assignment and
+ * prevent memory leaks or dangling pointers.
  *
- * ASCII Illustration:
- *
- *      +---------------+
- *      |    String     |
- *      +---------------+
- *      | - data        |  ---> char array
- *      | - length      |  ---> length of the string
- *      +---------------+
+ * Constraints:
+ * - Manage memory manually using `new[]` and `delete[]`.
+ * - Preserve value semantics for copy constructor and copy assignment.
+ * - After assignment, both objects should hold independent copies.
  *
  * Example:
- *   String a("Hello");
- *   String b = a;  // Uses copy constructor.
- *   String c;
- *   c = a;         // Uses copy assignment operator.
- *
- * Expected Output:
- *   String a: Hello
- *   String b: Hello
- *   String c: Hello
+ * Input: a = "Hello", b = a, c = "", then c = a
+ * Output: a == "Hello", b == "Hello", c == "Hello"
  */
 
 #include <cstring> // For standard strlen and strncpy

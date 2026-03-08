@@ -1,59 +1,21 @@
 /*
  * Task: Compare runtime polymorphism, CRTP, and composition for shapes.
  *
- * SHAPE INHERITANCE DEMONSTRATION
+ * POLYMORPHISM APPROACHES FOR SHAPES
  *
- * Illustrate different approaches to using inheritance and polymorphism in
- * C++.
+ * Problem:
+ * Design shape-area calculation in three ways: runtime polymorphism (virtual
+ * functions), compile-time polymorphism (CRTP), and composition (strategy
+ * object). Verify that all approaches produce correct area results.
  *
- * Three solutions are provided:
- *
- * 1. Simple (Runtime Polymorphism):
- *    Uses a base class `Shape` with a virtual method `area()`. Derived classes
- *    `Circle` and `Rectangle` override the method to compute their respective
- *    areas. This is the classic example of runtime polymorphism.
- *
- * 2. Optimal (Compile-time Polymorphism using CRTP):
- *    Uses the Curiously Recurring Template Pattern (CRTP) to achieve
- * polymorphic behavior at compile time. This method avoids the overhead of
- * virtual functions.
- *
- * 3. Alternative (Using Composition):
- *    Demonstrates an alternative design where a shape object holds a pointer to
- *    a strategy object that defines its area calculation. This approach shows
- *    the flexibility of composition over inheritance.
- *
- * ASCII Illustration:
- *
- *             Runtime Polymorphism
- *                   Shape
- *                    / \
- *              Circle   Rectangle
- *
- *             Compile-time Polymorphism (CRTP)
- *                   ShapeCRTP
- *                    /   \
- *          CircleCRTP   RectangleCRTP
- *
- *             Composition
- *                 ShapeComposition
- *                    |
- *             +-----------------+
- *             |  AreaStrategy   |
- *             +-----------------+
- *                /          \
- *      CircleAreaStrategy   RectangleAreaStrategy
+ * Constraints:
+ * - Circle area uses `pi * r^2`.
+ * - Rectangle area uses `width * height`.
+ * - Implement and test all three approaches in one file.
  *
  * Example:
- *   Create a Circle with radius 5 and a Rectangle with width 4 and height 6.
- *
- *   Expected output (areas):
- *     Circle area: approximately 78.5398
- *     Rectangle area: 24
- *
- *   Explanation:
- *     - Circle area is computed as π * r^2.
- *     - Rectangle area is computed as width * height.
+ * Input: circle radius = 5, rectangle width = 4, height = 6
+ * Output: circle area ~= 78.5398, rectangle area = 24
  */
 
 #include <cmath>

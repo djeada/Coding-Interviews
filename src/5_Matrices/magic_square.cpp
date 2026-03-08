@@ -1,18 +1,21 @@
 /*
  * Task: Verify whether a square matrix is a magic square.
  *
- * A magic square is an n x n matrix where:
- * - Every row sum is the same
- * - Every column sum is the same
- * - Main diagonal sum is the same
- * - Anti-diagonal sum is the same
+ * VALIDATE MAGIC SQUARE
  *
- * Example (3x3):
- *   [ 8, 1, 6 ]
- *   [ 3, 5, 7 ]
- *   [ 4, 9, 2 ]
- *   All sums = 15  -> true
+ * Problem:
+ * Given an n x n integer matrix, determine whether it is a magic square. A
+ * matrix is magic if every row sum, every column sum, the main diagonal sum,
+ * and the anti-diagonal sum are all equal.
  *
+ * Constraints:
+ * - 1 <= n <= 200
+ * - -10^9 <= matrix[i][j] <= 10^9
+ * - Input must be square; non-square input should return false.
+ *
+ * Example:
+ * Input: matrix = [[8,1,6],[3,5,7],[4,9,2]]
+ * Output: true
  */
 
 #include <iostream>

@@ -1,29 +1,19 @@
 /*
  * Task: Compute the Levenshtein (edit) distance between two strings.
  *
- * LEVENSHTEIN DISTANCE (EDIT DISTANCE)
+ * EDIT DISTANCE
  *
- * Given two strings, calculate the Levenshtein distance (edit distance).
- * This distance is defined as the minimum number of operations (insertions,
- * deletions, or substitutions) needed to convert one string into the other.
+ * Problem:
+ * Given two strings word1 and word2, return the minimum number of insertions,
+ * deletions, and substitutions required to transform word1 into word2.
  *
  * Constraints:
- * - The strings may contain uppercase and lowercase letters.
- * - Length of the strings will be at most 1000 characters.
- *
- * Visual illustration:
+ * - 0 <= word1.length, word2.length <= 1000
+ * - Strings contain ASCII characters.
  *
  * Example:
- * Input: "kitten", "sitting"
- * Operations: kitten → sitten (substitute 's' for 'k'),
- *             sitten → sittin (substitute 'i' for 'e'),
- *             sittin → sitting (insert 'g')
+ * Input: word1 = "kitten", word2 = "sitting"
  * Output: 3
- *
- * Example Input/Output:
- * Input: "flaw", "lawn"
- * Output: 2
- * Explanation: flaw → law (delete 'f'), law → lawn (insert 'n')
  */
 
 #include <algorithm>

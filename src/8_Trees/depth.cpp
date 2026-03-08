@@ -1,36 +1,18 @@
 /*
  * Task: Compute the depth (height) of a binary tree.
  *
- * BINARY TREE DEPTH CALCULATION
+ * MAXIMUM DEPTH OF BINARY TREE
  *
- * Extend an assumed BinaryTree implementation (from "binary_tree.h") by
- * adding a method to calculate the depth (height) of the tree. The depth is
- * defined as the number of nodes along the longest path from the root node down
- * to the farthest leaf node.
+ * Problem:
+ * Given the root of a binary tree, return its maximum depth.
  *
- * The algorithm is implemented recursively:
- *   - For an empty node, the depth is 0.
- *   - For a non-empty node, the depth is the maximum depth of its left and
- * right subtrees plus one.
+ * Constraints:
+ * - 0 <= number of nodes <= 10^5
+ * - Node values are 32-bit signed integers.
  *
- * ASCII Illustration:
- *           9
- *          / \
- *         8   13
- *        /    / \
- *       4    10  16
- *        \
- *         7
- *            \
- *            15
- *
- * Example Input/Output:
- * Input: Build the tree by adding values: {9, 8, 13, 4, 10, 16, 7, 15}
- * Output: The depth of the tree is 4.
- *
- * Explanation:
- * The longest path in the tree is from the root (9) to the leaf (15) with a
- * total of 4 nodes.
+ * Example:
+ * Input: root built from [9,8,13,4,10,16,7,15]
+ * Output: 4
  */
 
 #include "binary_tree.h"

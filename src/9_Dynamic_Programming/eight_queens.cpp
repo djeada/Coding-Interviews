@@ -1,28 +1,19 @@
 /*
  * Task: Count all valid arrangements of 8 queens on an 8x8 chessboard.
  *
- * N-QUEENS PUZZLE (N=8)
+ * N-QUEENS (N = 8)
  *
- * Find all valid arrangements to place eight chess queens on an 8x8 chessboard
- * such that no two queens threaten each other. Queens threaten each other if
- * they share the same row, column, or diagonal.
+ * Problem:
+ * Place 8 queens on an 8x8 chessboard so that no two queens attack each other.
+ * Return the total number of valid arrangements.
  *
  * Constraints:
- * - Chessboard is 8×8 (fixed size).
- * - Exactly one queen per row, column, and diagonal.
+ * - Board size is fixed at 8 x 8.
+ * - Queens attack on same row, column, or diagonal.
  *
- * Visual illustration (example of valid arrangement for smaller N=4):
- *
- * . Q . .
- * . . . Q
- * Q . . .
- * . . Q .
- *
- * Example Input/Output:
+ * Example:
  * Input: N = 8
  * Output: 92
- * Explanation: There are exactly 92 distinct solutions for the 8-queens
- * problem.
  */
 
 #include <algorithm>

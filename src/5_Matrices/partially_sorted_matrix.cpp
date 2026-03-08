@@ -1,17 +1,22 @@
 /*
  * Task: Determine whether a target value exists in a row/column-sorted matrix.
  *
- * MATRIX VALUE SEARCH
+ * SEARCH A 2D MATRIX (ROW/COLUMN SORTED)
  *
- * The matrix has the following properties:
- * - Each row is sorted left-to-right
- * - Each column is sorted top-to-bottom
+ * Problem:
+ * Given an m x n matrix where each row is sorted left-to-right and each
+ * column is sorted top-to-bottom, return true if a target value exists in the
+ * matrix; otherwise return false.
  *
- * Example matrix:
- *   { 1,  2,  8,  9 }
- *   { 2,  4,  9, 12 }
- *   { 4,  7, 10, 13 }
- *   { 6,  8, 11, 15 }
+ * Constraints:
+ * - 1 <= m, n <= 10^3
+ * - -10^9 <= matrix[i][j], target <= 10^9
+ * - Each row is non-decreasing.
+ * - Each column is non-decreasing.
+ *
+ * Example:
+ * Input: matrix = [[1,2,8,9],[2,4,9,12],[4,7,10,13],[6,8,11,15]], target = 7
+ * Output: true
  */
 
 #include <iostream>

@@ -1,26 +1,21 @@
 /*
  * Task: Determine whether a target value exists in a sorted 2D matrix.
  *
- * Matrix Binary Search
+ * SEARCH A 2D MATRIX (BINARY SEARCH)
  *
- * Search for a specified value within a 2D matrix, where each row and each
- * column are sorted in ascending order. The function `contains` treats the
- * matrix as a flattened sorted array and performs a binary search to locate
- * the target value. It returns true if the value is found and false otherwise.
+ * Problem:
+ * Given an m x n matrix that is globally sorted in row-major order (each row
+ * sorted, and first element of each row greater than the last of the previous
+ * row), determine whether target exists in the matrix.
  *
- * ASCII Illustration of the Matrix:
- *       +----+----+----+
- *       |  1 |  3 |  5 |
- *       +----+----+----+
- *       |  7 |  9 | 11 |
- *       +----+----+----+
- *       | 13 | 15 | 17 |
- *       +----+----+----+
+ * Constraints:
+ * - 1 <= m, n <= 10^3
+ * - -10^9 <= matrix[i][j], target <= 10^9
+ * - Matrix follows row-major sorted order.
  *
  * Example:
- * Input: Matrix = {{1,3,5}, {7,9,11}, {13,15,17}}, Target = 7
+ * Input: matrix = [[1,3,5],[7,9,11],[13,15,17]], target = 7
  * Output: true
- * Explanation: The value 7 is found in the matrix.
  */
 
 #include <iostream>

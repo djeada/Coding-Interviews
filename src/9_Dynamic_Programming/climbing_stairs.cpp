@@ -1,33 +1,20 @@
 /*
  * Task: Count the number of ways to climb N steps with allowed step sizes.
  *
- * CLIMBING STAIRS WITH VARIABLE STEPS
+ * CLIMBING STAIRS WITH CUSTOM STEPS
  *
- * Given an integer N representing a staircase with N steps and an array of
- * allowed steps, determine how many distinct ways you can reach the top. You
- * can take steps according to the values provided in the allowed steps array.
- * Each move can only consist of an allowed number of steps.
+ * Problem:
+ * Given an integer N and a list of allowed step sizes, return the number of
+ * distinct ordered ways to reach exactly step N.
  *
  * Constraints:
- * - 1 ≤ N ≤ 1000
- * - allowedSteps contains unique positive integers.
- * - allowedSteps size ≤ 10
+ * - 0 <= N <= 1000
+ * - 1 <= allowedSteps.size() <= 10
+ * - Each allowed step is a positive integer.
  *
- * Visual illustration (Example):
- *
- * N = 4, allowedSteps = [1, 3]
- *
- * Ways to climb:
- * (1, 1, 1, 1)
- * (1, 3)
- * (3, 1)
- *
- * Total ways = 3
- *
- * Example Input/Output:
- * Input: N = 5, allowedSteps = [1, 2]
+ * Example:
+ * Input: N = 5, allowedSteps = [1,2]
  * Output: 8
- * Explanation: Ways = [11111, 1112, 1121, 1211, 2111, 122, 212, 221]
  */
 
 #include <algorithm>
